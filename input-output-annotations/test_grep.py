@@ -14,7 +14,7 @@ def test_grep_1():
 
     meta = Annotation_Generation.get_meta_from_cmd_invocation(cmd_name, args, operands)
 
-
+    print(meta)
     assert len(meta.get_input_list()) == 3
 
 test_grep_1()

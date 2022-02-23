@@ -1,6 +1,9 @@
 class Meta:
 
-    def __init__(self, input_list=[], output_list=[], custom_info=None):
+    def __init__(self, 
+                 input_list=[], 
+                 output_list=[], 
+                 custom_info=None):
         self.input_list = input_list
         self.output_list = output_list
         self.custom_info = custom_info
