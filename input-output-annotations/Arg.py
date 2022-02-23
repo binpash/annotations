@@ -8,7 +8,7 @@ class Arg:
     data : depending on kind
     """
     def __init__(self, kind, data):
-        self.kind = kind,
+        self.kind = kind
         if kind == ArgKindEnum.FLAG:
             self.flag_name = data
         elif kind == ArgKindEnum.OPTION:
@@ -16,11 +16,19 @@ class Arg:
         else:
             raise Exception("Arg got unknown kind!")
 
-    def get_name_suffix_for_transformer(self):
+    def __repr__(self):
         if self.kind == ArgKindEnum.FLAG:
-            str(self.flag_name)
+            return self.flag_name
         elif self.kind == ArgKindEnum.OPTION:
-            str(self.option_name)
+            return f'{self.option_name} {self.option_arg}'
+        else:
+            raise Exception("Arg got unknown kind!")
+
+    def get_name(self):
+        if self.kind == ArgKindEnum.FLAG:
+            return self.flag_name
+        elif self.kind == ArgKindEnum.OPTION:
+            return self.option_name
         else:
             raise Exception("Arg got unknown kind!")
 

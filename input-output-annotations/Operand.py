@@ -4,4 +4,4 @@ class Operand:
         self.name = name
 
     def __repr__(self):
-        return str(self.name)
+        return self.name

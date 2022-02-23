@@ -11,8 +11,14 @@ class Meta:
             + f'output_list: {self.output_list}\n' \
             + f'custom_info: {self.custom_info}'
 
-    def add_to_input_list(self, input_list_to_be_added):
+    def get_input_list(self):
+        return self.input_list
+
+    def add_to_input_list(self, input_list_to_be_added: list):
         self.input_list.extend(input_list_to_be_added)
 
-    def add_to_output_list(self, output_list_to_be_added):
+    def prepend_to_input_list(self, input_el_to_be_added):
+        self.input_list.insert(0, input_el_to_be_added)
+
+    def add_to_output_list(self, output_list_to_be_added: list):
         self.output_list.extend(output_list_to_be_added)

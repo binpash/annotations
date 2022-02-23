@@ -14,10 +14,12 @@ class MetaGeneratorGrep(MetaGeneratorInterface):
         return (initial_meta, __class__.transformers_for_args_grep, transformer_for_operands)
 
     def generate_operand_meta_func(arg_list):
-        operand_slicing_parameter = 0 \
-            if any(arg.kind == ArgKindEnum.OPTION and arg.option_name == "-f" for arg in arg_list) else 1
-        print(operand_slicing_parameter)
-        func = lambda operand_list, meta: meta.add_to_input_list(operand_list[:operand_slicing_parameter])
+        if any([arg.get_name() in ["-e", "-f"] for arg in arg_list]):
+            operand_slicing_parameter = 0
+        else:
+            operand_slicing_parameter = 1
+
+        func = lambda operand_list, meta: meta.add_to_input_list(operand_list[operand_slicing_parameter:])
         return func
 
         
@@ -34,8 +36,7 @@ class MetaGeneratorGrep(MetaGeneratorInterface):
     # for now, we ignore --exclude, --exclude-from, --exclude-dir, and --include and, thus, over-approximate
     # for now, we ignore -D/-d with actions
 
+    ## Updates meta in place
     def transformers_for_args_grep(arg, meta):
         if arg.kind == ArgKindEnum.OPTION and arg.option_name == "-f":
-            return meta.add_to_input_list([arg.option_arg])
-        else:
-            return meta
+            meta.prepend_to_input_list(arg.option_arg)
