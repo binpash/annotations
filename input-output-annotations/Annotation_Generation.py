@@ -1,5 +1,7 @@
 import functools
+import Transformer_grep
 
+cmd_name_transformer_module_mapper = {"grep": Transformer_grep}
 
 """
 function to compute meta from command invocation
@@ -11,7 +13,7 @@ operand_list : [Operand]
 
 def get_meta_from_cmd_invocation(cmd_name, arg_list, operand_list):
 
-    transformer_class_for_cmd = "Transformers_" + cmd_name,
+    transformer_class_for_cmd = "Transformer_" + cmd_name,
     initial_meta, transformers_for_args, transformer_for_operands = transformer_class_for_cmd.select_subcommand(arg_list),
 
     # 1) we apply the function for operands which changes meta
