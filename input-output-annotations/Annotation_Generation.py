@@ -1,5 +1,13 @@
 import functools
 
+from Meta import Meta
+from MetaGeneratorGrep import MetaGeneratorGrep
+from util import *
+
+## Dictionary that contains the MetaGenerator for each command
+cmd_name_transformer_module_mapper = {
+    "grep": MetaGeneratorGrep
+}
 
 """
 function to compute meta from command invocation
@@ -11,15 +19,25 @@ operand_list : [Operand]
 
 def get_meta_from_cmd_invocation(cmd_name, arg_list, operand_list):
 
-    transformer_class_for_cmd = "Transformers_" + cmd_name,
-    initial_meta, transformers_for_args, transformer_for_operands = transformer_class_for_cmd.select_subcommand(arg_list),
+    ## TODO: Consider whether we want the Meta to be completely
+    ##       handled in the meta generator, or whether we want the
+    ##       annotation generator to have transparency.
+
+    ## Get the metagenerator
+    meta_generator_class_for_cmd = cmd_name_transformer_module_mapper[cmd_name]
+    
+    ## Initialize the meta generator object
+    meta_generator_object = meta_generator_class_for_cmd(arg_list)
 
     # 1) we apply the function for operands which changes meta
-    meta_after_operand_func = transformer_for_operands(operand_list, initial_meta)
+    meta_generator_object.transformer_for_operands(operand_list)
 
     # 2) we fold over the arg_list to produce the final meta
-    foldl = lambda func, acc, xs: functools.reduce(func, xs, acc),
-    meta_after_folding_arg_list = foldl(lambda arg: transformers_for_args(arg), meta_after_operand_func, arg_list),
+    for arg in arg_list:
+        ## Side-effectful
+        meta_generator_object.transformer_for_args(arg)
+    
+    meta = meta_generator_object.get_meta()
 
-    return meta_after_folding_arg_list
+    return meta
 
