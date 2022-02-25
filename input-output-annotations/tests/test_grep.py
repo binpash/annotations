@@ -1,7 +1,7 @@
 from Arg import make_arg_simple
 from Operand import Operand
 
-import Annotation_Generation
+import AnnotationGeneration
 
 cmd_name = "grep"
 
@@ -11,7 +11,7 @@ def test_grep_1():
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
 
-    meta = Annotation_Generation.get_meta_from_cmd_invocation(cmd_name, args, operands)
+    meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
 
     assert len(meta.get_input_list()) == 3
     assert len(meta.get_output_list()) == 0
@@ -22,7 +22,7 @@ def test_grep_2():
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
 
-    meta = Annotation_Generation.get_meta_from_cmd_invocation(cmd_name, args, operands)
+    meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
 
     assert len(meta.get_input_list()) == 3
     assert len(meta.get_output_list()) == 0
@@ -33,7 +33,7 @@ def test_grep_3():
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
 
-    meta = Annotation_Generation.get_meta_from_cmd_invocation(cmd_name, args, operands)
+    meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
 
     assert len(meta.get_input_list()) == 4
     assert len(meta.get_output_list()) == 0
@@ -45,7 +45,7 @@ def test_grep_4():
                 Operand("in2.txt"),
                 Operand("dict.txt")]
 
-    meta = Annotation_Generation.get_meta_from_cmd_invocation(cmd_name, args, operands)
+    meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
 
     assert len(meta.get_input_list()) == 4
     assert len(meta.get_output_list()) == 0

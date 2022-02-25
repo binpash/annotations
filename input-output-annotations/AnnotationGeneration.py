@@ -1,9 +1,11 @@
 from MetaGeneratorGrep import MetaGeneratorGrep
+from MetaGeneratorMv import MetaGeneratorMv
 from util import *
 
 # Dictionary that contains the MetaGenerator for each command
 cmd_name_transformer_module_mapper = {
-    "grep": MetaGeneratorGrep
+    "grep": MetaGeneratorGrep,
+    "mv":   MetaGeneratorMv
 }
 
 """
