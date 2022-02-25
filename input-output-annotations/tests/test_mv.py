@@ -1,5 +1,5 @@
-from Arg import make_arg_simple
-from Operand import Operand
+from datatypes.Arg import make_arg_simple
+from datatypes.Operand import Operand
 
 import AnnotationGeneration
 

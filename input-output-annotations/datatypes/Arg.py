@@ -1,4 +1,4 @@
-from ArgKindEnum import ArgKindEnum
+from datatypes.ArgKindEnum import ArgKindEnum
 
 
 class Arg:

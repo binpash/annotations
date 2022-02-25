@@ -1,6 +1,6 @@
 
-from ArgKindEnum import ArgKindEnum
-from MetaGenerator_Interface import MetaGeneratorInterface
+from datatypes.ArgKindEnum import ArgKindEnum
+from metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
 
 
 class MetaGeneratorGrep(MetaGeneratorInterface):

@@ -1,7 +1,6 @@
-from MetaGeneratorGrep import MetaGeneratorGrep
-from MetaGeneratorMv import MetaGeneratorMv
-from MetaGeneratorTr import MetaGeneratorTr
-from util import *
+from metagenerators.MetaGeneratorGrep import MetaGeneratorGrep
+from metagenerators.MetaGeneratorMv import MetaGeneratorMv
+from metagenerators.MetaGeneratorTr import MetaGeneratorTr
 
 # Dictionary that contains the MetaGenerator for each command
 cmd_name_transformer_module_mapper = {

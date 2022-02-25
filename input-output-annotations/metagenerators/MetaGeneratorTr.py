@@ -1,6 +1,4 @@
-
-from ArgKindEnum import ArgKindEnum
-from MetaGenerator_Interface import MetaGeneratorInterface
+from metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
 
 
 class MetaGeneratorTr(MetaGeneratorInterface):

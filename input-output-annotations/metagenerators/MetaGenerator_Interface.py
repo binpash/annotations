@@ -1,4 +1,4 @@
-from Meta import Meta
+from datatypes.Meta import Meta
 
 
 class MetaGeneratorInterface:

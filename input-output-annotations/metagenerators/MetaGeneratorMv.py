@@ -1,6 +1,6 @@
 
-from ArgKindEnum import ArgKindEnum
-from MetaGenerator_Interface import MetaGeneratorInterface
+from datatypes.ArgKindEnum import ArgKindEnum
+from metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
 
 
 class MetaGeneratorMv(MetaGeneratorInterface):
@@ -51,7 +51,6 @@ class MetaGeneratorMv(MetaGeneratorInterface):
             case _:
                 # multiple -t options not allowed (checked using cmd)
                 raise Exception("multiple -t options defined for mv")
-
 
     def transformer_for_args(self, arg):
         if arg.kind == ArgKindEnum.OPTION and arg.option_name == "-t":
