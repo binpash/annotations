@@ -1,28 +1,10 @@
 
 from ArgKindEnum import ArgKindEnum
-from MetaGeneratorInterface import MetaGeneratorInterface
+from MetaGenerator_Interface import MetaGeneratorInterface
 
 
 class MetaGeneratorMv(MetaGeneratorInterface):
     # for details on what the functions do, check comments in its super class MetaGeneratorInterface
-
-    def transformer_for_operands(self, operand_list):
-        operand_list_strings = [operand.name for operand in operand_list]
-        # -T shall treat destination as file, not directory, not considered currently
-        # -t gives destination directory as an argument to option and determines
-        #    how operands are interpreted
-        list_options_t = [arg for arg in self.arg_list if arg.get_name() == "-t"]
-        match len(list_options_t):
-            case 0:
-                # all but last input, last output
-                self.meta.add_list_to_input_list(operand_list_strings[:-1])
-                self.meta.add_list_to_output_list(operand_list_strings[-1:])
-            case 1:
-                # all input, output given as argument to "-t"
-                self.meta.add_list_to_input_list(operand_list_strings)
-            case _:
-                # multiple -t options not allowed (checked using cmd)
-                raise Exception("multiple -t options defined for mv")
 
     # list_of_all_flags = ["-b", "-f", "-i", "-n", "--strip-trailing-slashes", "-T",
     #                      "-u", "-v", "-Z", "--help", "--version"]
@@ -52,6 +34,24 @@ class MetaGeneratorMv(MetaGeneratorInterface):
     #   - we know state of file system, so we can determine which files will
     #     be written in the destination directory, i.e., moved and backed up,
     #     depending on all the different options but recomputing quite some program logic then
+
+    def transformer_for_operands(self, operand_list_strings):
+        # -T shall treat destination as file, not directory, not considered currently
+        # -t gives destination directory as an argument to option and determines
+        #    how operands are interpreted
+        list_options_t = [arg for arg in self.arg_list if arg.get_name() == "-t"]
+        match len(list_options_t):
+            case 0:
+                # all but last input, last output
+                self.meta.add_list_to_input_list(operand_list_strings[:-1])
+                self.meta.add_list_to_output_list(operand_list_strings[-1:])
+            case 1:
+                # all input, output given as argument to "-t"
+                self.meta.add_list_to_input_list(operand_list_strings)
+            case _:
+                # multiple -t options not allowed (checked using cmd)
+                raise Exception("multiple -t options defined for mv")
+
 
     def transformer_for_args(self, arg):
         if arg.kind == ArgKindEnum.OPTION and arg.option_name == "-t":
