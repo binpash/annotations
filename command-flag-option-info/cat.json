@@ -1,0 +1,50 @@
+{
+    "flag": [
+        [
+            "-A",
+            "--show-all"
+        ],
+        [
+            "-b",
+            "--number-nonblank"
+        ],
+        [
+            "-e",
+            "-vE"
+        ],
+        [
+            "-E",
+            "--show-ends"
+        ],
+        [
+            "-n",
+            "--number"
+        ],
+        [
+            "-s",
+            "--squeeze-blank"
+        ],
+        [
+            "-t",
+            "-vT"
+        ],
+        [
+            "-T",
+            "--show-tabs"
+        ],
+        [
+            "-u"
+        ],
+        [
+            "-v",
+            "--show-nonprinting"
+        ],
+        [
+            "--help"
+        ],
+        [
+            "--version"
+        ]
+    ],
+    "option": []
+}
