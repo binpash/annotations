@@ -18,14 +18,18 @@ def parse_lines(lines):
     for line in lines:
         # remove [] from line
         line = re.sub(r"\[|\]", '', line)
-        # find all arguments in line
+        # find all arguments in line; generally separated by commas
         line_args = re.findall(r"-[a-zA-Z-\[\]=]+[ ]*[A-Z]*(?![a-z])", line)
-        # split by spaces and commas
+        # remove empty line args
+        line_args = [arg for arg in line_args if arg != ""]
+        # split by spaces and equal signs
         for i in range(len(line_args)):
             la = re.split(" |=", line_args[i].strip())
             if len(la)>0:
                 line_args[i] = la[0] if len(la)==1 else tuple(la)
-        args.append(line_args)
+        # ignore empty lists
+        if line_args != []:
+            args.append(line_args)
     return args
 
 def parse_args(args):
