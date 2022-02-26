@@ -35,11 +35,13 @@ def parse_args(args):
     """
     args_dict = {"flag": [], "option": []}
     for line_args in args:
-        if len(line_args)>0:
-            if type(line_args[0])==str:
-                args_dict["flag"].append(list(line_args))
-            else:
-                for arg in line_args:
+        if all([type(arg)==str for arg in line_args]):
+            args_dict["flag"].append(list(line_args))
+        else:
+            for arg in line_args:
+                if type(arg)==str:
+                    args_dict["flag"].append(arg)
+                else:
                     args_dict["option"].append(list(arg))
     return args_dict
 
