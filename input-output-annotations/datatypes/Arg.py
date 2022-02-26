@@ -1,4 +1,4 @@
-from ArgKindEnum import ArgKindEnum
+from enum import Enum
 
 
 class Arg:
@@ -32,6 +32,7 @@ class Arg:
         else:
             raise Exception("Arg got unknown kind!")
 
+
 def make_arg_simple(arg: list):
     
     if len(arg) == 1:
@@ -39,6 +40,11 @@ def make_arg_simple(arg: list):
     elif len(arg) == 2:
         ret = Arg(ArgKindEnum.OPTION, arg)
     else:
-        assert(False)
+        assert False
     
     return ret
+
+
+class ArgKindEnum(Enum):
+    FLAG = 1
+    OPTION = 2
