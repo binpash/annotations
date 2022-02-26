@@ -1,4 +1,4 @@
-from datatypes.ArgKindEnum import ArgKindEnum
+from enum import Enum
 
 
 class Arg:
@@ -43,3 +43,8 @@ def make_arg_simple(arg: list):
         assert False
     
     return ret
+
+
+class ArgKindEnum(Enum):
+    FLAG = 1
+    OPTION = 2

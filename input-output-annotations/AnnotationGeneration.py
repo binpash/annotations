@@ -36,8 +36,13 @@ def get_meta_from_cmd_invocation(cmd_name, arg_list, operand_list):
     for arg in arg_list:
         # side-effectful
         meta_generator_object.transformer_for_args(arg)
-    
-    meta = meta_generator_object.get_deduplicated_meta()
+
+    # 3) we apply the function to determine the "std" file descriptors used
+    meta_generator_object.transformer_for_standard_filedescriptors(arg_list, [operand.name for operand in operand_list])
+
+
+    meta_generator_object.deduplicate_lists_of_meta()
+    meta = meta_generator_object.get_meta()
 
     return meta
 

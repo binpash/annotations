@@ -1,3 +1,7 @@
+from util import *
+from datatypes.FileDescriptor import *
+
+
 class Meta:
 
     def __init__(self, 
@@ -27,21 +31,25 @@ class Meta:
         return self.output_list
 
     def add_list_to_input_list(self, input_list_to_be_added: list):
-        self.input_list.extend(input_list_to_be_added)
+        self.input_list.extend([compute_actual_el_for_input(input_el) for input_el in input_list_to_be_added])
 
     def prepend_el_to_input_list(self, el_to_be_prepended):
-        self.input_list.insert(0, el_to_be_prepended)
+        self.input_list.insert(0, compute_actual_el_for_input(el_to_be_prepended))
 
     def add_list_to_output_list(self, output_list_to_be_added: list):
-        self.output_list.extend(output_list_to_be_added)
+        self.output_list.extend([compute_actual_el_for_output(output_el) for output_el in output_list_to_be_added])
 
     def prepend_el_to_output_list(self, el_to_be_prepended):
-        self.output_list.insert(0, el_to_be_prepended)
+        self.output_list.insert(0, compute_actual_el_for_output(el_to_be_prepended))
+
+    def prepend_stdin_to_input_list(self):
+        # "-" is interpreted as stdin by the function
+        self.input_list.insert(0, FileDescriptor.get_stdin_fd())
+
+    def append_stdout_to_output_list(self):
+        # "-" is interpreted as stdout by the function
+        self.output_list.insert(-1, FileDescriptor.get_stdout_fd())
 
     def deduplicate_input_output_lists(self):
-        deduplicated_input_list = list()
-        [deduplicated_input_list.append(item) for item in self.input_list if item not in deduplicated_input_list]
-        self.input_list = deduplicated_input_list
-        deduplicated_output_list = list()
-        [deduplicated_output_list.append(item) for item in self.output_list if item not in deduplicated_output_list]
-        self.output_list = deduplicated_output_list
+        self.input_list = list_deduplication(self.input_list)
+        self.output_list = list_deduplication(self.output_list)

@@ -1,5 +1,6 @@
 
-from datatypes.ArgKindEnum import ArgKindEnum
+from datatypes.Arg import ArgKindEnum
+# from datatypes.FileDescriptor import FileDescriptor, FileDescriptorEnum
 from metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
 
 
@@ -35,7 +36,11 @@ class MetaGeneratorMv(MetaGeneratorInterface):
     #     be written in the destination directory, i.e., moved and backed up,
     #     depending on all the different options but recomputing quite some program logic then
 
-    def transformer_for_operands(self, operand_list_strings):
+    def transformer_for_standard_filedescriptors(self, _arg_list, _operand_list_filenames):
+        # TODO: it actually does write to stdout if there is an error though
+        pass
+
+    def transformer_for_operands(self, operand_list_filenames):
         # -T shall treat destination as file, not directory, not considered currently
         # -t gives destination directory as an argument to option and determines
         #    how operands are interpreted
@@ -43,11 +48,11 @@ class MetaGeneratorMv(MetaGeneratorInterface):
         match len(list_options_t):
             case 0:
                 # all but last input, last output
-                self.meta.add_list_to_input_list(operand_list_strings[:-1])
-                self.meta.add_list_to_output_list(operand_list_strings[-1:])
+                self.meta.add_list_to_input_list(operand_list_filenames[:-1])
+                self.meta.add_list_to_output_list(operand_list_filenames[-1:])
             case 1:
                 # all input, output given as argument to "-t"
-                self.meta.add_list_to_input_list(operand_list_strings)
+                self.meta.add_list_to_input_list(operand_list_filenames)
             case _:
                 # multiple -t options not allowed (checked using cmd)
                 raise Exception("multiple -t options defined for mv")
@@ -55,3 +60,4 @@ class MetaGeneratorMv(MetaGeneratorInterface):
     def transformer_for_args(self, arg):
         if arg.kind == ArgKindEnum.OPTION and arg.option_name == "-t":
             self.meta.prepend_el_to_output_list(arg.option_arg)
+#             TODO stdout if error?
