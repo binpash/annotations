@@ -16,7 +16,7 @@ def test_tr_1():
     meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
 
     assert len(meta.get_input_list()) == 1
-    assert len(meta.get_output_list()) == 1
+    assert len(meta.get_output_list()) == 2     # stdout and stderr
 
 
 def test_tr_2():
@@ -27,7 +27,7 @@ def test_tr_2():
     meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
 
     assert len(meta.get_input_list()) == 1
-    assert len(meta.get_output_list()) == 1
+    assert len(meta.get_output_list()) == 2
 
 
 def test_tr_3():
@@ -37,5 +37,5 @@ def test_tr_3():
     meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
 
     assert len(meta.get_input_list()) == 1
-    assert len(meta.get_output_list()) == 1
+    assert len(meta.get_output_list()) == 2
 

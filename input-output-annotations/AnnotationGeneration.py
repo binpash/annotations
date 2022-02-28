@@ -27,19 +27,16 @@ def get_meta_from_cmd_invocation(cmd_name, arg_list, operand_list):
     meta_generator_class_for_cmd = cmd_name_transformer_module_mapper[cmd_name]
     
     # Initialize the meta generator object
-    meta_generator_object = meta_generator_class_for_cmd(arg_list)
+    meta_generator_object = meta_generator_class_for_cmd(arg_list, operand_list)
 
     # 1) we apply the function for operands which changes meta but strip off the Operand class when passing
-    meta_generator_object.transformer_for_operands([operand.name for operand in operand_list])
+    meta_generator_object.transformer_for_operands()
 
-    # 2) we fold over the arg_list to produce the final meta
-    for arg in arg_list:
-        # side-effectful
-        meta_generator_object.transformer_for_args(arg)
+    # 2) we apply the function for arg_list to produce the final meta
+    meta_generator_object.transformer_for_arg_list()
 
     # 3) we apply the function to determine the "std" file descriptors used
-    meta_generator_object.transformer_for_standard_filedescriptors(arg_list, [operand.name for operand in operand_list])
-
+    meta_generator_object.transformer_for_standard_filedescriptors()
 
     meta_generator_object.deduplicate_lists_of_meta()
     meta = meta_generator_object.get_meta()

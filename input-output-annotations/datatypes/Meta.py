@@ -50,6 +50,10 @@ class Meta:
         # "-" is interpreted as stdout by the function
         self.output_list.insert(-1, FileDescriptor.get_stdout_fd())
 
+    def append_stderr_to_output_list(self):
+        # "-" is interpreted as stdout by the function
+        self.output_list.insert(-1, FileDescriptor.get_stderr_fd())
+
     def deduplicate_input_output_lists(self):
         self.input_list = list_deduplication(self.input_list)
         self.output_list = list_deduplication(self.output_list)

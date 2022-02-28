@@ -18,15 +18,26 @@ class MetaGeneratorGrep(MetaGeneratorInterface):
     # for now, we ignore --exclude, --exclude-from, --exclude-dir, and --include and, thus, over-approximate
     # for now, we ignore -D/-d with actions
 
-    def transformer_for_standard_filedescriptors(self, _arg_list, _operand_list_filenames):
-        self.meta.append_stdout_to_output_list()
+    def transformer_for_standard_filedescriptors(self):
+        # in general, output is written to stdout but can be suppressed
+        # though, --help and --version overrules this (and no actual result returned)
+        output_suppressed = self.arg_list_contains_at_least_one_of(["-q"])
+        version_or_help_write_to_stdout = self.arg_list_contains_at_least_one_of(["--help"]) \
+                                          or self.arg_list_contains_at_least_one_of(["--version"])
+        if not output_suppressed or version_or_help_write_to_stdout:
+            self.meta.append_stdout_to_output_list()
+        # errors are written to stderr but can be suppressed
+        errors_suppressed = self.arg_list_contains_at_least_one_of(["-s"])
+        if not errors_suppressed:
+            self.meta.append_stderr_to_output_list()
 
-    def transformer_for_operands(self, operand_list_filenames):
+
+    def transformer_for_operands(self):
         if any([arg.get_name() in ["-e", "-f"] for arg in self.arg_list]):
             operand_slicing_parameter = 0
         else:
             operand_slicing_parameter = 1
-        self.meta.add_list_to_input_list(operand_list_filenames[operand_slicing_parameter:])
+        self.meta.add_list_to_input_list(self.operand_names_list[operand_slicing_parameter:])
 
     def transformer_for_args(self, arg):
         if arg.kind == ArgKindEnum.OPTION and arg.option_name == "-f":

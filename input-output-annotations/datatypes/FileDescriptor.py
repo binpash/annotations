@@ -21,6 +21,10 @@ class FileDescriptor:
     def get_stdout_fd():
         return FileDescriptor(FileDescriptorEnum.STDOUT)
 
+    @staticmethod
+    def get_stderr_fd():
+        return FileDescriptor(FileDescriptorEnum.STDERR)
+
 
 class FileDescriptorEnum(Enum):
     STDIN = 0

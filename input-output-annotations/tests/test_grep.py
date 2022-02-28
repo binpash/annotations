@@ -14,7 +14,7 @@ def test_grep_1():
     meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
 
     assert len(meta.get_input_list()) == 3
-    assert len(meta.get_output_list()) == 1
+    assert len(meta.get_output_list()) == 2
 
 
 def test_grep_2():
@@ -25,7 +25,7 @@ def test_grep_2():
     meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
 
     assert len(meta.get_input_list()) == 3
-    assert len(meta.get_output_list()) == 1
+    assert len(meta.get_output_list()) == 2
 
 
 def test_grep_3():
@@ -36,7 +36,7 @@ def test_grep_3():
     meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
 
     assert len(meta.get_input_list()) == 4
-    assert len(meta.get_output_list()) == 1
+    assert len(meta.get_output_list()) == 2
 
 
 def test_grep_4():
@@ -48,4 +48,16 @@ def test_grep_4():
     meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
 
     assert len(meta.get_input_list()) == 4
-    assert len(meta.get_output_list()) == 1
+    assert len(meta.get_output_list()) == 2
+
+
+def test_grep_5():
+    args = [make_arg_simple(["-q"]), make_arg_simple(["-s"])]
+    operands = [Operand("in1.txt"),
+                Operand("in2.txt"),
+                Operand("dict.txt")]
+
+    meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
+
+    assert len(meta.get_input_list()) == 2
+    assert len(meta.get_output_list()) == 0
