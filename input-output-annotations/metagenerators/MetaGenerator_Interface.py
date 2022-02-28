@@ -44,7 +44,7 @@ class MetaGeneratorInterface(ABC):
         return any([arg.get_name() in list_names for arg in self.arg_list])
 
     def if_no_file_given_add_stdin_to_input_list(self):
-        if self.operand_names_list is []:
+        if len(self.operand_names_list) == 0:
             self.meta.prepend_stdin_to_input_list()
 
     def deduplicate_lists_of_meta(self):
@@ -53,3 +53,6 @@ class MetaGeneratorInterface(ABC):
     def get_meta(self):
         return self.meta
 
+# TODO: for most commands, --help and --version overrules the rest of the command
+#  and hence we could remove the input and output lists to be more accurate,
+#  we do NOT do this for now

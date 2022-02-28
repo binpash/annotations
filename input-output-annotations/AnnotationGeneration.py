@@ -4,6 +4,9 @@ from metagenerators.MetaGeneratorTr import MetaGeneratorTr
 from metagenerators.MetaGeneratorCat import MetaGeneratorCat
 from metagenerators.MetaGeneratorHead import MetaGeneratorHead
 from metagenerators.MetaGeneratorTail import MetaGeneratorTail
+from metagenerators.MetaGeneratorCut import MetaGeneratorCut
+from metagenerators.MetaGeneratorUniq import MetaGeneratorUniq
+from metagenerators.MetaGeneratorComm import MetaGeneratorComm
 
 # Dictionary that contains the MetaGenerator for each command
 cmd_name_transformer_module_mapper = {
@@ -12,7 +15,10 @@ cmd_name_transformer_module_mapper = {
     "tr": MetaGeneratorTr,
     "cat": MetaGeneratorCat,
     "head": MetaGeneratorHead,
-    "tail": MetaGeneratorTail
+    "tail": MetaGeneratorTail,
+    "cut": MetaGeneratorCut,
+    "uniq": MetaGeneratorUniq,
+    "comm": MetaGeneratorComm
 }
 
 """
