@@ -32,7 +32,7 @@ class MetaGeneratorGrep(MetaGeneratorInterface):
             self.meta.append_stderr_to_output_list()
 
     def transformer_for_operands(self):
-        if any([arg.get_name() in ["-e", "-f"] for arg in self.arg_list]):
+        if self.arg_list_contains_at_least_one_of(["-e", "-f"]):
             operand_slicing_parameter = 0
         else:
             operand_slicing_parameter = 1

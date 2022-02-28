@@ -36,8 +36,7 @@ class MetaGeneratorMv(MetaGeneratorInterface):
     #     depending on all the different options but recomputing quite some program logic then
 
     def transformer_for_standard_filedescriptors(self):
-        version_or_help_write_to_stdout = self.arg_list_contains_at_least_one_of(["--help"]) \
-                                or self.arg_list_contains_at_least_one_of(["--version"])
+        version_or_help_write_to_stdout = self.arg_list_contains_at_least_one_of(["--help", "--version"])
         if version_or_help_write_to_stdout:
             self.meta.append_stdout_to_output_list()
         # no way to suppress error messages hence added
@@ -47,7 +46,7 @@ class MetaGeneratorMv(MetaGeneratorInterface):
         # -T shall treat destination as file, not directory, not considered currently
         # -t gives destination directory as an argument to option and determines
         #    how operands are interpreted
-        list_options_t = [arg for arg in self.arg_list if arg.get_name() == "-t"]
+        list_options_t = self.filter_arg_list_with("-t")
         match len(list_options_t):
             case 0:
                 # all but last input, last output
@@ -61,5 +60,5 @@ class MetaGeneratorMv(MetaGeneratorInterface):
                 raise Exception("multiple -t options defined for mv")
 
     def transformer_for_args(self, arg):
-        if arg.kind == ArgKindEnum.OPTION and arg.option_name == "-t":
+        if arg.get_name() == "-t":
             self.meta.prepend_el_to_output_list(arg.option_arg)

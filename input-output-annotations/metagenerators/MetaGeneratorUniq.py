@@ -10,7 +10,7 @@ class MetaGeneratorUniq(MetaGeneratorInterface):
     # list_of_all_options = ["--all-repeated", "-f", "--group", "-s", "-w"]
 
     # Which ones do affect input/output?
-    # only the number of operands and flags --help --version
+    # only the number of operands and flags --help and --version
 
     def transformer_for_standard_filedescriptors(self):
         self.meta.append_stderr_to_output_list()
@@ -28,6 +28,6 @@ class MetaGeneratorUniq(MetaGeneratorInterface):
             self.meta.add_list_to_output_list(self.operand_names_list[-1:])
 
     def transformer_for_args(self, arg):
-        if arg.get_name() == "--help" or arg.get_name() == "--version":
+        if arg.get_name() in ["--help", "--version"]:
             self.meta.append_stdout_to_output_list()
 

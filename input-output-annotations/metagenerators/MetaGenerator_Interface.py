@@ -15,19 +15,19 @@ class MetaGeneratorInterface(ABC):
     # is used to determine behaviour regarding stdin and stdout and puts them in input/output lists
     @abstractmethod
     def transformer_for_standard_filedescriptors(self):
-        # use the following functions for stdin and stdout,
-        # prepending and appending matches the intuition that stdin is the first read and stdout the last written
+        # use the following functions for stdin, stdout, and stderr
         # self.meta.prepend_stdin_to_input_list()
         # self.meta.append_stdout_to_output_list()
+        # self.meta.append_stderr_to_output_list()
         pass
 
-    # Roughly corresponds to this type, but updates meta in place
+    # Roughly corresponds to this type, but updates meta in place and list of operands is attribute
     #   ([Operand] x Meta) -> Meta
     @abstractmethod
     def transformer_for_operands(self):
         pass
 
-    # Roughly corresponds to this type, but updates meta in place
+    # Roughly corresponds to this type, but updates meta in place and list of operands is attribute
     #   ([Arg] x Meta) -> Meta
     def transformer_for_arg_list(self):
         for arg in self.arg_list:
@@ -41,7 +41,10 @@ class MetaGeneratorInterface(ABC):
         pass
 
     def arg_list_contains_at_least_one_of(self, list_names):
-        return any([arg.get_name() in list_names for arg in self.arg_list])
+        return len(self.filter_arg_list_with(list_names)) > 0
+
+    def filter_arg_list_with(self, list_names):
+        return [arg for arg in self.arg_list if arg.get_name() in list_names]
 
     def if_no_file_given_add_stdin_to_input_list(self):
         if len(self.operand_names_list) == 0:

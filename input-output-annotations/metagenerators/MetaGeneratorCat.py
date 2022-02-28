@@ -13,8 +13,7 @@ class MetaGeneratorCat(MetaGeneratorInterface):
 
     def transformer_for_standard_filedescriptors(self):
         self.meta.append_stdout_to_output_list()
-        # errors are written to stderr and cannot be suppressed
-        self.meta.append_stderr_to_output_list()
+        self.meta.append_stderr_to_output_list()  # errors are written to stderr and cannot be suppressed
         self.if_no_file_given_add_stdin_to_input_list()
 
     def transformer_for_operands(self):
