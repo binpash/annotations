@@ -31,13 +31,27 @@ class MetaGeneratorGrep(MetaGeneratorInterface):
         if not errors_suppressed:
             self.meta.append_stderr_to_output_list()
 
-
     def transformer_for_operands(self):
         if any([arg.get_name() in ["-e", "-f"] for arg in self.arg_list]):
             operand_slicing_parameter = 0
         else:
             operand_slicing_parameter = 1
-        self.meta.add_list_to_input_list(self.operand_names_list[operand_slicing_parameter:])
+        print("arg_list" + str(self.arg_list))
+        print("operand_slicing_par" + str(operand_slicing_parameter))
+        operand_list_filenames = self.operand_names_list[operand_slicing_parameter:]
+
+        # append pattern file if existent
+        # pattern_filename_list = self.operand_names_list[:operand_slicing_parameter]
+        # self.meta.add_list_to_input_list(pattern_filename_list)
+
+        # deciding on whether there is an input to check, add to input_list
+        if len(operand_list_filenames) == 0:
+            if self.arg_list_contains_at_least_one_of(["-r"]):
+                self.meta.add_list_to_input_list("$CWD")
+            else:
+                self.meta.prepend_stdin_to_input_list()
+        else:
+            self.meta.add_list_to_input_list(operand_list_filenames)
 
     def transformer_for_args(self, arg):
         if arg.kind == ArgKindEnum.OPTION and arg.option_name == "-f":
