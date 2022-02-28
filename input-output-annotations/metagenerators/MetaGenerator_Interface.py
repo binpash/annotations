@@ -43,6 +43,10 @@ class MetaGeneratorInterface(ABC):
     def arg_list_contains_at_least_one_of(self, list_names):
         return any([arg.get_name() in list_names for arg in self.arg_list])
 
+    def if_no_file_given_add_stdin_to_input_list(self):
+        if self.operand_names_list is []:
+            self.meta.prepend_stdin_to_input_list()
+
     def deduplicate_lists_of_meta(self):
         self.meta.deduplicate_input_output_lists()
 

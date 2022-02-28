@@ -1,12 +1,18 @@
 from metagenerators.MetaGeneratorGrep import MetaGeneratorGrep
 from metagenerators.MetaGeneratorMv import MetaGeneratorMv
 from metagenerators.MetaGeneratorTr import MetaGeneratorTr
+from metagenerators.MetaGeneratorCat import MetaGeneratorCat
+from metagenerators.MetaGeneratorHead import MetaGeneratorHead
+from metagenerators.MetaGeneratorTail import MetaGeneratorTail
 
 # Dictionary that contains the MetaGenerator for each command
 cmd_name_transformer_module_mapper = {
     "grep": MetaGeneratorGrep,
     "mv":   MetaGeneratorMv,
-    "tr": MetaGeneratorTr
+    "tr": MetaGeneratorTr,
+    "cat": MetaGeneratorCat,
+    "head": MetaGeneratorHead,
+    "tail": MetaGeneratorTail
 }
 
 """
@@ -18,10 +24,6 @@ operand_list : [Operand]
 
 
 def get_meta_from_cmd_invocation(cmd_name, arg_list, operand_list):
-
-    # TODO: Consider whether we want the Meta to be completely
-    #       handled in the meta generator, or whether we want the
-    #       annotation generator to have transparency.
 
     # Get the MetaGenerator
     meta_generator_class_for_cmd = cmd_name_transformer_module_mapper[cmd_name]
