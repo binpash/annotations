@@ -4,18 +4,14 @@ from datatypes.FileDescriptor import *
 
 class Meta:
 
-    def __init__(self, 
+    def __init__(self,
                  input_list=None,
                  output_list=None,
+                 parallel_info_list=None,
                  custom_info=None):
-        if input_list is None:
-            self.input_list = []
-        else:
-            self.input_list = input_list
-        if output_list is None:
-            self.output_list = []
-        else:
-            self.output_list = output_list
+        self.input_list = return_empty_list_if_none_else_itself(input_list)
+        self.output_list = return_empty_list_if_none_else_itself(output_list)
+        self.parallel_info_list = return_empty_list_if_none_else_itself(parallel_info_list)
         self.custom_info = custom_info
 
     def __str__(self):

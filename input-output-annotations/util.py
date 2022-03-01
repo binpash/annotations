@@ -29,3 +29,9 @@ def compute_actual_el_for_output(output_el):
     else:
         return FileName(output_el)
 
+
+def return_empty_list_if_none_else_itself(arg):
+    if arg is None:
+        return []
+    else:
+        return arg
