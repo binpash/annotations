@@ -13,6 +13,7 @@ class Meta:
         self.output_list = return_empty_list_if_none_else_itself(output_list)
         self.parallel_info_list = return_empty_list_if_none_else_itself(parallel_info_list)
         self.custom_info = custom_info
+    #     TODO: add info whether command can take sequence of inputs (or we need cat to merge them)
 
     def __str__(self):
         return f'meta: \n' \
