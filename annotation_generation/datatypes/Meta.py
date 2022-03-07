@@ -19,6 +19,7 @@ class Meta:
         return f'meta: \n' \
             + f'\tinput_list: {self.input_list}\n' \
             + f'\toutput_list: {self.output_list}\n' \
+            + f'\tparallelizer_list: {self.parallelizer_list}\n' \
             + f'\tcustom_info: {self.custom_info}'
 
     # GETTERS
@@ -61,3 +62,6 @@ class Meta:
         self.output_list = list_deduplication(self.output_list)
 
     # modifiers for parallelizer list
+
+    def append_to_parallelizer_list(self, el_to_be_appended):
+        self.parallelizer_list.append(el_to_be_appended)

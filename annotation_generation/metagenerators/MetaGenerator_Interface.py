@@ -59,24 +59,11 @@ class MetaGeneratorInterface(ABC):
     def deduplicate_input_output_lists_of_meta(self):
         self.meta.deduplicate_input_output_lists()
 
-    # transformer scaffolding for PARALLELIZERS
+    # transformer for PARALLELIZERS
     def apply_transformers_for_parallelizers(self):
-        # 1) we apply the function for operands
-        self.apply_operands_transformer_for_parallelizers()
-
-        # 2) we apply the function for arg_list to produce the final meta
-        self.apply_arg_list_transformer_for_parallelizers()
-
-    # Roughly corresponds to this type, but updates meta in place and list of operands is attribute
-    #   ([Operand] x Meta) -> Meta
-    # @abstractmethod, then we do not need to have the ones with pass
-    def apply_operands_transformer_for_parallelizers(self):
-        pass
-
-    # Roughly corresponds to this type, but updates meta in place and list of operands is attribute
-    #   ([Arg] x Meta) -> Meta
-    def apply_arg_list_transformer_for_parallelizers(self):
-        pass
+        # for commands which only take input from stdin, we cannot have indiv file parallelizers,
+        # and for those, round robin is superior over consecutive junks, so we omit the latter even if feasible
+        pass    # keep empty list for parallelizers
 
 #     HELPER FUNCTIONS
 

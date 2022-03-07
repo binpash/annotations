@@ -11,5 +11,5 @@ class ParallelizerConsecJunks(ParallelizerInterface):
         return f'ConsecJunks'
 
     @staticmethod
-    def make_parallelizer_consec_junks_mapper_seq_aggregator_concat(seq):
+    def make_parallelizer_mapper_seq_aggregator_conc(seq):
         return ParallelizerConsecJunks(seq, AggregatorConcatenate())

@@ -1,6 +1,8 @@
 
 from datatypes.FileDescriptor import FileDescriptor, FileDescriptorEnum
 from metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
+from parallelizers.ParallelizerIndivFiles import ParallelizerIndivFiles
+from parallelizers.ParallelizerRoundRobin import ParallelizerRoundRobin
 
 
 class MetaGeneratorUniq(MetaGeneratorInterface):
@@ -22,12 +24,37 @@ class MetaGeneratorUniq(MetaGeneratorInterface):
             self.meta.prepend_stdin_to_input_list()
             self.meta.append_stdout_to_output_list()
         elif len(self.operand_names_list) == 1:
+            self.meta.add_list_to_input_list(self.operand_names_list)
             self.meta.append_stdout_to_output_list()
-        else:
+        elif len(self.operand_names_list) == 2:
             self.meta.add_list_to_input_list(self.operand_names_list[:-1])
             self.meta.add_list_to_output_list(self.operand_names_list[-1:])
+        else:
+            pass    # only stderr with "uniq: extra operand '...'"
 
     def apply_indiv_arg_transformer_for_input_output_lists(self, arg):
         if arg.get_name() in ["--help", "--version"]:
             self.meta.append_stdout_to_output_list()
+
+    # Which ones do affect parallelizability?
+    # base-line: parallelization possible with RR/(CJ) x SEQ x ADJF
+    # by using the sequential command for ADJF, we handle a lot of cases where flags contain semantic information
+    # -d, -D and --all-repeated renders parallelization infeasible (at least very hard)
+    # -c makes it harder but feasible:
+    #   one needs to cut the prefix of numbers, run the sequential and see whether it is merged
+    # TODO: what does --group do?
+
+    def apply_transformers_for_parallelizers(self):
+        # check for flags/options that make it super hard
+        if not self.arg_list_contains_at_least_one_of(["-d", "-D", "--all-repeated"]):
+            if self.arg_list_contains_at_least_one_of(["-c"]):
+                # we need a special merge
+                parallelizer_rr_seq_adjf = ParallelizerRoundRobin.make_parallelizer_mapper_seq_aggregator_adjf("seq", "merge_count")
+                self.meta.append_to_parallelizer_list(parallelizer_rr_seq_adjf)
+            else:
+                parallelizer_rr_seq_adjf = ParallelizerRoundRobin.make_parallelizer_mapper_seq_aggregator_adjf("seq", "seq")
+                self.meta.append_to_parallelizer_list(parallelizer_rr_seq_adjf)
+
+
+
 

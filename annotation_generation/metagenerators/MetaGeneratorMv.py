@@ -62,3 +62,8 @@ class MetaGeneratorMv(MetaGeneratorInterface):
     def apply_indiv_arg_transformer_for_input_output_lists(self, arg):
         if arg.get_name() == "-t":
             self.meta.prepend_el_to_output_list(arg.option_arg)
+
+    # Which ones do affect parallelizability?
+    # It does not really make sense to parallelize mv.
+    # We parallelize data streams to exploit multi cores but mv deals with the disk e.g.
+

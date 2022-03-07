@@ -20,3 +20,6 @@ class MetaGeneratorTail(MetaGeneratorInterface):
     def apply_operands_transformer_for_input_output_lists(self):
         # all operands are inputs
         self.meta.add_list_to_input_list(self.operand_names_list)
+
+    # Which ones do affect parallelizability?
+    # It does not really make sense to parallelize tail

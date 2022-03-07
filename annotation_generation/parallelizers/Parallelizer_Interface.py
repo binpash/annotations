@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from parallelizers.AggregatorConcatenate import AggregatorConcatenate
 
 
 class ParallelizerInterface(ABC):
@@ -10,6 +11,12 @@ class ParallelizerInterface(ABC):
     @staticmethod
     @abstractmethod
     def __name__():
+        pass
+
+    def __eq__(self, other):
+        self.__class__.__name__ = other.__class__.__name__
+        self.core_mapper = other.core_mapper
+        self.core_aggregator = other.core_aggregator
         pass
 
     def __repr__(self):

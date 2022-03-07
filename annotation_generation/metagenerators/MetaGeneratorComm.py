@@ -20,3 +20,6 @@ class MetaGeneratorComm(MetaGeneratorInterface):
         if not self.arg_list_contains_at_least_one_of(["--help", "--version"]):
             assert(len(self.operand_names_list) == 2)  # needs two files to compare
         self.meta.add_list_to_input_list(self.operand_names_list)
+
+    # Which ones do affect parallelizability?
+    # none, it is very hard to parallelize because of potentially different speed of traversing both files

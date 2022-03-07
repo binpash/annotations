@@ -49,3 +49,6 @@ class MetaGeneratorGrep(MetaGeneratorInterface):
     def apply_indiv_arg_transformer_for_input_output_lists(self, arg):
         if arg.get_name() == "-f":
             self.meta.prepend_el_to_input_list(arg.option_arg)
+
+    # Which ones do affect parallelizability?
+    # TODO
