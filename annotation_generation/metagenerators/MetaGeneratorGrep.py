@@ -18,7 +18,7 @@ class MetaGeneratorGrep(MetaGeneratorInterface):
     # for now, we ignore --exclude, --exclude-from, --exclude-dir, and --include and, thus, over-approximate
     # for now, we ignore -D/-d with actions
 
-    def transformer_for_standard_filedescriptors(self):
+    def apply_standard_filedescriptor_transformer_for_input_output_lists(self):
         # in general, output is written to stdout but can be suppressed
         # though, --help and --version overrules this (and no actual result returned)
         output_suppressed = self.arg_list_contains_at_least_one_of(["-q"])
@@ -31,7 +31,7 @@ class MetaGeneratorGrep(MetaGeneratorInterface):
         if not errors_suppressed:
             self.meta.append_stderr_to_output_list()
 
-    def transformer_for_operands(self):
+    def apply_operands_transformer_for_input_output_lists(self):
         if self.arg_list_contains_at_least_one_of(["-e", "-f"]):
             operand_slicing_parameter = 0
         else:
@@ -46,6 +46,6 @@ class MetaGeneratorGrep(MetaGeneratorInterface):
         else:
             self.meta.add_list_to_input_list(operand_list_filenames)
 
-    def transformer_for_args(self, arg):
-        if arg.kind == ArgKindEnum.OPTION and arg.option_name == "-f":
+    def apply_indiv_arg_transformer_for_input_output_lists(self, arg):
+        if arg.get_name() == "-f":
             self.meta.prepend_el_to_input_list(arg.option_arg)

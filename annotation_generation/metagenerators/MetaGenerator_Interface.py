@@ -12,9 +12,25 @@ class MetaGeneratorInterface(ABC):
         self.arg_list = arg_list
         self.operand_names_list = [operand.name for operand in operand_list]
 
+    # we have one "big" function for each dimension of the meta, e.g. apply_transformers_for_input_output_lists
+    # which has a default way of iterating over command invocation details but can be overwritten
+
+    # transformer scaffolding for INPUT/OUTPUT-LISTS
+    def apply_transformers_for_input_output_lists(self):
+        # 1) we apply the function for operands
+        self.apply_operands_transformer_for_input_output_lists()
+
+        # 2) we apply the function for arg_list to produce the final meta
+        self.apply_arg_list_transformer_for_input_output_lists()
+
+        # 3) we apply the function to determine the "std" file descriptors used
+        self.apply_standard_filedescriptor_transformer_for_input_output_lists()
+
+        self.deduplicate_input_output_lists_of_meta()
+
     # is used to determine behaviour regarding stdin and stdout and puts them in input/output lists
-    @abstractmethod
-    def transformer_for_standard_filedescriptors(self):
+    # @abstractmethod, then we do not need to have the ones with pass
+    def apply_standard_filedescriptor_transformer_for_input_output_lists(self):
         # use the following functions for stdin, stdout, and stderr
         # self.meta.prepend_stdin_to_input_list()
         # self.meta.append_stdout_to_output_list()
@@ -23,22 +39,49 @@ class MetaGeneratorInterface(ABC):
 
     # Roughly corresponds to this type, but updates meta in place and list of operands is attribute
     #   ([Operand] x Meta) -> Meta
-    @abstractmethod
-    def transformer_for_operands(self):
+    # @abstractmethod, then we do not need to have the ones with pass
+    def apply_operands_transformer_for_input_output_lists(self):
         pass
 
     # Roughly corresponds to this type, but updates meta in place and list of operands is attribute
     #   ([Arg] x Meta) -> Meta
-    def transformer_for_arg_list(self):
+    def apply_arg_list_transformer_for_input_output_lists(self):
         for arg in self.arg_list:
             # side-effectful
-            self.transformer_for_args(arg)
+            self.apply_indiv_arg_transformer_for_input_output_lists(arg)
 
     # Roughly corresponds to this type, but updates meta in place
     #   Arg -> (Meta -> Meta)
-    @abstractmethod
-    def transformer_for_args(self, arg):
+    # @abstractmethod, then we do not need to have the ones with pass
+    def apply_indiv_arg_transformer_for_input_output_lists(self, arg):
         pass
+
+    def deduplicate_input_output_lists_of_meta(self):
+        self.meta.deduplicate_input_output_lists()
+
+    # transformer scaffolding for PARALLELIZERS
+    def apply_transformers_for_parallelizers(self):
+        # 1) we apply the function for operands
+        self.apply_operands_transformer_for_parallelizers()
+
+        # 2) we apply the function for arg_list to produce the final meta
+        self.apply_arg_list_transformer_for_parallelizers()
+
+    # Roughly corresponds to this type, but updates meta in place and list of operands is attribute
+    #   ([Operand] x Meta) -> Meta
+    # @abstractmethod, then we do not need to have the ones with pass
+    def apply_operands_transformer_for_parallelizers(self):
+        pass
+
+    # Roughly corresponds to this type, but updates meta in place and list of operands is attribute
+    #   ([Arg] x Meta) -> Meta
+    def apply_arg_list_transformer_for_parallelizers(self):
+        pass
+
+#     HELPER FUNCTIONS
+
+    def get_meta(self):
+        return self.meta
 
     def arg_list_contains_at_least_one_of(self, list_names):
         return len(self.filter_arg_list_with(list_names)) > 0
@@ -50,11 +93,6 @@ class MetaGeneratorInterface(ABC):
         if len(self.operand_names_list) == 0:
             self.meta.prepend_stdin_to_input_list()
 
-    def deduplicate_lists_of_meta(self):
-        self.meta.deduplicate_input_output_lists()
-
-    def get_meta(self):
-        return self.meta
 
 # TODO: for most commands, --help and --version overrules the rest of the command
 #  and hence we could remove the input and output lists to be more accurate,

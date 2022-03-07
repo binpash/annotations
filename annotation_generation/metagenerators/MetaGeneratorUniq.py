@@ -12,11 +12,11 @@ class MetaGeneratorUniq(MetaGeneratorInterface):
     # Which ones do affect input/output?
     # only the number of operands and flags --help and --version
 
-    def transformer_for_standard_filedescriptors(self):
+    def apply_standard_filedescriptor_transformer_for_input_output_lists(self):
         self.meta.append_stderr_to_output_list()
         # we add stdout and stdin in transformer_for_operands
 
-    def transformer_for_operands(self):
+    def apply_operands_transformer_for_input_output_lists(self):
         # tested this with the command, man-page a bit inconclusive with optional OUTPUT
         if len(self.operand_names_list) == 0:
             self.meta.prepend_stdin_to_input_list()
@@ -27,7 +27,7 @@ class MetaGeneratorUniq(MetaGeneratorInterface):
             self.meta.add_list_to_input_list(self.operand_names_list[:-1])
             self.meta.add_list_to_output_list(self.operand_names_list[-1:])
 
-    def transformer_for_args(self, arg):
+    def apply_indiv_arg_transformer_for_input_output_lists(self, arg):
         if arg.get_name() in ["--help", "--version"]:
             self.meta.append_stdout_to_output_list()
 

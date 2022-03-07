@@ -7,11 +7,11 @@ class Meta:
     def __init__(self,
                  input_list=None,
                  output_list=None,
-                 parallel_info_list=None,
+                 parallelizer_list=None,
                  custom_info=None):
         self.input_list = return_empty_list_if_none_else_itself(input_list)
         self.output_list = return_empty_list_if_none_else_itself(output_list)
-        self.parallel_info_list = return_empty_list_if_none_else_itself(parallel_info_list)
+        self.parallelizer_list = return_empty_list_if_none_else_itself(parallelizer_list)
         self.custom_info = custom_info
     #     TODO: add info whether command can take sequence of inputs (or we need cat to merge them)
 
@@ -21,12 +21,17 @@ class Meta:
             + f'\toutput_list: {self.output_list}\n' \
             + f'\tcustom_info: {self.custom_info}'
 
+    # GETTERS
     def get_input_list(self):
         return self.input_list
 
     def get_output_list(self):
         return self.output_list
 
+    def get_parallelizer_list(self):
+        return self.parallelizer_list
+
+    # modifiers for input/output-lists
     def add_list_to_input_list(self, input_list_to_be_added: list):
         self.input_list.extend([compute_actual_el_for_input(input_el) for input_el in input_list_to_be_added])
 
@@ -54,3 +59,5 @@ class Meta:
     def deduplicate_input_output_lists(self):
         self.input_list = list_deduplication(self.input_list)
         self.output_list = list_deduplication(self.output_list)
+
+    # modifiers for parallelizer list
