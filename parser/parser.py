@@ -5,6 +5,7 @@ sys.path.append('../input-output-annotations/datatypes')
 from Arg import Arg, ArgKindEnum
 from Operand import Operand
 
+
 def parse_json(command, command_json_fn):
     """
     Convert terminal command invocation string to 
@@ -50,13 +51,9 @@ def parse_json(command, command_json_fn):
             xbd_list.append(Operand(term))
         i += 1
 
+    # TODO: fix structure of result
     # return [ command_name, FLAG, ..., OPTION, ..., OPERAND, ... ] list
-    for xbd_term in xbd_list:
-        print(type(xbd_term))
-        print(xbd_term)
+    # for xbd_term in xbd_list:
+        # print(type(xbd_term))
+        # print(xbd_term)
     return xbd_list
-
-def test():
-    parse_json("grep -e '^\s*def ' -m 3 -n test.py", "../command-flag-option-info/grep.json")
-
-test()

@@ -21,3 +21,7 @@ Class to hold parsed terminal command data.
 - flag = takes no arguments, e.g. `--verbose`
 - option = takes arguments, e.g. `-n 10`
 - operand = argument with no flag, e.g. `input.txt`
+
+# tests
+Use `pytest` to run tests. 
+For now, one needs to run the test in the directory which contains the `tests`.

@@ -24,6 +24,12 @@ class Arg:
         else:
             raise Exception("Arg got unknown kind!")
 
+    # def __eq__(self, other):
+    #     if isinstance(other, Arg):
+    #         if self.kind == other.kind: and self.flag_name == self.flagname
+    #
+    #     return False
+
     def get_name(self):
         if self.kind == ArgKindEnum.FLAG:
             return self.flag_name
