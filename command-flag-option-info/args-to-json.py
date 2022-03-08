@@ -2,35 +2,47 @@ import re
 import sys
 import json
 
-def parse(lines):
-    args_list = parse_lines(lines)
-    args_dict = parse_args(args_list)
-    json_formatted_args = json.dumps(args_dict, indent=4)
-    print(json_formatted_args)
-
-def parse_lines(lines):
+def find_matches(line, past_tags):
     """
-    Patterns to match (will be separated with ", ") =
+    Patterns to match (will be separated with ", "):
        ['--opt ARG', '--opt=ARG', '--opt[=ARG]', '-o ARG', '-O ARG'
         '-o=ARG', '-O=ARG', '-opt[=ARG]', '-f', '-F', '--flag']
+
+    Patterns NOT to match: 
+        ['-ARG', '--ARG', 'command descriptions']
     """
-    args = []
-    for line in lines:
-        # remove [] from line
-        line = re.sub(r"\[|\]", '', line)
-        # find all arguments in line; generally separated by commas
-        line_args = re.findall(r"-[a-zA-Z-\[\]=]+[ ]*[A-Z]*(?![a-z])", line)
-        # remove empty line args
-        line_args = [arg for arg in line_args if arg != ""]
-        # split by spaces and equal signs
-        for i in range(len(line_args)):
-            la = re.split(" |=", line_args[i].strip())
-            if len(la)>0:
-                line_args[i] = la[0] if len(la)==1 else tuple(la)
-        # ignore empty lists
-        if line_args != []:
-            args.append(line_args)
-    return args
+    # remove "[" and "]" from line
+    line = re.sub(r"\[|\]", '', line)
+
+    # store all tags & options in line
+    xbd_args = []
+
+    # arguments are comma-separated
+    phrases = re.split(", ", line)
+
+    # parse line and get xbd tags & options
+    for i in range(len(phrases)):
+        # remove starting and ending spaces
+        phrases[i] = phrases[i].strip()
+
+        # option tag and argument separated by space or equal sign
+        if "=" in phrases[i]:
+            phrase_parts = re.split("=", phrases[i])
+        else:
+            phrase_parts = re.split("\s+", phrases[i])
+
+        if len(phrase_parts) >= 1 and (re.match(r"^-[-]*[a-z][a-z-]*$", phrase_parts[0]) or re.match(r"^-[-]*[A-Z]$", phrase_parts[0])):
+            tag = re.sub("-", '', phrase_parts[0])
+            # ignore duplicate tags
+            if tag not in past_tags:
+                past_tags.add(tag)
+                if (len(phrase_parts) > 1) and (re.match(r"^[A-Z]+$", phrase_parts[1])):
+                    xbd_args.append([phrase_parts[0], phrase_parts[1]])
+                else:
+                    xbd_args.append(phrase_parts[0])
+
+    # return xbd tags & options in line
+    return (xbd_args, past_tags)
 
 def parse_args(args):
     """
@@ -48,5 +60,27 @@ def parse_args(args):
                 else:
                     args_dict["option"].append(list(arg))
     return args_dict
+
+def parse_lines(lines):
+    """
+    Return list of args in man page as JSON object.
+    """
+    # keep track of past tags & ignore duplicates 
+    past_tags = set()
+
+    # list of xbd args
+    args = []
+    for line in lines:
+        line_args, past_tags = find_matches(line, past_tags)
+        if line_args != []:
+            args.append(line_args)
+
+    # parse and return args
+    return parse_args(args)
+
+def parse(lines):
+    args_dict = parse_lines(lines)
+    json_formatted_args = json.dumps(args_dict, indent=4)
+    print(json_formatted_args)
 
 parse(sys.stdin)

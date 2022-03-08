@@ -25,6 +25,7 @@
         ],
         [
             "-i",
+            "-y",
             "--ignore-case"
         ],
         [
@@ -41,10 +42,6 @@
         [
             "-x",
             "--line-regexp"
-        ],
-        [
-            "-y",
-            "-i"
         ],
         [
             "-c",
@@ -99,7 +96,6 @@
             "-Z",
             "--null"
         ],
-        "-NUM",
         [
             "--no-group-separator"
         ],
@@ -128,10 +124,6 @@
         [
             "-z",
             "--null-data"
-        ],
-        [
-            "--quiet",
-            "--silent"
         ]
     ],
     "option": [
