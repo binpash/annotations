@@ -2,7 +2,7 @@ import re
 import sys
 import json
 
-def find_matches(line, past_tags):
+def find_matches(line, past_flags):
     """
     Patterns to match (will be separated with ", "):
        ['--opt ARG', '--opt=ARG', '--opt[=ARG]', '-o ARG', '-O ARG'
@@ -14,35 +14,35 @@ def find_matches(line, past_tags):
     # remove "[" and "]" from line
     line = re.sub(r"\[|\]", '', line)
 
-    # store all tags & options in line
+    # store all flags & options in line
     xbd_args = []
 
     # arguments are comma-separated
     phrases = re.split(", ", line)
 
-    # parse line and get xbd tags & options
+    # parse line and get xbd flags & options
     for i in range(len(phrases)):
         # remove starting and ending spaces
         phrases[i] = phrases[i].strip()
 
-        # option tag and argument separated by space or equal sign
+        # option flag and argument separated by space or equal sign
         if "=" in phrases[i]:
             phrase_parts = re.split("=", phrases[i])
         else:
             phrase_parts = re.split("\s+", phrases[i])
 
         if len(phrase_parts) >= 1 and (re.match(r"^-[-]*[a-z][a-z-]*$", phrase_parts[0]) or re.match(r"^-[-]*[A-Z]$", phrase_parts[0])):
-            tag = re.sub("-", '', phrase_parts[0])
-            # ignore duplicate tags
-            if tag not in past_tags:
-                past_tags.add(tag)
+            flag = re.sub("-", '', phrase_parts[0])
+            # ignore duplicate flags
+            if flag not in past_flags:
+                past_flags.add(flag)
                 if (len(phrase_parts) > 1) and (re.match(r"^[A-Z]+$", phrase_parts[1])):
                     xbd_args.append([phrase_parts[0], phrase_parts[1]])
                 else:
                     xbd_args.append(phrase_parts[0])
 
-    # return xbd tags & options in line
-    return (xbd_args, past_tags)
+    # return xbd flags & options in line
+    return (xbd_args, past_flags)
 
 def parse_args(args):
     """
@@ -65,13 +65,13 @@ def parse_lines(lines):
     """
     Return list of args in man page as JSON object.
     """
-    # keep track of past tags & ignore duplicates 
-    past_tags = set()
+    # keep track of past flags & ignore duplicates 
+    past_flags = set()
 
     # list of xbd args
     args = []
     for line in lines:
-        line_args, past_tags = find_matches(line, past_tags)
+        line_args, past_flags = find_matches(line, past_flags)
         if line_args != []:
             args.append(line_args)
 
