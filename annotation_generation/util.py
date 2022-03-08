@@ -35,3 +35,4 @@ def return_empty_list_if_none_else_itself(arg):
         return []
     else:
         return arg
+

@@ -76,6 +76,11 @@ class MetaGeneratorInterface(ABC):
     def filter_arg_list_with(self, list_names):
         return [arg for arg in self.arg_list if arg.get_name() in list_names]
 
+    def which_is_last_in_arglist_of(self, list_names):
+        filtered_arg_list = self.filter_arg_list_with(list_names)
+        last_arg = filtered_arg_list[len(filtered_arg_list) - 1]
+        return last_arg.get_name()
+
     def if_no_file_given_add_stdin_to_input_list(self):
         if len(self.operand_names_list) == 0:
             self.meta.prepend_stdin_to_input_list()

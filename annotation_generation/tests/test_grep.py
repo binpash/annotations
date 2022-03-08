@@ -1,5 +1,7 @@
 from datatypes.Arg import make_arg_simple
 from datatypes.Operand import Operand
+from parallelizers.ParallelizerIndivFiles import ParallelizerIndivFiles
+from parallelizers.ParallelizerRoundRobin import ParallelizerRoundRobin
 
 import AnnotationGeneration
 
@@ -7,7 +9,7 @@ cmd_name = "grep"
 
 
 def test_grep_1():
-    args = [make_arg_simple(["-f", "dict.txt"])]
+    args = [make_arg_simple(["-c"]), make_arg_simple(["-L"]), make_arg_simple(["-f", "dict.txt"])]
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
 
@@ -15,10 +17,14 @@ def test_grep_1():
 
     assert len(meta.get_input_list()) == 3
     assert len(meta.get_output_list()) == 2
+
+    assert len(meta.get_parallelizer_list()) == 2
+    assert ParallelizerIndivFiles.is_parallelizer_mapper_seq_aggregator_conc(meta.get_parallelizer_list()[0])
+    assert ParallelizerRoundRobin.is_parallelizer_mapper_seq_aggregator_cus2(meta.get_parallelizer_list()[1], "merge_keeping_longer_output")
 
 
 def test_grep_2():
-    args = [make_arg_simple(["-f", "dict.txt"]), make_arg_simple(["-e", "*"])]
+    args = [make_arg_simple(["-f", "dict.txt"]), make_arg_simple(["-e", "*"]), make_arg_simple(["-b"])]
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
 
@@ -26,6 +32,10 @@ def test_grep_2():
 
     assert len(meta.get_input_list()) == 3
     assert len(meta.get_output_list()) == 2
+
+    assert len(meta.get_parallelizer_list()) == 2
+    assert ParallelizerIndivFiles.is_parallelizer_mapper_seq_aggregator_conc(meta.get_parallelizer_list()[0])
+    assert ParallelizerRoundRobin.is_parallelizer_mapper_custom_aggregator_conc(meta.get_parallelizer_list()[1], "add_byte_offset")
 
 
 def test_grep_3():
@@ -38,9 +48,14 @@ def test_grep_3():
     assert len(meta.get_input_list()) == 4
     assert len(meta.get_output_list()) == 2
 
+    assert len(meta.get_parallelizer_list()) == 2
+    assert ParallelizerIndivFiles.is_parallelizer_mapper_seq_aggregator_conc(meta.get_parallelizer_list()[0])
+    assert ParallelizerRoundRobin.is_parallelizer_mapper_seq_aggregator_conc(meta.get_parallelizer_list()[1])
+
 
 def test_grep_4():
-    args = [make_arg_simple(["-f", "dict.txt"]), make_arg_simple(["-e", "*"]), make_arg_simple(["-f", "dict2.txt"])]
+    args = [make_arg_simple(["-f", "dict.txt"]), make_arg_simple(["-e", "*"]), make_arg_simple(["-f", "dict2.txt"]),
+            make_arg_simple(["-n"]), make_arg_simple(["-b"])]
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
 
@@ -48,6 +63,11 @@ def test_grep_4():
 
     assert len(meta.get_input_list()) == 4
     assert len(meta.get_output_list()) == 2
+
+    assert len(meta.get_parallelizer_list()) == 2
+    assert ParallelizerIndivFiles.is_parallelizer_mapper_seq_aggregator_conc(meta.get_parallelizer_list()[0])
+    assert ParallelizerRoundRobin.is_parallelizer_mapper_custom_aggregator_conc(meta.get_parallelizer_list()[1],
+                                                                                "add_line_number_and_byte_offset")
 
 
 def test_grep_5():
@@ -60,6 +80,8 @@ def test_grep_5():
 
     assert len(meta.get_input_list()) == 2
     assert len(meta.get_output_list()) == 0
+
+    assert len(meta.get_parallelizer_list()) == 0
 
 
 def test_grep_6():
