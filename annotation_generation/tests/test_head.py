@@ -2,6 +2,7 @@ from datatypes.Arg import make_arg_simple
 from datatypes.Operand import Operand
 
 import AnnotationGeneration
+from parallelizers.Parallelizer import Parallelizer
 
 cmd_name = "head"
 
@@ -18,7 +19,9 @@ def test_head_1():
     assert len(meta.get_input_list()) == 2
     assert len(meta.get_output_list()) == 2     # stdout and stderr
 
-    assert len(meta.get_parallelizer_list()) == 0
+    assert len(meta.get_parallelizer_list()) == 1
+    [parallelizer1] = meta.get_parallelizer_list()
+    assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
 
 
 def test_head_2():
@@ -32,4 +35,6 @@ def test_head_2():
     assert len(meta.get_input_list()) == 3
     assert len(meta.get_output_list()) == 2
 
-    assert len(meta.get_parallelizer_list()) == 0
+    assert len(meta.get_parallelizer_list()) == 1
+    [parallelizer1] = meta.get_parallelizer_list()
+    assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()

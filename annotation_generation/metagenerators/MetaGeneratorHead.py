@@ -1,5 +1,6 @@
 
 from metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
+from parallelizers.Parallelizer import Parallelizer
 
 
 class MetaGeneratorHead(MetaGeneratorInterface):
@@ -22,4 +23,8 @@ class MetaGeneratorHead(MetaGeneratorInterface):
         self.meta.add_list_to_input_list(self.operand_names_list)
 
     # Which ones do affect parallelizability?
-    # It does not really make sense to parallelize head
+    # we can parallelize individual files
+
+    def apply_transformers_for_parallelizers(self):
+        parallelizer_if_seq_conc = Parallelizer.make_parallelizer_indiv_files()
+        self.meta.append_to_parallelizer_list(parallelizer_if_seq_conc)
