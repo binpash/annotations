@@ -1,6 +1,6 @@
 
 from datatypes.Arg import ArgKindEnum
-from metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
+from annotation_generation.metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
 
 
 class MetaGeneratorMv(MetaGeneratorInterface):

@@ -1,7 +1,7 @@
-from datatypes.FileName import FileName
-from datatypes.FileDescriptor import FileDescriptor, FileDescriptorEnum
-from parallelizers.Aggregator import Aggregator
-from parallelizers.Mapper import Mapper
+from annotation_generation.datatypes.FileName import FileName
+from annotation_generation.datatypes.FileDescriptor import FileDescriptor, FileDescriptorEnum
+from annotation_generation.parallelizers.Aggregator import Aggregator
+from annotation_generation.parallelizers.Mapper import Mapper
 
 
 def foldl(func, acc0, list):

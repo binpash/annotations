@@ -1,9 +1,9 @@
 
 from datatypes.Arg import ArgKindEnum
-from metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
-from parallelizers.Parallelizer import Parallelizer
-from parallelizers.Mapper import Mapper
-from parallelizers.Aggregator import Aggregator
+from annotation_generation.metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
+from annotation_generation.parallelizers.Parallelizer import Parallelizer
+from annotation_generation.parallelizers.Mapper import Mapper
+from annotation_generation.parallelizers.Aggregator import Aggregator
 
 
 class MetaGeneratorGrep(MetaGeneratorInterface):

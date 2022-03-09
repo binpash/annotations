@@ -1,6 +1,4 @@
-
-from datatypes.FileDescriptor import FileDescriptor, FileDescriptorEnum
-from metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
+from annotation_generation.metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
 
 
 class MetaGeneratorComm(MetaGeneratorInterface):

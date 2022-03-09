@@ -1,9 +1,9 @@
 from datatypes.Arg import make_arg_simple
 from datatypes.Operand import Operand
-from parallelizers.Parallelizer import Parallelizer
-from parallelizers.Aggregator import Aggregator
+from annotation_generation.parallelizers.Parallelizer import Parallelizer
+from annotation_generation.parallelizers.Aggregator import Aggregator
 
-import AnnotationGeneration
+import annotation_generation.AnnotationGeneration as AnnotationGeneration
 
 cmd_name = "tr"
 

@@ -1,12 +1,14 @@
 import json
 import shlex
-import sys
-sys.path.append('../input-output-annotations/datatypes')
-from Arg import Arg, ArgKindEnum
-from Operand import Operand
+import os
+from datatypes.Arg import Arg, ArgKindEnum
+from datatypes.Operand import Operand
+from config.definitions import ROOT_DIR
 
 
+# assumes that command_json_fn is the filename in folder command_flag_option_info
 def parse_json(command, command_json_fn):
+    command_json_fn_absolute = os.path.join(ROOT_DIR, 'command_flag_option_info', command_json_fn)
     """
     Convert terminal command invocation string to 
     [ command_name, FLAG, ..., OPTION, ..., OPERAND, ... ] list.
@@ -19,7 +21,7 @@ def parse_json(command, command_json_fn):
     xbd_list = [command_list[0]]
 
     # get man page data for command as dict
-    with open(command_json_fn) as f:
+    with open(command_json_fn_absolute) as f:
         json_data = json.load(f)
 
     # get tags and map long tags to their short versions
@@ -37,7 +39,7 @@ def parse_json(command, command_json_fn):
 
     # parse list of command invocation terms
     i = 1
-    while (i < len(command_list)):
+    while i < len(command_list):
         term = command_list[i]
         if term in unique_tags:
             if term in tag_map:

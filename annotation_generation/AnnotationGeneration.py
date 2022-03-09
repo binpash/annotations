@@ -1,12 +1,12 @@
-from metagenerators.MetaGeneratorGrep import MetaGeneratorGrep
-from metagenerators.MetaGeneratorMv import MetaGeneratorMv
-from metagenerators.MetaGeneratorTr import MetaGeneratorTr
-from metagenerators.MetaGeneratorCat import MetaGeneratorCat
-from metagenerators.MetaGeneratorHead import MetaGeneratorHead
-from metagenerators.MetaGeneratorTail import MetaGeneratorTail
-from metagenerators.MetaGeneratorCut import MetaGeneratorCut
-from metagenerators.MetaGeneratorUniq import MetaGeneratorUniq
-from metagenerators.MetaGeneratorComm import MetaGeneratorComm
+from annotation_generation.metagenerators.MetaGeneratorGrep import MetaGeneratorGrep
+from annotation_generation.metagenerators.MetaGeneratorMv import MetaGeneratorMv
+from annotation_generation.metagenerators.MetaGeneratorTr import MetaGeneratorTr
+from annotation_generation.metagenerators.MetaGeneratorCat import MetaGeneratorCat
+from annotation_generation.metagenerators.MetaGeneratorHead import MetaGeneratorHead
+from annotation_generation.metagenerators.MetaGeneratorTail import MetaGeneratorTail
+from annotation_generation.metagenerators.MetaGeneratorCut import MetaGeneratorCut
+from annotation_generation.metagenerators.MetaGeneratorUniq import MetaGeneratorUniq
+from annotation_generation.metagenerators.MetaGeneratorComm import MetaGeneratorComm
 
 # Dictionary that contains the MetaGenerator for each command
 cmd_name_transformer_module_mapper = {

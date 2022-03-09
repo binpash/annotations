@@ -1,6 +1,6 @@
-from parallelizers.Splitter import Splitter
-from parallelizers.Aggregator import Aggregator
-from util import *
+from annotation_generation.parallelizers.Splitter import Splitter
+from annotation_generation.parallelizers.Aggregator import Aggregator
+from annotation_generation.util import *
 
 
 class Parallelizer:

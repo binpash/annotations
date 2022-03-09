@@ -1,8 +1,6 @@
-
-from datatypes.FileDescriptor import FileDescriptor, FileDescriptorEnum
-from metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
-from parallelizers.Parallelizer import Parallelizer
-from parallelizers.Aggregator import Aggregator
+from annotation_generation.metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
+from annotation_generation.parallelizers.Parallelizer import Parallelizer
+from annotation_generation.parallelizers.Aggregator import Aggregator
 
 
 class MetaGeneratorTr(MetaGeneratorInterface):

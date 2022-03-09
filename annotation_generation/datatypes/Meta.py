@@ -1,5 +1,5 @@
-from util import *
-from datatypes.FileDescriptor import *
+from annotation_generation.util import *
+from annotation_generation.datatypes.FileDescriptor import *
 
 
 class Meta:

@@ -1,5 +1,5 @@
-from datatypes.Meta import *
-from abc import ABC, abstractmethod
+from annotation_generation.datatypes.Meta import *
+from abc import ABC
 
 
 class MetaGeneratorInterface(ABC):

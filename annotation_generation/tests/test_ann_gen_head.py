@@ -1,13 +1,13 @@
 from datatypes.Arg import make_arg_simple
 from datatypes.Operand import Operand
-from parallelizers.Parallelizer import Parallelizer
+from annotation_generation.parallelizers.Parallelizer import Parallelizer
 
-import AnnotationGeneration
+import annotation_generation.AnnotationGeneration as AnnotationGeneration
 
-cmd_name = "tail"
+cmd_name = "head"
 
 
-def test_tail_1():
+def test_head_1():
     args = [make_arg_simple(["-q"])]
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
@@ -22,7 +22,7 @@ def test_tail_1():
     assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
 
 
-def test_tail_2():
+def test_head_2():
     args = [make_arg_simple(["--version"])]
     operands = [Operand("in1.txt"),
                 Operand("-"),

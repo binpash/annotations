@@ -1,15 +1,13 @@
 from datatypes.Arg import make_arg_simple
 from datatypes.Operand import Operand
+from annotation_generation.parallelizers.Parallelizer import Parallelizer
 
-import AnnotationGeneration
-from parallelizers.Parallelizer import Parallelizer
+import annotation_generation.AnnotationGeneration as AnnotationGeneration
 
-cmd_name = "head"
-
-# TODO: does head take head of each file? then IF possible; same for tail
+cmd_name = "tail"
 
 
-def test_head_1():
+def test_tail_1():
     args = [make_arg_simple(["-q"])]
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
@@ -24,7 +22,7 @@ def test_head_1():
     assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
 
 
-def test_head_2():
+def test_tail_2():
     args = [make_arg_simple(["--version"])]
     operands = [Operand("in1.txt"),
                 Operand("-"),
