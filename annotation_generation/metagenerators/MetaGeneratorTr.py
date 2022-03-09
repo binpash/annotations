@@ -1,7 +1,8 @@
 
 from datatypes.FileDescriptor import FileDescriptor, FileDescriptorEnum
 from metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
-from parallelizers.ParallelizerRoundRobin import ParallelizerRoundRobin
+from parallelizers.Parallelizer import Parallelizer
+from parallelizers.Aggregator import Aggregator
 
 
 class MetaGeneratorTr(MetaGeneratorInterface):
@@ -37,12 +38,13 @@ class MetaGeneratorTr(MetaGeneratorInterface):
         if does_delete_newlines or does_squeeze_newlines:
             # for RR, we need an adjacent aggregator
             # TODO: change seq to something reasonable
-            parallelizer_rr_seq_adjm = ParallelizerRoundRobin.make_parallelizer_mapper_seq_aggregator_adjm("seq")
+            aggregator = Aggregator.make_aggregator_adj_lines_merge()
+            parallelizer_rr_seq_adjm = Parallelizer.make_parallelizer_round_robin(aggregator=aggregator)
             self.meta.append_to_parallelizer_list(parallelizer_rr_seq_adjm)
         else:
             # for RR, we can just use concatenation
             # TODO: change seq to something reasonable
-            parallelizer_rr_seq_conc = ParallelizerRoundRobin.make_parallelizer_mapper_seq_aggregator_conc("seq")
+            parallelizer_rr_seq_conc = Parallelizer.make_parallelizer_round_robin()
             self.meta.append_to_parallelizer_list(parallelizer_rr_seq_conc)
 
     def does_last_set_effectively_contain_newline(self):

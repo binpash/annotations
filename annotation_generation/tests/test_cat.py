@@ -1,7 +1,8 @@
 from datatypes.Arg import make_arg_simple
 from datatypes.Operand import Operand
-from parallelizers.ParallelizerIndivFiles import ParallelizerIndivFiles
-from parallelizers.ParallelizerRoundRobin import ParallelizerRoundRobin
+from parallelizers.Parallelizer import Parallelizer
+from parallelizers.Mapper import Mapper
+from parallelizers.Aggregator import Aggregator
 
 import AnnotationGeneration
 
@@ -19,8 +20,13 @@ def test_cat_1():
     assert len(meta.get_output_list()) == 2     # stdout and stderr
 
     assert len(meta.get_parallelizer_list()) == 2
-    assert ParallelizerIndivFiles.is_parallelizer_mapper_seq_aggregator_conc(meta.get_parallelizer_list()[0])
-    assert ParallelizerRoundRobin.is_parallelizer_mapper_seq_aggregator_conc(meta.get_parallelizer_list()[1])
+    [parallelizer1, parallelizer2] = meta.get_parallelizer_list()
+    print(parallelizer2)
+    par1ret = Parallelizer.make_parallelizer_indiv_files()
+    par2ret = Parallelizer.make_parallelizer_round_robin()
+    print(par2ret)
+    assert parallelizer1 == par1ret
+    assert parallelizer2 == par2ret
 
 
 def test_cat_2():
@@ -35,8 +41,9 @@ def test_cat_2():
     assert len(meta.get_output_list()) == 2
 
     assert len(meta.get_parallelizer_list()) == 2
-    assert ParallelizerIndivFiles.is_parallelizer_mapper_seq_aggregator_conc(meta.get_parallelizer_list()[0])
-    assert ParallelizerRoundRobin.is_parallelizer_mapper_seq_aggregator_conc(meta.get_parallelizer_list()[1])
+    [parallelizer1, parallelizer2] = meta.get_parallelizer_list()
+    assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
+    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
 
 
 def test_cat_3():
@@ -50,8 +57,9 @@ def test_cat_3():
     assert len(meta.get_output_list()) == 2
 
     assert len(meta.get_parallelizer_list()) == 2
-    assert ParallelizerIndivFiles.is_parallelizer_mapper_custom_aggregator_conc(meta.get_parallelizer_list()[0], "cus")
-    assert ParallelizerRoundRobin.is_parallelizer_mapper_custom_aggregator_conc(meta.get_parallelizer_list()[1], "cus")
+    [parallelizer1, parallelizer2] = meta.get_parallelizer_list()
+    assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files(mapper=Mapper.make_mapper_custom("cus"))
+    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(mapper=Mapper.make_mapper_custom("cus"))
 
 
 def test_cat_4():
@@ -78,6 +86,7 @@ def test_cat_5():
     assert len(meta.get_output_list()) == 2
 
     assert len(meta.get_parallelizer_list()) == 2
-    assert ParallelizerIndivFiles.is_parallelizer_mapper_seq_aggregator_adjf(meta.get_parallelizer_list()[0], "squeeze_blanks")
-    assert ParallelizerRoundRobin.is_parallelizer_mapper_seq_aggregator_adjf(meta.get_parallelizer_list()[1], "squeeze_blanks")
+    [parallelizer1, parallelizer2] = meta.get_parallelizer_list()
+    assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files(aggregator=Aggregator.make_aggregator_adj_lines_func("squeeze_blanks"))
+    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_adj_lines_func("squeeze_blanks"))
 

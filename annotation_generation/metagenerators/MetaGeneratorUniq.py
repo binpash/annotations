@@ -1,8 +1,8 @@
 
 from datatypes.FileDescriptor import FileDescriptor, FileDescriptorEnum
 from metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
-from parallelizers.ParallelizerIndivFiles import ParallelizerIndivFiles
-from parallelizers.ParallelizerRoundRobin import ParallelizerRoundRobin
+from parallelizers.Parallelizer import Parallelizer
+from parallelizers.Aggregator import Aggregator
 
 
 class MetaGeneratorUniq(MetaGeneratorInterface):
@@ -49,10 +49,12 @@ class MetaGeneratorUniq(MetaGeneratorInterface):
         if not self.arg_list_contains_at_least_one_of(["-d", "-D", "--all-repeated"]):
             if self.arg_list_contains_at_least_one_of(["-c"]):
                 # we need a special merge
-                parallelizer_rr_seq_adjf = ParallelizerRoundRobin.make_parallelizer_mapper_seq_aggregator_adjf("seq", "merge_count")
+                aggregator = Aggregator.make_aggregator_adj_lines_func("merge_count")
+                parallelizer_rr_seq_adjf = Parallelizer.make_parallelizer_round_robin(aggregator=aggregator)
                 self.meta.append_to_parallelizer_list(parallelizer_rr_seq_adjf)
             else:
-                parallelizer_rr_seq_adjf = ParallelizerRoundRobin.make_parallelizer_mapper_seq_aggregator_adjf("seq", "seq")
+                aggregator = Aggregator.make_aggregator_adj_lines_func("seq")
+                parallelizer_rr_seq_adjf = Parallelizer.make_parallelizer_round_robin(aggregator=aggregator)
                 self.meta.append_to_parallelizer_list(parallelizer_rr_seq_adjf)
 
 

@@ -1,6 +1,7 @@
 from datatypes.Arg import make_arg_simple
 from datatypes.Operand import Operand
-from parallelizers.ParallelizerRoundRobin import ParallelizerRoundRobin
+from parallelizers.Parallelizer import Parallelizer
+from parallelizers.Aggregator import Aggregator
 
 import AnnotationGeneration
 
@@ -20,7 +21,8 @@ def test_tr_1():
     assert len(meta.get_output_list()) == 2     # stdout and stderr
 
     assert len(meta.get_parallelizer_list()) == 1
-    assert ParallelizerRoundRobin.is_parallelizer_mapper_seq_aggregator_adjm(meta.get_parallelizer_list()[0])
+    [parallelizer1] = meta.get_parallelizer_list()
+    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_adj_lines_merge())
 
 
 def test_tr_2():
@@ -34,7 +36,8 @@ def test_tr_2():
     assert len(meta.get_output_list()) == 2
 
     assert len(meta.get_parallelizer_list()) == 1
-    assert ParallelizerRoundRobin.is_parallelizer_mapper_seq_aggregator_conc(meta.get_parallelizer_list()[0])
+    [parallelizer1] = meta.get_parallelizer_list()
+    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin()
 
 
 def test_tr_3():
@@ -47,7 +50,8 @@ def test_tr_3():
     assert len(meta.get_output_list()) == 2
 
     assert len(meta.get_parallelizer_list()) == 1
-    assert ParallelizerRoundRobin.is_parallelizer_mapper_seq_aggregator_conc(meta.get_parallelizer_list()[0])
+    [parallelizer1] = meta.get_parallelizer_list()
+    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin()
 
 
 def test_tr_4():
@@ -60,7 +64,8 @@ def test_tr_4():
     assert len(meta.get_output_list()) == 2
 
     assert len(meta.get_parallelizer_list()) == 1
-    assert ParallelizerRoundRobin.is_parallelizer_mapper_seq_aggregator_adjm(meta.get_parallelizer_list()[0])
+    [parallelizer1] = meta.get_parallelizer_list()
+    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_adj_lines_merge())
 
 
 def test_tr_5():
@@ -73,7 +78,8 @@ def test_tr_5():
     assert len(meta.get_output_list()) == 2
 
     assert len(meta.get_parallelizer_list()) == 1
-    assert ParallelizerRoundRobin.is_parallelizer_mapper_seq_aggregator_conc(meta.get_parallelizer_list()[0])
+    [parallelizer1] = meta.get_parallelizer_list()
+    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin()
 
 
 def test_tr_6():
@@ -86,4 +92,5 @@ def test_tr_6():
     assert len(meta.get_output_list()) == 2
 
     assert len(meta.get_parallelizer_list()) == 1
-    assert ParallelizerRoundRobin.is_parallelizer_mapper_seq_aggregator_adjm(meta.get_parallelizer_list()[0])
+    [parallelizer1] = meta.get_parallelizer_list()
+    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_adj_lines_merge())

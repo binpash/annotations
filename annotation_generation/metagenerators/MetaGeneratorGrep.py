@@ -1,8 +1,9 @@
 
 from datatypes.Arg import ArgKindEnum
 from metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
-from parallelizers.ParallelizerIndivFiles import ParallelizerIndivFiles
-from parallelizers.ParallelizerRoundRobin import ParallelizerRoundRobin
+from parallelizers.Parallelizer import Parallelizer
+from parallelizers.Mapper import Mapper
+from parallelizers.Aggregator import Aggregator
 
 
 class MetaGeneratorGrep(MetaGeneratorInterface):
@@ -62,35 +63,32 @@ class MetaGeneratorGrep(MetaGeneratorInterface):
 
     def apply_transformers_for_parallelizers(self):
         if not self.arg_list_contains_at_least_one_of(["-q"]):
-            parallelizer_if_seq_conc = ParallelizerIndivFiles.make_parallelizer_mapper_seq_aggregator_conc("seq")
+            parallelizer_if_seq_conc = Parallelizer.make_parallelizer_indiv_files()
             self.meta.append_to_parallelizer_list(parallelizer_if_seq_conc)
             if not self.arg_list_contains_at_least_one_of(["-A", "-B", "-C", "-m"]):
                 if self.arg_list_contains_at_least_one_of(["-L", "-l"]):
-                    parallelizer_rr_seq_cus2 = ParallelizerRoundRobin.make_parallelizer_mapper_seq_aggregator_cus2(
-                            "seq", "merge_keeping_longer_output")
+                    aggregator = Aggregator.make_aggregator_custom_2_ary("merge_keeping_longer_output")
+                    parallelizer_rr_seq_cus2 = Parallelizer.make_parallelizer_round_robin(aggregator=aggregator)
                     self.meta.append_to_parallelizer_list(parallelizer_rr_seq_cus2)
                     # the output for both options is either empty or the filename (same for both if so)
                     # for "-l": if there was a match in one part, the filename will propagate; if not, not
                     # for "-L": if there was no match in one part, the filename will propagate; it not, not
                 elif self.arg_list_contains_at_least_one_of(["-c"]):
-                    parallelizer_rr_seq_cus2 = ParallelizerRoundRobin.make_parallelizer_mapper_seq_aggregator_cus2(
-                        "seq", "sum_indiv_results_up")
+                    aggregator = Aggregator.make_aggregator_custom_2_ary("sum_indiv_results_up")
+                    parallelizer_rr_seq_cus2 = Parallelizer.make_parallelizer_round_robin(aggregator=aggregator)
                     self.meta.append_to_parallelizer_list(parallelizer_rr_seq_cus2)
                 elif self.arg_list_contains_at_least_one_of(["-n"]) and self.arg_list_contains_at_least_one_of(["-b"]):
-                    parallelizer_rr_cus_conc = ParallelizerRoundRobin.make_parallelizer_mapper_custom_aggregator_conc(
-                        "add_line_number_and_byte_offset")
+                    mapper = Mapper.make_mapper_custom("add_line_number_and_byte_offset")
+                    parallelizer_rr_cus_conc = Parallelizer.make_parallelizer_round_robin(mapper=mapper)
                     self.meta.append_to_parallelizer_list(parallelizer_rr_cus_conc)
                 elif self.arg_list_contains_at_least_one_of(["-n"]):
-                    parallelizer_rr_cus_conc = ParallelizerRoundRobin.make_parallelizer_mapper_custom_aggregator_conc(
-                        "add_line_number_offset")
+                    mapper = Mapper.make_mapper_custom("add_line_number_offset")
+                    parallelizer_rr_cus_conc = Parallelizer.make_parallelizer_round_robin(mapper=mapper)
                     self.meta.append_to_parallelizer_list(parallelizer_rr_cus_conc)
                 elif self.arg_list_contains_at_least_one_of(["-b"]):
-                    parallelizer_rr_cus_conc = ParallelizerRoundRobin.make_parallelizer_mapper_custom_aggregator_conc(
-                        "add_byte_offset")
+                    mapper = Mapper.make_mapper_custom("add_byte_offset")
+                    parallelizer_rr_cus_conc = Parallelizer.make_parallelizer_round_robin(mapper=mapper)
                     self.meta.append_to_parallelizer_list(parallelizer_rr_cus_conc)
                 else:   # none of the above affecting flags
-                    parallelizer_rr_seq_conc = ParallelizerRoundRobin.make_parallelizer_mapper_seq_aggregator_conc(
-                        "seq")
+                    parallelizer_rr_seq_conc = Parallelizer.make_parallelizer_round_robin()
                     self.meta.append_to_parallelizer_list(parallelizer_rr_seq_conc)
-
-

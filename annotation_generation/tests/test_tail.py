@@ -16,6 +16,8 @@ def test_tail_1():
     assert len(meta.get_input_list()) == 2
     assert len(meta.get_output_list()) == 2     # stdout and stderr
 
+    assert len(meta.get_parallelizer_list()) == 0
+
 
 def test_tail_2():
     args = [make_arg_simple(["--version"])]
@@ -27,4 +29,6 @@ def test_tail_2():
 
     assert len(meta.get_input_list()) == 3
     assert len(meta.get_output_list()) == 2
+
+    assert len(meta.get_parallelizer_list()) == 0
 

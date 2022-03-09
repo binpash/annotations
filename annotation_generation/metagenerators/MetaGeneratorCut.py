@@ -1,8 +1,7 @@
 
 from datatypes.FileDescriptor import FileDescriptor, FileDescriptorEnum
 from metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
-from parallelizers.ParallelizerIndivFiles import ParallelizerIndivFiles
-from parallelizers.ParallelizerRoundRobin import ParallelizerRoundRobin
+from parallelizers.Parallelizer import Parallelizer
 
 
 class MetaGeneratorCut(MetaGeneratorInterface):
@@ -25,9 +24,9 @@ class MetaGeneratorCut(MetaGeneratorInterface):
 
     def apply_transformers_for_parallelizers(self):
         # add two parallelizers: IF and RR with SEQ and CONC each
-        parallelizer_if_seq_conc = ParallelizerIndivFiles.make_parallelizer_mapper_seq_aggregator_conc("seq")
+        parallelizer_if_seq_conc = Parallelizer.make_parallelizer_indiv_files()
         self.meta.append_to_parallelizer_list(parallelizer_if_seq_conc)
-        parallelizer_rr_seq_conc = ParallelizerRoundRobin.make_parallelizer_mapper_seq_aggregator_conc("seq")
+        parallelizer_rr_seq_conc = Parallelizer.make_parallelizer_round_robin()
         self.meta.append_to_parallelizer_list(parallelizer_rr_seq_conc)
 
 

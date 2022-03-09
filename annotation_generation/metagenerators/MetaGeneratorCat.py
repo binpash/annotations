@@ -1,7 +1,8 @@
 
 from metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
-from parallelizers.ParallelizerIndivFiles import ParallelizerIndivFiles
-from parallelizers.ParallelizerRoundRobin import ParallelizerRoundRobin
+from parallelizers.Parallelizer import Parallelizer
+from parallelizers.Mapper import Mapper
+from parallelizers.Aggregator import Aggregator
 
 
 class MetaGeneratorCat(MetaGeneratorInterface):
@@ -33,23 +34,25 @@ class MetaGeneratorCat(MetaGeneratorInterface):
         match (self.arg_list_contains_at_least_one_of(["-n"]), self.arg_list_contains_at_least_one_of(["-s"])):
             case (True, False): # we can have mappers that take offset as argument and without -s, this is stable
                 # TODO: instantiate special mapper
-                parallelizer_if_cus_conc = ParallelizerIndivFiles.make_parallelizer_mapper_custom_aggregator_conc("cus")
+                mapper = Mapper.make_mapper_custom("cus")
+                parallelizer_if_cus_conc = Parallelizer.make_parallelizer_indiv_files(mapper=mapper)
                 self.meta.append_to_parallelizer_list(parallelizer_if_cus_conc)
-                parallelizer_rr_cus_conc = ParallelizerRoundRobin.make_parallelizer_mapper_custom_aggregator_conc("cus")
+                parallelizer_rr_cus_conc = Parallelizer.make_parallelizer_round_robin(mapper=mapper)
                 self.meta.append_to_parallelizer_list(parallelizer_rr_cus_conc)
             case (True, True):
                 pass    # do not add any since it is tricky
             case (False, True):
                 # not numbered but need to compare adjacent lines and possibly remove one blank line
-                parallelizer_if_seq_adjf = ParallelizerIndivFiles.make_parallelizer_mapper_seq_aggregator_adjf("seq", "squeeze_blanks")
+                aggregator = Aggregator.make_aggregator_adj_lines_func("squeeze_blanks")
+                parallelizer_if_seq_adjf = Parallelizer.make_parallelizer_indiv_files(aggregator=aggregator)
                 self.meta.append_to_parallelizer_list(parallelizer_if_seq_adjf)
-                parallelizer_rr_seq_adjf = ParallelizerRoundRobin.make_parallelizer_mapper_seq_aggregator_adjf("seq", "squeeze_blanks")
+                parallelizer_rr_seq_adjf = Parallelizer.make_parallelizer_round_robin(aggregator=aggregator)
                 self.meta.append_to_parallelizer_list(parallelizer_rr_seq_adjf)
                 pass
             case (False, False):
                 # add two parallelizers: IF and RR with SEQ and CONC each
-                parallelizer_if_seq_conc = ParallelizerIndivFiles.make_parallelizer_mapper_seq_aggregator_conc("seq")
+                parallelizer_if_seq_conc = Parallelizer.make_parallelizer_indiv_files()
                 self.meta.append_to_parallelizer_list(parallelizer_if_seq_conc)
-                parallelizer_rr_seq_conc = ParallelizerRoundRobin.make_parallelizer_mapper_seq_aggregator_conc("seq")
+                parallelizer_rr_seq_conc = Parallelizer.make_parallelizer_round_robin()
                 self.meta.append_to_parallelizer_list(parallelizer_rr_seq_conc)
 

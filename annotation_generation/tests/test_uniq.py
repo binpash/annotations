@@ -1,6 +1,7 @@
 from datatypes.Arg import make_arg_simple
 from datatypes.Operand import Operand
-from parallelizers.ParallelizerRoundRobin import ParallelizerRoundRobin
+from parallelizers.Parallelizer import Parallelizer
+from parallelizers.Aggregator import Aggregator
 
 import AnnotationGeneration
 
@@ -32,7 +33,8 @@ def test_uniq_2():
     assert len(meta.get_output_list()) == 2  # stdout and stderr
 
     assert len(meta.get_parallelizer_list()) == 1
-    assert ParallelizerRoundRobin.is_parallelizer_mapper_seq_aggregator_adjf(meta.get_parallelizer_list()[0], "merge_count")
+    [parallelizer1] = meta.get_parallelizer_list()
+    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_adj_lines_func("merge_count"))
 
 
 def test_uniq_3():
@@ -45,7 +47,8 @@ def test_uniq_3():
     assert len(meta.get_output_list()) == 2  # stdout and stderr
 
     assert len(meta.get_parallelizer_list()) == 1
-    assert ParallelizerRoundRobin.is_parallelizer_mapper_seq_aggregator_adjf(meta.get_parallelizer_list()[0], "seq")
+    [parallelizer1] = meta.get_parallelizer_list()
+    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_adj_lines_func("seq"))
 
 
 def test_uniq_4():

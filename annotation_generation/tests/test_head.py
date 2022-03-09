@@ -5,6 +5,8 @@ import AnnotationGeneration
 
 cmd_name = "head"
 
+# TODO: does head take head of each file? then IF possible; same for tail
+
 
 def test_head_1():
     args = [make_arg_simple(["-q"])]
@@ -15,6 +17,8 @@ def test_head_1():
 
     assert len(meta.get_input_list()) == 2
     assert len(meta.get_output_list()) == 2     # stdout and stderr
+
+    assert len(meta.get_parallelizer_list()) == 0
 
 
 def test_head_2():
@@ -28,3 +32,4 @@ def test_head_2():
     assert len(meta.get_input_list()) == 3
     assert len(meta.get_output_list()) == 2
 
+    assert len(meta.get_parallelizer_list()) == 0
