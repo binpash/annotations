@@ -37,16 +37,12 @@ def get_meta_from_cmd_invocation(cmd_name, arg_list, operand_list):
     # Initialize the meta generator object
     meta_generator_object = meta_generator_class_for_cmd(arg_list, operand_list)
 
-    # 1) we apply the function for operands which changes meta but strip off the Operand class when passing
-    meta_generator_object.transformer_for_operands()
+    # Apply the transformers for input/output lists
+    meta_generator_object.apply_transformers_for_input_output_lists()
 
-    # 2) we apply the function for arg_list to produce the final meta
-    meta_generator_object.transformer_for_arg_list()
+    # Apply the transformers for data parallelizability information
+    meta_generator_object.apply_transformers_for_parallelizers()
 
-    # 3) we apply the function to determine the "std" file descriptors used
-    meta_generator_object.transformer_for_standard_filedescriptors()
-
-    meta_generator_object.deduplicate_lists_of_meta()
     meta = meta_generator_object.get_meta()
 
     return meta

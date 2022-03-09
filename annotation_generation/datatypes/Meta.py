@@ -4,32 +4,35 @@ from datatypes.FileDescriptor import *
 
 class Meta:
 
-    def __init__(self, 
+    def __init__(self,
                  input_list=None,
                  output_list=None,
+                 parallelizer_list=None,
                  custom_info=None):
-        if input_list is None:
-            self.input_list = []
-        else:
-            self.input_list = input_list
-        if output_list is None:
-            self.output_list = []
-        else:
-            self.output_list = output_list
+        self.input_list = return_empty_list_if_none_else_itself(input_list)
+        self.output_list = return_empty_list_if_none_else_itself(output_list)
+        self.parallelizer_list = return_empty_list_if_none_else_itself(parallelizer_list)
         self.custom_info = custom_info
+    #     TODO: add info whether command can take sequence of inputs (or we need cat to merge them)
 
     def __str__(self):
         return f'meta: \n' \
             + f'\tinput_list: {self.input_list}\n' \
             + f'\toutput_list: {self.output_list}\n' \
+            + f'\tparallelizer_list: {self.parallelizer_list}\n' \
             + f'\tcustom_info: {self.custom_info}'
 
+    # GETTERS
     def get_input_list(self):
         return self.input_list
 
     def get_output_list(self):
         return self.output_list
 
+    def get_parallelizer_list(self):
+        return self.parallelizer_list
+
+    # modifiers for input/output-lists
     def add_list_to_input_list(self, input_list_to_be_added: list):
         self.input_list.extend([compute_actual_el_for_input(input_el) for input_el in input_list_to_be_added])
 
@@ -57,3 +60,8 @@ class Meta:
     def deduplicate_input_output_lists(self):
         self.input_list = list_deduplication(self.input_list)
         self.output_list = list_deduplication(self.output_list)
+
+    # modifiers for parallelizer list
+
+    def append_to_parallelizer_list(self, el_to_be_appended):
+        self.parallelizer_list.append(el_to_be_appended)

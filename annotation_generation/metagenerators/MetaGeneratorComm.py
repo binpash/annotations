@@ -12,15 +12,14 @@ class MetaGeneratorComm(MetaGeneratorInterface):
     # Which ones do affect input/output?
     # none
 
-    def transformer_for_standard_filedescriptors(self):
+    def apply_standard_filedescriptor_transformer_for_input_output_lists(self):
         self.meta.append_stderr_to_output_list()
         self.meta.append_stdout_to_output_list()
 
-    def transformer_for_operands(self):
+    def apply_operands_transformer_for_input_output_lists(self):
         if not self.arg_list_contains_at_least_one_of(["--help", "--version"]):
             assert(len(self.operand_names_list) == 2)  # needs two files to compare
         self.meta.add_list_to_input_list(self.operand_names_list)
 
-    def transformer_for_args(self, arg):
-        pass
-
+    # Which ones do affect parallelizability?
+    # none, it is very hard to parallelize because of potentially different speed of traversing both files

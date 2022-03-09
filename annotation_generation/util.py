@@ -1,5 +1,7 @@
 from datatypes.FileName import FileName
 from datatypes.FileDescriptor import FileDescriptor, FileDescriptorEnum
+from parallelizers.Aggregator import Aggregator
+from parallelizers.Mapper import Mapper
 
 
 def foldl(func, acc0, list):
@@ -29,3 +31,23 @@ def compute_actual_el_for_output(output_el):
     else:
         return FileName(output_el)
 
+
+def return_empty_list_if_none_else_itself(arg):
+    if arg is None:
+        return []
+    else:
+        return arg
+
+
+def return_mapper_seq_if_none_else_itself(arg):
+    if arg is None:
+        return Mapper.make_mapper_seq()
+    else:
+        return arg
+
+
+def return_aggregator_conc_if_none_else_itself(arg):
+    if arg is None:
+        return Aggregator.make_aggregator_concatenate()
+    else:
+        return arg

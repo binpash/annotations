@@ -16,6 +16,8 @@ def test_mv_1():
     assert len(meta.get_input_list()) == 2
     assert len(meta.get_output_list()) == 2     # dest and stderr
 
+    assert len(meta.get_parallelizer_list()) == 0
+
 
 def test_mv_2():
     args = [make_arg_simple(["-v"])]
@@ -27,6 +29,8 @@ def test_mv_2():
 
     assert len(meta.get_input_list()) == 2
     assert len(meta.get_output_list()) == 2     # dest and stderr
+
+    assert len(meta.get_parallelizer_list()) == 0
 
 
 def test_mv_3():
@@ -52,3 +56,5 @@ def test_mv_4():
 
     assert len(meta.get_input_list()) == 0
     assert len(meta.get_output_list()) == 2     # stdout, stderr
+
+    assert len(meta.get_parallelizer_list()) == 0
