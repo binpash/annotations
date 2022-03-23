@@ -14,12 +14,12 @@ class MetaGeneratorCat(MetaGeneratorInterface):
     # Which ones do affect input/output?
     # basically only operands and the stdout as standard output and stderr for errors
 
-    def apply_standard_filedescriptor_transformer_for_input_output_lists(self):
+    def apply_standard_filedescriptor_transformer_for_input_output_lists(self) -> None:
         self.meta.append_stdout_to_output_list()
         self.meta.append_stderr_to_output_list()  # errors are written to stderr and cannot be suppressed
         self.if_no_file_given_add_stdin_to_input_list()
 
-    def apply_operands_transformer_for_input_output_lists(self):
+    def apply_operands_transformer_for_input_output_lists(self) -> None:
         # all operands are inputs
         self.meta.add_list_to_input_list(self.operand_names_list)
 
@@ -30,29 +30,54 @@ class MetaGeneratorCat(MetaGeneratorInterface):
     # for -n and -s, we could only do with a 2nd pass so we omit this for now
     # for
 
-    def apply_transformers_for_parallelizers(self):
-        match (self.arg_list_contains_at_least_one_of(["-n"]), self.arg_list_contains_at_least_one_of(["-s"])):
-            case (True, False): # we can have mappers that take offset as argument and without -s, this is stable
+    def apply_transformers_for_parallelizers(self) -> None:
+        if self.arg_list_contains_at_least_one_of(["-n"]) and not self.arg_list_contains_at_least_one_of(["-s"]):
+            # case (True, False): # we can have mappers that take offset as argument and without -s, this is stable
                 # TODO: instantiate special mapper
                 mapper = Mapper.make_mapper_custom("cus")
                 parallelizer_if_cus_conc = Parallelizer.make_parallelizer_indiv_files(mapper=mapper)
                 self.meta.append_to_parallelizer_list(parallelizer_if_cus_conc)
                 parallelizer_rr_cus_conc = Parallelizer.make_parallelizer_round_robin(mapper=mapper)
                 self.meta.append_to_parallelizer_list(parallelizer_rr_cus_conc)
-            case (True, True):
-                pass    # do not add any since it is tricky
-            case (False, True):
+            # case (True, True):
+            #     pass    # do not add any since it is tricky
+        elif not self.arg_list_contains_at_least_one_of(["-n"]) and self.arg_list_contains_at_least_one_of(["-s"]):
+            # case (False, True):
                 # not numbered but need to compare adjacent lines and possibly remove one blank line
                 aggregator = Aggregator.make_aggregator_adj_lines_func("squeeze_blanks")
                 parallelizer_if_seq_adjf = Parallelizer.make_parallelizer_indiv_files(aggregator=aggregator)
                 self.meta.append_to_parallelizer_list(parallelizer_if_seq_adjf)
                 parallelizer_rr_seq_adjf = Parallelizer.make_parallelizer_round_robin(aggregator=aggregator)
                 self.meta.append_to_parallelizer_list(parallelizer_rr_seq_adjf)
-                pass
-            case (False, False):
+        elif not self.arg_list_contains_at_least_one_of(["-n"]) and not self.arg_list_contains_at_least_one_of(["-s"]):
+            # case (False, False):
                 # add two parallelizers: IF and RR with SEQ and CONC each
                 parallelizer_if_seq_conc = Parallelizer.make_parallelizer_indiv_files()
                 self.meta.append_to_parallelizer_list(parallelizer_if_seq_conc)
                 parallelizer_rr_seq_conc = Parallelizer.make_parallelizer_round_robin()
                 self.meta.append_to_parallelizer_list(parallelizer_rr_seq_conc)
+        # match (self.arg_list_contains_at_least_one_of(["-n"]), self.arg_list_contains_at_least_one_of(["-s"])):
+        #     case (True, False): # we can have mappers that take offset as argument and without -s, this is stable
+        #         # TODO: instantiate special mapper
+        #         mapper = Mapper.make_mapper_custom("cus")
+        #         parallelizer_if_cus_conc = Parallelizer.make_parallelizer_indiv_files(mapper=mapper)
+        #         self.meta.append_to_parallelizer_list(parallelizer_if_cus_conc)
+        #         parallelizer_rr_cus_conc = Parallelizer.make_parallelizer_round_robin(mapper=mapper)
+        #         self.meta.append_to_parallelizer_list(parallelizer_rr_cus_conc)
+        #     case (True, True):
+        #         pass    # do not add any since it is tricky
+        #     case (False, True):
+        #         # not numbered but need to compare adjacent lines and possibly remove one blank line
+        #         aggregator = Aggregator.make_aggregator_adj_lines_func("squeeze_blanks")
+        #         parallelizer_if_seq_adjf = Parallelizer.make_parallelizer_indiv_files(aggregator=aggregator)
+        #         self.meta.append_to_parallelizer_list(parallelizer_if_seq_adjf)
+        #         parallelizer_rr_seq_adjf = Parallelizer.make_parallelizer_round_robin(aggregator=aggregator)
+        #         self.meta.append_to_parallelizer_list(parallelizer_rr_seq_adjf)
+        #         pass
+        #     case (False, False):
+        #         # add two parallelizers: IF and RR with SEQ and CONC each
+        #         parallelizer_if_seq_conc = Parallelizer.make_parallelizer_indiv_files()
+        #         self.meta.append_to_parallelizer_list(parallelizer_if_seq_conc)
+        #         parallelizer_rr_seq_conc = Parallelizer.make_parallelizer_round_robin()
+        #         self.meta.append_to_parallelizer_list(parallelizer_rr_seq_conc)
 

@@ -1,5 +1,5 @@
 
-from datatypes.Arg import ArgKindEnum
+from datatypes.Arg import Arg, ArgKindEnum
 from annotation_generation.metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
 
 
@@ -35,31 +35,41 @@ class MetaGeneratorMv(MetaGeneratorInterface):
     #     be written in the destination directory, i.e., moved and backed up,
     #     depending on all the different options but recomputing quite some program logic then
 
-    def apply_standard_filedescriptor_transformer_for_input_output_lists(self):
+    def apply_standard_filedescriptor_transformer_for_input_output_lists(self) -> None:
         version_or_help_write_to_stdout = self.arg_list_contains_at_least_one_of(["--help", "--version"])
         if version_or_help_write_to_stdout:
             self.meta.append_stdout_to_output_list()
         # no way to suppress error messages hence added
         self.meta.append_stderr_to_output_list()
 
-    def apply_operands_transformer_for_input_output_lists(self):
+    def apply_operands_transformer_for_input_output_lists(self) -> None:
         # -T shall treat destination as file, not directory, not considered currently
         # -t gives destination directory as an argument to option and determines
         #    how operands are interpreted
-        list_options_t = self.filter_arg_list_with("-t")
-        match len(list_options_t):
-            case 0:
-                # all but last input, last output
-                self.meta.add_list_to_input_list(self.operand_names_list[:-1])
-                self.meta.add_list_to_output_list(self.operand_names_list[-1:])
-            case 1:
-                # all input, output given as argument to "-t"
-                self.meta.add_list_to_input_list(self.operand_names_list)
-            case _:
-                # multiple -t options not allowed (checked using cmd)
-                raise Exception("multiple -t options defined for mv")
+        list_options_t = self.filter_arg_list_with(["-t"])
+        if len(list_options_t) == 0:
+            # all but last input, last output
+            self.meta.add_list_to_input_list(self.operand_names_list[:-1])
+            self.meta.add_list_to_output_list(self.operand_names_list[-1:])
+        elif len(list_options_t) == 1:
+            # all input, output given as argument to "-t"
+            self.meta.add_list_to_input_list(self.operand_names_list)
+        else:
+            # multiple -t options not allowed (checked using cmd)
+            raise Exception("multiple -t options defined for mv")
+        # match len(list_options_t):
+        #     case 0:
+        #         # all but last input, last output
+        #         self.meta.add_list_to_input_list(self.operand_names_list[:-1])
+        #         self.meta.add_list_to_output_list(self.operand_names_list[-1:])
+        #     case 1:
+        #         # all input, output given as argument to "-t"
+        #         self.meta.add_list_to_input_list(self.operand_names_list)
+        #     case _:
+        #         # multiple -t options not allowed (checked using cmd)
+        #         raise Exception("multiple -t options defined for mv")
 
-    def apply_indiv_arg_transformer_for_input_output_lists(self, arg):
+    def apply_indiv_arg_transformer_for_input_output_lists(self, arg: Arg) -> None:
         if arg.get_name() == "-t":
             self.meta.prepend_el_to_output_list(arg.option_arg)
 

@@ -9,7 +9,7 @@ import annotation_generation.AnnotationGeneration as AnnotationGeneration
 cmd_name = "cat"
 
 
-def test_cat_1():
+def test_cat_1() -> None:
     args = [make_arg_simple(["-b"]), make_arg_simple(["-e"])]
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
@@ -21,15 +21,13 @@ def test_cat_1():
 
     assert len(meta.get_parallelizer_list()) == 2
     [parallelizer1, parallelizer2] = meta.get_parallelizer_list()
-    print(parallelizer2)
     par1ret = Parallelizer.make_parallelizer_indiv_files()
     par2ret = Parallelizer.make_parallelizer_round_robin()
-    print(par2ret)
     assert parallelizer1 == par1ret
     assert parallelizer2 == par2ret
 
 
-def test_cat_2():
+def test_cat_2() -> None:
     args = []
     operands = [Operand("in1.txt"),
                 Operand("-"),
@@ -46,7 +44,7 @@ def test_cat_2():
     assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
 
 
-def test_cat_3():
+def test_cat_3() -> None:
     args = [make_arg_simple(["-n"])]
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
@@ -62,7 +60,7 @@ def test_cat_3():
     assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(mapper=Mapper.make_mapper_custom("cus"))
 
 
-def test_cat_4():
+def test_cat_4() -> None:
     args = [make_arg_simple(["-n"]), make_arg_simple(["-s"])]
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
@@ -75,7 +73,7 @@ def test_cat_4():
     assert len(meta.get_parallelizer_list()) == 0
 
 
-def test_cat_5():
+def test_cat_5() -> None:
     args = [make_arg_simple(["-s"])]
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]

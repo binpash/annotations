@@ -10,7 +10,7 @@ cmd_name = "uniq"
 # commands taken from spell script in one-liners
 
 
-def test_uniq_1():
+def test_uniq_1() -> None:
     args = [make_arg_simple(["-D"])]
     operands = [Operand("in.txt"),
                 Operand("out.txt")]
@@ -23,7 +23,7 @@ def test_uniq_1():
     assert len(meta.get_parallelizer_list()) == 0
 
 
-def test_uniq_2():
+def test_uniq_2() -> None:
     args = [make_arg_simple(["-c"])]
     operands = []
 
@@ -37,7 +37,7 @@ def test_uniq_2():
     assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_adj_lines_func("merge_count"))
 
 
-def test_uniq_3():
+def test_uniq_3() -> None:
     args = [make_arg_simple(["--help"])]
     operands = [Operand("in.txt")]
 
@@ -51,7 +51,7 @@ def test_uniq_3():
     assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_adj_lines_func("seq"))
 
 
-def test_uniq_4():
+def test_uniq_4() -> None:
     args = [make_arg_simple(["-s", "10"])]
     operands = [Operand("in1.txt"),
                 Operand("in2.txt"),

@@ -1,6 +1,7 @@
 from annotation_generation.metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
 from annotation_generation.parallelizers.Parallelizer import Parallelizer
 from annotation_generation.parallelizers.Aggregator import Aggregator
+from datatypes.Arg import Arg
 
 
 class MetaGeneratorUniq(MetaGeneratorInterface):
@@ -12,11 +13,11 @@ class MetaGeneratorUniq(MetaGeneratorInterface):
     # Which ones do affect input/output?
     # only the number of operands and flags --help and --version
 
-    def apply_standard_filedescriptor_transformer_for_input_output_lists(self):
+    def apply_standard_filedescriptor_transformer_for_input_output_lists(self) -> None:
         self.meta.append_stderr_to_output_list()
         # we add stdout and stdin in transformer_for_operands
 
-    def apply_operands_transformer_for_input_output_lists(self):
+    def apply_operands_transformer_for_input_output_lists(self) -> None:
         # tested this with the command, man-page a bit inconclusive with optional OUTPUT
         if len(self.operand_names_list) == 0:
             self.meta.prepend_stdin_to_input_list()
@@ -30,7 +31,7 @@ class MetaGeneratorUniq(MetaGeneratorInterface):
         else:
             pass    # only stderr with "uniq: extra operand '...'"
 
-    def apply_indiv_arg_transformer_for_input_output_lists(self, arg):
+    def apply_indiv_arg_transformer_for_input_output_lists(self, arg: Arg) -> None:
         if arg.get_name() in ["--help", "--version"]:
             self.meta.append_stdout_to_output_list()
 
@@ -42,7 +43,7 @@ class MetaGeneratorUniq(MetaGeneratorInterface):
     #   one needs to cut the prefix of numbers, run the sequential and see whether it is merged
     # TODO: what does --group do?
 
-    def apply_transformers_for_parallelizers(self):
+    def apply_transformers_for_parallelizers(self) -> None:
         # check for flags/options that make it super hard
         if not self.arg_list_contains_at_least_one_of(["-d", "-D", "--all-repeated"]):
             if self.arg_list_contains_at_least_one_of(["-c"]):

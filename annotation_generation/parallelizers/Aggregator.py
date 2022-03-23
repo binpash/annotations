@@ -1,54 +1,73 @@
+from __future__ import annotations
+from typing import Optional
+
 from enum import Enum
 
 
 class Aggregator:
 
-    def __init__(self, kind, func=None):
+    def __init__(self, kind: AggregatorKindEnum, func: Optional[str]=None) -> None:
         self.kind = kind
-        match kind:
-            # TODO: unify names
-            case AggregatorKindEnum.ADJ_LINES_FUNC:
-                self.adj_func = func
-            case AggregatorKindEnum.CUSTOM_2_ARY:
-                self.cus2_func = func
-            case AggregatorKindEnum.CUSTOM_N_ARY:
-                self.custom_aggregator = func
+        #     # TODO: unify names
+        if kind == AggregatorKindEnum.ADJ_LINES_FUNC:
+            self.adj_func = func
+        elif kind == AggregatorKindEnum.CUSTOM_2_ARY:
+            self.cus2_func = func
+        elif kind == AggregatorKindEnum.CUSTOM_N_ARY:
+            self.custom_aggregator = func
+        else:
+            raise Exception("no proper kind given for Aggregator")
+        # match kind:
+        #     case AggregatorKindEnum.ADJ_LINES_FUNC:
+        #         self.adj_func = func
+        #     case AggregatorKindEnum.CUSTOM_2_ARY:
+        #         self.cus2_func = func
+        #     case AggregatorKindEnum.CUSTOM_N_ARY:
+        #         self.custom_aggregator = func
+        #     case _:
+        #         raise Exception("no proper kind given for Aggregator")
 
-    def __eq__(self, other):
+    def __eq__(self, other: Aggregator) -> bool:
         return self.kind == other.kind and self.get_func() == other.get_func()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'{self.kind} \t {self.get_func()}'
 
-    def get_func(self):
-        match self.kind:
-            case AggregatorKindEnum.ADJ_LINES_FUNC:
-                return self.adj_func
-            case AggregatorKindEnum.CUSTOM_2_ARY:
-                return self.cus2_func
-            case AggregatorKindEnum.CUSTOM_N_ARY:
-                return self.custom_aggregator
+    def get_func(self) -> Optional[str]:
+        if self.kind == AggregatorKindEnum.ADJ_LINES_FUNC:
+            return self.adj_func
+        elif self.kind == AggregatorKindEnum.CUSTOM_2_ARY:
+            return self.cus2_func
+        elif self.kind == AggregatorKindEnum.CUSTOM_N_ARY:
+            return self.custom_aggregator
+        # match self.kind:
+        #     case AggregatorKindEnum.ADJ_LINES_FUNC:
+        #         return self.adj_func
+        #     case AggregatorKindEnum.CUSTOM_2_ARY:
+        #         return self.cus2_func
+        #     case AggregatorKindEnum.CUSTOM_N_ARY:
+        #         return self.custom_aggregator
         return None
 
     @staticmethod
-    def make_aggregator_concatenate():
+    def make_aggregator_concatenate() -> Aggregator:
         return Aggregator(AggregatorKindEnum.CONCATENATE)
 
     @staticmethod
-    def make_aggregator_adj_lines_merge():
+    def make_aggregator_adj_lines_merge() -> Aggregator:
         return Aggregator(AggregatorKindEnum.ADJ_LINES_MERGE)
 
     @staticmethod
-    def make_aggregator_adj_lines_func(func):
+    def make_aggregator_adj_lines_func(func: str) -> Aggregator:
         return Aggregator(AggregatorKindEnum.ADJ_LINES_FUNC, func)
 
     @staticmethod
-    def make_aggregator_custom_2_ary(func):
+    def make_aggregator_custom_2_ary(func: str) -> Aggregator:
         return Aggregator(AggregatorKindEnum.CUSTOM_2_ARY, func)
 
     @staticmethod
-    def make_aggregator_custom_n_ary(func):
-        return Aggregator(AggregatorKindEnum.CUSTOM_n_ARY, func)
+    def make_aggregator_custom_n_ary(func: str) -> Aggregator:
+        return Aggregator(AggregatorKindEnum.CUSTOM_N_ARY, func)
 
 
 class AggregatorKindEnum(Enum):

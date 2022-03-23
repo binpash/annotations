@@ -13,7 +13,7 @@ class MetaGeneratorTail(MetaGeneratorInterface):
     # Which ones do affect input/output?
     # none
 
-    def apply_standard_filedescriptor_transformer_for_input_output_lists(self):
+    def apply_standard_filedescriptor_transformer_for_input_output_lists(self) -> None:
         self.meta.append_stdout_to_output_list()
         self.meta.append_stderr_to_output_list()  # errors are written to stderr and cannot be suppressed
         self.if_no_file_given_add_stdin_to_input_list()

@@ -9,7 +9,7 @@ cmd_name = "cut"
 # commands taken from spell script in one-liners
 
 
-def test_cut_1():
+def test_cut_1() -> None:
     args = []
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
@@ -25,7 +25,7 @@ def test_cut_1():
     assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
 
 
-def test_cut_2():
+def test_cut_2() -> None:
     args = [make_arg_simple(["-z"])]
     operands = []
 

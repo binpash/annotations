@@ -12,7 +12,7 @@ class MetaGeneratorTr(MetaGeneratorInterface):
     # Which ones do affect input/output?
     # none, takes from stdin and prints to stdout and no way to suppress output
 
-    def apply_standard_filedescriptor_transformer_for_input_output_lists(self):
+    def apply_standard_filedescriptor_transformer_for_input_output_lists(self) -> None:
         self.meta.prepend_stdin_to_input_list()
         self.meta.append_stdout_to_output_list()
         self.meta.append_stderr_to_output_list()
@@ -24,7 +24,7 @@ class MetaGeneratorTr(MetaGeneratorInterface):
     #    -> if '\n' is effectively included in SET1, then Mp[ADJ] and Ag[ADJ]
     # for both, if nothing is true, standard things work
 
-    def apply_transformers_for_parallelizers(self):
+    def apply_transformers_for_parallelizers(self) -> None:
         # tr does only take input from stdin, so we can always apply RR parallelizer (but Mp and Ag may change slightly)
         # check for deletion of newlines
         does_delete_newlines = self.arg_list_contains_at_least_one_of(["-d"]) and \
@@ -45,7 +45,7 @@ class MetaGeneratorTr(MetaGeneratorInterface):
             parallelizer_rr_seq_conc = Parallelizer.make_parallelizer_round_robin()
             self.meta.append_to_parallelizer_list(parallelizer_rr_seq_conc)
 
-    def does_last_set_effectively_contain_newline(self):
+    def does_last_set_effectively_contain_newline(self) -> bool:
         last_operand = self.operand_names_list[len(self.operand_names_list) - 1]
         # is contained if (a) no -c and in set, or (b) -c and not in set
         if len(self.operand_names_list) == 1 and self.arg_list_contains_at_least_one_of(["-c"]):
