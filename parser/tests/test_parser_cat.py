@@ -7,7 +7,8 @@ from parser.parser import parse_json
 # [ <cmd_name>, [ Arg ], [ Operand ] ]  where Arg can either be a single flag or a single option
 
 
-@pytest.mark.skip(reason="we want the main branch not to have failing test cases")
+# @pytest.mark.skip(reason="we want the main branch not to have failing test cases")
+# TODO: change to new datatype for command invocation
 def test_cat_1():
     parser_result_list = parse_json("cat -b -e in1.txt in2.txt", "cat.json")
 
@@ -19,7 +20,8 @@ def test_cat_1():
     assert expected_result == parser_result_list
 
 
-@pytest.mark.skip(reason="we want the main branch not to have failing test cases")
+# @pytest.mark.skip(reason="we want the main branch not to have failing test cases")
+# TODO: change to new datatype for command invocation
 def test_cat_2():
     # this tests whether multiple flags with one - will be separated
     parser_result_list = parse_json("cat -be  in1.txt in2.txt", "cat.json")

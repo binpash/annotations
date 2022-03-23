@@ -5,7 +5,8 @@ from parser.parser import parse_json
 
 
 # TODO: fix the warning about 'invalid escape sequence '\s''
-@pytest.mark.skip(reason="we want the main branch not to have failing test cases")
+# @pytest.mark.skip(reason="we want the main branch not to have failing test cases")
+# TODO: change to new datatype for command invocation
 def test_grep_1():
     parser_result_list = parse_json("grep -e '^\s*def ' -m 3 -n test.py", "grep.json")
 
