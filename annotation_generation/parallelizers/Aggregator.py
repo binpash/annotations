@@ -8,13 +8,16 @@ class Aggregator:
 
     def __init__(self, kind: AggregatorKindEnum, func: Optional[str]=None) -> None:
         self.kind = kind
-        #     # TODO: unify names
-        if kind == AggregatorKindEnum.ADJ_LINES_FUNC:
-            self.adj_func = func
+        if kind == AggregatorKindEnum.CONCATENATE:
+            pass
+        elif kind == AggregatorKindEnum.ADJ_LINES_MERGE:
+            pass
+        elif kind == AggregatorKindEnum.ADJ_LINES_FUNC:
+            self.func = func
         elif kind == AggregatorKindEnum.CUSTOM_2_ARY:
-            self.cus2_func = func
+            self.func = func
         elif kind == AggregatorKindEnum.CUSTOM_N_ARY:
-            self.custom_aggregator = func
+            self.func = func
         else:
             raise Exception("no proper kind given for Aggregator")
         # match kind:
@@ -35,11 +38,11 @@ class Aggregator:
 
     def get_func(self) -> Optional[str]:
         if self.kind == AggregatorKindEnum.ADJ_LINES_FUNC:
-            return self.adj_func
+            return self.func
         elif self.kind == AggregatorKindEnum.CUSTOM_2_ARY:
-            return self.cus2_func
+            return self.func
         elif self.kind == AggregatorKindEnum.CUSTOM_N_ARY:
-            return self.custom_aggregator
+            return self.func
         # match self.kind:
         #     case AggregatorKindEnum.ADJ_LINES_FUNC:
         #         return self.adj_func
