@@ -7,7 +7,7 @@ import annotation_generation.AnnotationGeneration as AnnotationGeneration
 cmd_name = "head"
 
 
-def test_head_1():
+def test_head_1() -> None:
     args = [make_arg_simple(["-q"])]
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
@@ -22,7 +22,7 @@ def test_head_1():
     assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
 
 
-def test_head_2():
+def test_head_2() -> None:
     args = [make_arg_simple(["--version"])]
     operands = [Operand("in1.txt"),
                 Operand("-"),

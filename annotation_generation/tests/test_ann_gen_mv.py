@@ -6,7 +6,7 @@ import annotation_generation.AnnotationGeneration as AnnotationGeneration
 cmd_name = "mv"
 
 
-def test_mv_1():
+def test_mv_1() -> None:
     args = [make_arg_simple(["-t", "dest"])]
     operands = [Operand("tomove1.txt"),
                 Operand("tomove2.txt")]
@@ -19,7 +19,7 @@ def test_mv_1():
     assert len(meta.get_parallelizer_list()) == 0
 
 
-def test_mv_2():
+def test_mv_2() -> None:
     args = [make_arg_simple(["-v"])]
     operands = [Operand("tomove1.txt"),
                 Operand("tomove2.txt"),
@@ -33,7 +33,7 @@ def test_mv_2():
     assert len(meta.get_parallelizer_list()) == 0
 
 
-def test_mv_3():
+def test_mv_3() -> None:
     args = [make_arg_simple(["-t", "dest1.txt"]),
             make_arg_simple(["-t", "dest2.txt"])]
     # illegal to have -t twice
@@ -48,7 +48,7 @@ def test_mv_3():
         assert True
 
 
-def test_mv_4():
+def test_mv_4() -> None:
     args = [make_arg_simple(["--version"])]
     operands = []
 

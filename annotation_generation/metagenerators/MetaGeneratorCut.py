@@ -11,16 +11,16 @@ class MetaGeneratorCut(MetaGeneratorInterface):
     # Which ones do affect input/output?
     # none, takes from stdin and prints to stdout and no way to suppress output
 
-    def apply_standard_filedescriptor_transformer_for_input_output_lists(self):
+    def apply_standard_filedescriptor_transformer_for_input_output_lists(self) -> None:
         self.meta.append_stdout_to_output_list()
         self.meta.append_stderr_to_output_list()
         self.if_no_file_given_add_stdin_to_input_list()
 
-    def apply_operands_transformer_for_input_output_lists(self):
+    def apply_operands_transformer_for_input_output_lists(self) -> None:
         # all operands are inputs
         self.meta.add_list_to_input_list(self.operand_names_list)
 
-    def apply_transformers_for_parallelizers(self):
+    def apply_transformers_for_parallelizers(self) -> None:
         # add two parallelizers: IF and RR with SEQ and CONC each
         parallelizer_if_seq_conc = Parallelizer.make_parallelizer_indiv_files()
         self.meta.append_to_parallelizer_list(parallelizer_if_seq_conc)

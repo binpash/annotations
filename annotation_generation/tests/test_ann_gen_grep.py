@@ -9,7 +9,7 @@ import annotation_generation.AnnotationGeneration as AnnotationGeneration
 cmd_name = "grep"
 
 
-def test_grep_1():
+def test_grep_1() -> None:
     args = [make_arg_simple(["-c"]), make_arg_simple(["-L"]), make_arg_simple(["-f", "dict.txt"])]
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
@@ -25,7 +25,7 @@ def test_grep_1():
     assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_custom_2_ary("merge_keeping_longer_output"))
 
 
-def test_grep_2():
+def test_grep_2() -> None:
     args = [make_arg_simple(["-f", "dict.txt"]), make_arg_simple(["-e", "*"]), make_arg_simple(["-b"])]
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
@@ -41,7 +41,7 @@ def test_grep_2():
     assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(mapper=Mapper.make_mapper_custom("add_byte_offset"))
 
 
-def test_grep_3():
+def test_grep_3() -> None:
     args = [make_arg_simple(["-f", "dict.txt"]), make_arg_simple(["-e", "*"]), make_arg_simple(["-f", "dict2.txt"])]
     operands = [Operand("in1.txt"),
                 Operand("-")]
@@ -57,7 +57,7 @@ def test_grep_3():
     assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
 
 
-def test_grep_4():
+def test_grep_4() -> None:
     args = [make_arg_simple(["-f", "dict.txt"]), make_arg_simple(["-e", "*"]), make_arg_simple(["-f", "dict2.txt"]),
             make_arg_simple(["-n"]), make_arg_simple(["-b"])]
     operands = [Operand("in1.txt"),
@@ -74,7 +74,7 @@ def test_grep_4():
     assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(mapper=Mapper.make_mapper_custom("add_line_number_and_byte_offset"))
 
 
-def test_grep_5():
+def test_grep_5() -> None:
     args = [make_arg_simple(["-q"]), make_arg_simple(["-s"])]
     operands = [Operand("*"),
                 Operand("in1.txt"),
@@ -88,7 +88,7 @@ def test_grep_5():
     assert len(meta.get_parallelizer_list()) == 0
 
 
-def test_grep_6():
+def test_grep_6() -> None:
     args = []
     operands = [Operand("*")]
 

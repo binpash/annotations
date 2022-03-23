@@ -1,5 +1,8 @@
 from annotation_generation.datatypes.Meta import *
 from abc import ABC
+from datatypes.Arg import Arg
+from datatypes.Operand import Operand
+from typing import List
 
 
 class MetaGeneratorInterface(ABC):
@@ -7,7 +10,7 @@ class MetaGeneratorInterface(ABC):
     # This is the select_subcommand from the original proposal,
     #   instead of returning functions, it initializes the object
     #   and then we can call its methods.
-    def __init__(self, arg_list, operand_list):
+    def __init__(self, arg_list: List[Arg], operand_list: List[Operand]) -> None:
         self.meta = Meta()
         self.arg_list = arg_list
         self.operand_names_list = [operand.name for operand in operand_list]
@@ -16,7 +19,7 @@ class MetaGeneratorInterface(ABC):
     # which has a default way of iterating over command invocation details but can be overwritten
 
     # transformer scaffolding for INPUT/OUTPUT-LISTS
-    def apply_transformers_for_input_output_lists(self):
+    def apply_transformers_for_input_output_lists(self) -> None:
         # 1) we apply the function for operands
         self.apply_operands_transformer_for_input_output_lists()
 
@@ -40,12 +43,12 @@ class MetaGeneratorInterface(ABC):
     # Roughly corresponds to this type, but updates meta in place and list of operands is attribute
     #   ([Operand] x Meta) -> Meta
     # @abstractmethod, then we do not need to have the ones with pass
-    def apply_operands_transformer_for_input_output_lists(self):
+    def apply_operands_transformer_for_input_output_lists(self) -> None:
         pass
 
     # Roughly corresponds to this type, but updates meta in place and list of operands is attribute
     #   ([Arg] x Meta) -> Meta
-    def apply_arg_list_transformer_for_input_output_lists(self):
+    def apply_arg_list_transformer_for_input_output_lists(self) -> None:
         for arg in self.arg_list:
             # side-effectful
             self.apply_indiv_arg_transformer_for_input_output_lists(arg)
@@ -53,27 +56,27 @@ class MetaGeneratorInterface(ABC):
     # Roughly corresponds to this type, but updates meta in place
     #   Arg -> (Meta -> Meta)
     # @abstractmethod, then we do not need to have the ones with pass
-    def apply_indiv_arg_transformer_for_input_output_lists(self, arg):
+    def apply_indiv_arg_transformer_for_input_output_lists(self, arg: Arg) -> None:
         pass
 
-    def deduplicate_input_output_lists_of_meta(self):
+    def deduplicate_input_output_lists_of_meta(self) -> None:
         self.meta.deduplicate_input_output_lists()
 
     # transformer for PARALLELIZERS
-    def apply_transformers_for_parallelizers(self):
+    def apply_transformers_for_parallelizers(self) -> None:
         # for commands which only take input from stdin, we cannot have indiv file parallelizers,
         # and for those, round robin is superior over consecutive junks, so we omit the latter even if feasible
         pass    # keep empty list for parallelizers
 
 #     HELPER FUNCTIONS
 
-    def get_meta(self):
+    def get_meta(self) -> Meta:
         return self.meta
 
-    def arg_list_contains_at_least_one_of(self, list_names):
+    def arg_list_contains_at_least_one_of(self, list_names: List[str]) -> bool:
         return len(self.filter_arg_list_with(list_names)) > 0
 
-    def filter_arg_list_with(self, list_names):
+    def filter_arg_list_with(self, list_names: List[str]) -> List[Arg]:
         return [arg for arg in self.arg_list if arg.get_name() in list_names]
 
     def which_is_last_in_arglist_of(self, list_names):
@@ -81,7 +84,7 @@ class MetaGeneratorInterface(ABC):
         last_arg = filtered_arg_list[len(filtered_arg_list) - 1]
         return last_arg.get_name()
 
-    def if_no_file_given_add_stdin_to_input_list(self):
+    def if_no_file_given_add_stdin_to_input_list(self) -> None:
         if len(self.operand_names_list) == 0:
             self.meta.prepend_stdin_to_input_list()
 

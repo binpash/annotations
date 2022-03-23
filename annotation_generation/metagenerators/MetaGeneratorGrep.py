@@ -1,5 +1,5 @@
 
-from datatypes.Arg import ArgKindEnum
+from datatypes.Arg import Arg, ArgKindEnum
 from annotation_generation.metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
 from annotation_generation.parallelizers.Parallelizer import Parallelizer
 from annotation_generation.parallelizers.Mapper import Mapper
@@ -21,7 +21,7 @@ class MetaGeneratorGrep(MetaGeneratorInterface):
     # for now, we ignore --exclude, --exclude-from, --exclude-dir, and --include and, thus, over-approximate
     # for now, we ignore -D/-d with actions
 
-    def apply_standard_filedescriptor_transformer_for_input_output_lists(self):
+    def apply_standard_filedescriptor_transformer_for_input_output_lists(self) -> None:
         # in general, output is written to stdout but can be suppressed
         # though, --help and --version overrules this (and no actual result returned)
         output_suppressed = self.arg_list_contains_at_least_one_of(["-q"])
@@ -34,7 +34,7 @@ class MetaGeneratorGrep(MetaGeneratorInterface):
         if not errors_suppressed:
             self.meta.append_stderr_to_output_list()
 
-    def apply_operands_transformer_for_input_output_lists(self):
+    def apply_operands_transformer_for_input_output_lists(self) -> None:
         if self.arg_list_contains_at_least_one_of(["-e", "-f"]):
             operand_slicing_parameter = 0
         else:
@@ -43,13 +43,13 @@ class MetaGeneratorGrep(MetaGeneratorInterface):
         # deciding on whether there is an input to check, add to input_list
         if len(operand_list_filenames) == 0:
             if self.arg_list_contains_at_least_one_of(["-r"]):
-                self.meta.add_list_to_input_list("$CWD")
+                self.meta.add_list_to_input_list(["$CWD"])
             else:
                 self.meta.prepend_stdin_to_input_list()
         else:
             self.meta.add_list_to_input_list(operand_list_filenames)
 
-    def apply_indiv_arg_transformer_for_input_output_lists(self, arg):
+    def apply_indiv_arg_transformer_for_input_output_lists(self, arg: Arg) -> None:
         if arg.get_name() == "-f":
             self.meta.prepend_el_to_input_list(arg.option_arg)
 
@@ -61,7 +61,7 @@ class MetaGeneratorGrep(MetaGeneratorInterface):
     # for -q, the input is not read further after some condition is met, so we do not parallelize at all
     # for -m, we only do IF
 
-    def apply_transformers_for_parallelizers(self):
+    def apply_transformers_for_parallelizers(self) -> None:
         if not self.arg_list_contains_at_least_one_of(["-q"]):
             parallelizer_if_seq_conc = Parallelizer.make_parallelizer_indiv_files()
             self.meta.append_to_parallelizer_list(parallelizer_if_seq_conc)

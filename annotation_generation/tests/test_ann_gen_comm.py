@@ -6,7 +6,7 @@ import annotation_generation.AnnotationGeneration as AnnotationGeneration
 cmd_name = "comm"
 
 
-def test_comm_1():
+def test_comm_1() -> None:
     args = [make_arg_simple(["-12"])]
     operands = [Operand("tocomm1.txt"),
                 Operand("tocomm2.txt")]
@@ -17,7 +17,7 @@ def test_comm_1():
     assert len(meta.get_output_list()) == 2     # dest and stderr
 
 
-def test_comm_2():
+def test_comm_2() -> None:
     args = []
     # illegal to have more than 2 files to compare
     operands = [Operand("tocomm1.txt"),
@@ -31,7 +31,7 @@ def test_comm_2():
         assert True
 
 
-def test_comm_3():
+def test_comm_3() -> None:
     args = [make_arg_simple(["--version"])]
     operands = []
 

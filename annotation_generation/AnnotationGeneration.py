@@ -1,4 +1,9 @@
 from annotation_generation.metagenerators.MetaGeneratorGrep import MetaGeneratorGrep
+from annotation_generation.datatypes.Meta import Meta
+from datatypes.Arg import Arg
+from datatypes.Operand import Operand
+from typing import List
+
 from annotation_generation.metagenerators.MetaGeneratorMv import MetaGeneratorMv
 from annotation_generation.metagenerators.MetaGeneratorTr import MetaGeneratorTr
 from annotation_generation.metagenerators.MetaGeneratorCat import MetaGeneratorCat
@@ -29,7 +34,7 @@ operand_list : [Operand]
 """
 
 
-def get_meta_from_cmd_invocation(cmd_name, arg_list, operand_list):
+def get_meta_from_cmd_invocation(cmd_name: str, arg_list: List[Arg], operand_list: List[Operand]) -> Meta:
 
     # Get the MetaGenerator
     meta_generator_class_for_cmd = cmd_name_transformer_module_mapper[cmd_name]

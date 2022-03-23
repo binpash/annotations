@@ -1,5 +1,7 @@
-from enum import Enum
+from __future__ import annotations
 
+from enum import Enum
+from typing import Optional
 
 class Arg:
 
@@ -7,14 +9,16 @@ class Arg:
     kind : ArgKindEnum
     data : depending on kind
     """
-    def __init__(self, kind, data):
+    def __init__(self, kind: ArgKindEnum, name: str, arg: Optional[str] = None) -> None:
         self.kind = kind
         if kind == ArgKindEnum.FLAG:
-            self.flag_name = data
-        elif kind == ArgKindEnum.OPTION:
-            self.option_name, self.option_arg = data
+            assert(arg is None)
+            self.flag_name = name
+        elif kind == ArgKindEnum.OPTION and arg is not None:
+            self.option_name = name
+            self.option_arg = arg
         else:
-            raise Exception("Arg got unknown kind!")
+            raise Exception("no proper kind given for Arg")
 
     def __repr__(self):
         if self.kind == ArgKindEnum.FLAG:
@@ -30,7 +34,7 @@ class Arg:
     #
     #     return False
 
-    def get_name(self):
+    def get_name(self) -> str:
         if self.kind == ArgKindEnum.FLAG:
             return self.flag_name
         elif self.kind == ArgKindEnum.OPTION:
@@ -39,12 +43,12 @@ class Arg:
             raise Exception("Arg got unknown kind!")
 
 
-def make_arg_simple(arg: list):
+def make_arg_simple(arg: list) -> Arg:
     
     if len(arg) == 1:
         ret = Arg(ArgKindEnum.FLAG, arg[0])
     elif len(arg) == 2:
-        ret = Arg(ArgKindEnum.OPTION, arg)
+        ret = Arg(ArgKindEnum.OPTION, arg[0], arg[1])
     else:
         assert False
     

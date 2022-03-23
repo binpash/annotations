@@ -10,7 +10,7 @@ cmd_name = "tr"
 # commands taken from spell script in one-liners
 
 
-def test_tr_1():
+def test_tr_1() -> None:
     args = [make_arg_simple(["-c"]), make_arg_simple(["-s"])]
     operands = [Operand("A-Za-z"),
                 Operand("\'\n\'")]
@@ -25,7 +25,7 @@ def test_tr_1():
     assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_adj_lines_merge())
 
 
-def test_tr_2():
+def test_tr_2() -> None:
     args = []
     operands = [Operand("A-Z"),
                 Operand("a-z")]
@@ -40,7 +40,7 @@ def test_tr_2():
     assert parallelizer1 == Parallelizer.make_parallelizer_round_robin()
 
 
-def test_tr_3():
+def test_tr_3() -> None:
     args = [make_arg_simple(["-d"])]
     operands = [Operand("'[:punct:]'")]
 
@@ -54,7 +54,7 @@ def test_tr_3():
     assert parallelizer1 == Parallelizer.make_parallelizer_round_robin()
 
 
-def test_tr_4():
+def test_tr_4() -> None:
     args = [make_arg_simple(["-d"])]
     operands = [Operand("'\n'")]
 
@@ -68,7 +68,7 @@ def test_tr_4():
     assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_adj_lines_merge())
 
 
-def test_tr_5():
+def test_tr_5() -> None:
     args = [make_arg_simple(["-c"]), make_arg_simple(["-d"])]
     operands = [Operand("'\n'")]
 
@@ -82,7 +82,7 @@ def test_tr_5():
     assert parallelizer1 == Parallelizer.make_parallelizer_round_robin()
 
 
-def test_tr_6():
+def test_tr_6() -> None:
     args = [make_arg_simple(["-c"]), make_arg_simple(["-d"])]
     operands = [Operand("A-Z")]
 

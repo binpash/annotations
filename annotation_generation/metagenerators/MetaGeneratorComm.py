@@ -10,11 +10,11 @@ class MetaGeneratorComm(MetaGeneratorInterface):
     # Which ones do affect input/output?
     # none
 
-    def apply_standard_filedescriptor_transformer_for_input_output_lists(self):
+    def apply_standard_filedescriptor_transformer_for_input_output_lists(self) -> None:
         self.meta.append_stderr_to_output_list()
         self.meta.append_stdout_to_output_list()
 
-    def apply_operands_transformer_for_input_output_lists(self):
+    def apply_operands_transformer_for_input_output_lists(self) -> None:
         if not self.arg_list_contains_at_least_one_of(["--help", "--version"]):
             assert(len(self.operand_names_list) == 2)  # needs two files to compare
         self.meta.add_list_to_input_list(self.operand_names_list)
