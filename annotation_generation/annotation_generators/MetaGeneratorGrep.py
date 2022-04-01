@@ -1,9 +1,9 @@
 
-from datatypes.Arg import Arg, ArgKindEnum
-from annotation_generation.metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
-from annotation_generation.parallelizers.Parallelizer import Parallelizer
-from annotation_generation.parallelizers.Mapper import Mapper
-from annotation_generation.parallelizers.Aggregator import Aggregator
+from datatypes.FlagOption import FlagOption
+from annotation_generation.annotation_generators.MetaGenerator_Interface import MetaGeneratorInterface
+from annotation_generation.datatypes.parallelizability.Parallelizer import Parallelizer
+from annotation_generation.datatypes.parallelizability.Mapper import Mapper
+from annotation_generation.datatypes.parallelizability.Aggregator import Aggregator
 
 
 class MetaGeneratorGrep(MetaGeneratorInterface):
@@ -24,32 +24,32 @@ class MetaGeneratorGrep(MetaGeneratorInterface):
     def apply_standard_filedescriptor_transformer_for_input_output_lists(self) -> None:
         # in general, output is written to stdout but can be suppressed
         # though, --help and --version overrules this (and no actual result returned)
-        output_suppressed = self.arg_list_contains_at_least_one_of(["-q"])
-        version_or_help_write_to_stdout = self.arg_list_contains_at_least_one_of(["--help"]) \
-                                          or self.arg_list_contains_at_least_one_of(["--version"])
+        output_suppressed = self.does_flag_option_list_contains_at_least_one_of(["-q"])
+        version_or_help_write_to_stdout = self.does_flag_option_list_contains_at_least_one_of(["--help"]) \
+                                          or self.does_flag_option_list_contains_at_least_one_of(["--version"])
         if not output_suppressed or version_or_help_write_to_stdout:
             self.meta.append_stdout_to_output_list()
         # errors are written to stderr but can be suppressed
-        errors_suppressed = self.arg_list_contains_at_least_one_of(["-s"])
+        errors_suppressed = self.does_flag_option_list_contains_at_least_one_of(["-s"])
         if not errors_suppressed:
             self.meta.append_stderr_to_output_list()
 
     def apply_operands_transformer_for_input_output_lists(self) -> None:
-        if self.arg_list_contains_at_least_one_of(["-e", "-f"]):
+        if self.does_flag_option_list_contains_at_least_one_of(["-e", "-f"]):
             operand_slicing_parameter = 0
         else:
             operand_slicing_parameter = 1
         operand_list_filenames = self.operand_names_list[operand_slicing_parameter:]
         # deciding on whether there is an input to check, add to input_list
         if len(operand_list_filenames) == 0:
-            if self.arg_list_contains_at_least_one_of(["-r"]):
+            if self.does_flag_option_list_contains_at_least_one_of(["-r"]):
                 self.meta.add_list_to_input_list(["$CWD"])
             else:
                 self.meta.prepend_stdin_to_input_list()
         else:
             self.meta.add_list_to_input_list(operand_list_filenames)
 
-    def apply_indiv_arg_transformer_for_input_output_lists(self, arg: Arg) -> None:
+    def apply_indiv_arg_transformer_for_input_output_lists(self, arg: FlagOption) -> None:
         if arg.get_name() == "-f":
             self.meta.prepend_el_to_input_list(arg.option_arg)
 
@@ -62,30 +62,30 @@ class MetaGeneratorGrep(MetaGeneratorInterface):
     # for -m, we only do IF
 
     def apply_transformers_for_parallelizers(self) -> None:
-        if not self.arg_list_contains_at_least_one_of(["-q"]):
+        if not self.does_flag_option_list_contains_at_least_one_of(["-q"]):
             parallelizer_if_seq_conc = Parallelizer.make_parallelizer_indiv_files()
             self.meta.append_to_parallelizer_list(parallelizer_if_seq_conc)
-            if not self.arg_list_contains_at_least_one_of(["-A", "-B", "-C", "-m"]):
-                if self.arg_list_contains_at_least_one_of(["-L", "-l"]):
+            if not self.does_flag_option_list_contains_at_least_one_of(["-A", "-B", "-C", "-m"]):
+                if self.does_flag_option_list_contains_at_least_one_of(["-L", "-l"]):
                     aggregator = Aggregator.make_aggregator_custom_2_ary("merge_keeping_longer_output")
                     parallelizer_rr_seq_cus2 = Parallelizer.make_parallelizer_round_robin(aggregator=aggregator)
                     self.meta.append_to_parallelizer_list(parallelizer_rr_seq_cus2)
                     # the output for both options is either empty or the filename (same for both if so)
                     # for "-l": if there was a match in one part, the filename will propagate; if not, not
                     # for "-L": if there was no match in one part, the filename will propagate; it not, not
-                elif self.arg_list_contains_at_least_one_of(["-c"]):
+                elif self.does_flag_option_list_contains_at_least_one_of(["-c"]):
                     aggregator = Aggregator.make_aggregator_custom_2_ary("sum_indiv_results_up")
                     parallelizer_rr_seq_cus2 = Parallelizer.make_parallelizer_round_robin(aggregator=aggregator)
                     self.meta.append_to_parallelizer_list(parallelizer_rr_seq_cus2)
-                elif self.arg_list_contains_at_least_one_of(["-n"]) and self.arg_list_contains_at_least_one_of(["-b"]):
+                elif self.does_flag_option_list_contains_at_least_one_of(["-n"]) and self.does_flag_option_list_contains_at_least_one_of(["-b"]):
                     mapper = Mapper.make_mapper_custom("add_line_number_and_byte_offset")
                     parallelizer_rr_cus_conc = Parallelizer.make_parallelizer_round_robin(mapper=mapper)
                     self.meta.append_to_parallelizer_list(parallelizer_rr_cus_conc)
-                elif self.arg_list_contains_at_least_one_of(["-n"]):
+                elif self.does_flag_option_list_contains_at_least_one_of(["-n"]):
                     mapper = Mapper.make_mapper_custom("add_line_number_offset")
                     parallelizer_rr_cus_conc = Parallelizer.make_parallelizer_round_robin(mapper=mapper)
                     self.meta.append_to_parallelizer_list(parallelizer_rr_cus_conc)
-                elif self.arg_list_contains_at_least_one_of(["-b"]):
+                elif self.does_flag_option_list_contains_at_least_one_of(["-b"]):
                     mapper = Mapper.make_mapper_custom("add_byte_offset")
                     parallelizer_rr_cus_conc = Parallelizer.make_parallelizer_round_robin(mapper=mapper)
                     self.meta.append_to_parallelizer_list(parallelizer_rr_cus_conc)

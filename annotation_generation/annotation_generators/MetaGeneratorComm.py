@@ -1,4 +1,4 @@
-from annotation_generation.metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
+from annotation_generation.annotation_generators.MetaGenerator_Interface import MetaGeneratorInterface
 
 
 class MetaGeneratorComm(MetaGeneratorInterface):
@@ -15,7 +15,7 @@ class MetaGeneratorComm(MetaGeneratorInterface):
         self.meta.append_stdout_to_output_list()
 
     def apply_operands_transformer_for_input_output_lists(self) -> None:
-        if not self.arg_list_contains_at_least_one_of(["--help", "--version"]):
+        if not self.does_flag_option_list_contains_at_least_one_of(["--help", "--version"]):
             assert(len(self.operand_names_list) == 2)  # needs two files to compare
         self.meta.add_list_to_input_list(self.operand_names_list)
 

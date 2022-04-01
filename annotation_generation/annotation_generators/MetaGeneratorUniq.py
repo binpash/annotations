@@ -1,7 +1,7 @@
-from annotation_generation.metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
-from annotation_generation.parallelizers.Parallelizer import Parallelizer
-from annotation_generation.parallelizers.Aggregator import Aggregator
-from datatypes.Arg import Arg
+from annotation_generation.annotation_generators.MetaGenerator_Interface import MetaGeneratorInterface
+from annotation_generation.datatypes.parallelizability.Parallelizer import Parallelizer
+from annotation_generation.datatypes.parallelizability.Aggregator import Aggregator
+from datatypes.FlagOption import FlagOption
 
 
 class MetaGeneratorUniq(MetaGeneratorInterface):
@@ -31,7 +31,7 @@ class MetaGeneratorUniq(MetaGeneratorInterface):
         else:
             pass    # only stderr with "uniq: extra operand '...'"
 
-    def apply_indiv_arg_transformer_for_input_output_lists(self, arg: Arg) -> None:
+    def apply_indiv_arg_transformer_for_input_output_lists(self, arg: FlagOption) -> None:
         if arg.get_name() in ["--help", "--version"]:
             self.meta.append_stdout_to_output_list()
 
@@ -45,8 +45,8 @@ class MetaGeneratorUniq(MetaGeneratorInterface):
 
     def apply_transformers_for_parallelizers(self) -> None:
         # check for flags/options that make it super hard
-        if not self.arg_list_contains_at_least_one_of(["-d", "-D", "--all-repeated"]):
-            if self.arg_list_contains_at_least_one_of(["-c"]):
+        if not self.does_flag_option_list_contains_at_least_one_of(["-d", "-D", "--all-repeated"]):
+            if self.does_flag_option_list_contains_at_least_one_of(["-c"]):
                 # we need a special merge
                 aggregator = Aggregator.make_aggregator_adj_lines_func("merge_count")
                 parallelizer_rr_seq_adjf = Parallelizer.make_parallelizer_round_robin(aggregator=aggregator)

@@ -1,6 +1,6 @@
-from annotation_generation.metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
-from annotation_generation.parallelizers.Parallelizer import Parallelizer
-from annotation_generation.parallelizers.Aggregator import Aggregator
+from annotation_generation.annotation_generators.MetaGenerator_Interface import MetaGeneratorInterface
+from annotation_generation.datatypes.parallelizability.Parallelizer import Parallelizer
+from annotation_generation.datatypes.parallelizability.Aggregator import Aggregator
 
 
 class MetaGeneratorTr(MetaGeneratorInterface):
@@ -27,11 +27,11 @@ class MetaGeneratorTr(MetaGeneratorInterface):
     def apply_transformers_for_parallelizers(self) -> None:
         # tr does only take input from stdin, so we can always apply RR parallelizer (but Mp and Ag may change slightly)
         # check for deletion of newlines
-        does_delete_newlines = self.arg_list_contains_at_least_one_of(["-d"]) and \
+        does_delete_newlines = self.does_flag_option_list_contains_at_least_one_of(["-d"]) and \
                                self.does_last_set_effectively_contain_newline()  # only allowed to have a single set
         # TODO: assert somewhere that only one set is given with -d
         # check for squeezing newlines
-        does_squeeze_newlines = self.arg_list_contains_at_least_one_of(["-s"]) and \
+        does_squeeze_newlines = self.does_flag_option_list_contains_at_least_one_of(["-s"]) and \
                                 self.does_last_set_effectively_contain_newline()
         if does_delete_newlines or does_squeeze_newlines:
             # for RR, we need an adjacent aggregator
@@ -48,7 +48,7 @@ class MetaGeneratorTr(MetaGeneratorInterface):
     def does_last_set_effectively_contain_newline(self) -> bool:
         last_operand = self.operand_names_list[len(self.operand_names_list) - 1]
         # is contained if (a) no -c and in set, or (b) -c and not in set
-        if len(self.operand_names_list) == 1 and self.arg_list_contains_at_least_one_of(["-c"]):
+        if len(self.operand_names_list) == 1 and self.does_flag_option_list_contains_at_least_one_of(["-c"]):
             return not last_operand.__contains__("\n")
         else:  # '-c' does not refer to the given set
             return last_operand.__contains__("\n")

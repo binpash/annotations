@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from annotation_generation.parallelizers.Splitter import *
-from annotation_generation.parallelizers.Aggregator import Aggregator
+from annotation_generation.datatypes.parallelizability.Splitter import *
 from annotation_generation.util import *
-from annotation_generation.parallelizers.Mapper import Mapper
+from annotation_generation.datatypes.parallelizability.Mapper import Mapper
 from typing import Optional
 
 

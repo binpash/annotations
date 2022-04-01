@@ -3,13 +3,14 @@ from typing import Any, Union
 import json
 import shlex
 import os
-from datatypes.Arg import make_arg_simple, Arg
+from util import make_arg_simple
+from FlagOption import FlagOption
 from datatypes.Operand import Operand
 from config.definitions import ROOT_DIR
 
 
 # assumes that command_json_fn is the filename in folder command_flag_option_info
-def parse_json(command, command_json_fn) -> list[Union[str, Arg, Operand]]:
+def parse_json(command, command_json_fn) -> list[Union[str, FlagOption, Operand]]:
     command_json_fn_absolute : str = os.path.join(ROOT_DIR, 'command_flag_option_info', command_json_fn)
     """
     Convert terminal command invocation string to 
@@ -20,7 +21,7 @@ def parse_json(command, command_json_fn) -> list[Union[str, Arg, Operand]]:
     # print(command_list)
 
     # add command name to xbd list
-    xbd_list : list[Union[str, Arg, Operand]] = [command_list[0]] # TODO: fix type when making list more structured
+    xbd_list : list[Union[str, FlagOption, Operand]] = [command_list[0]] # TODO: fix type when making list more structured
 
     # get man page data for command as dict
     with open(command_json_fn_absolute) as f:

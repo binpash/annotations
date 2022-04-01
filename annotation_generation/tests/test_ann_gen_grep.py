@@ -1,8 +1,8 @@
-from datatypes.Arg import make_arg_simple
+from util import make_arg_simple
 from datatypes.Operand import Operand
-from annotation_generation.parallelizers.Parallelizer import Parallelizer
-from annotation_generation.parallelizers.Mapper import Mapper
-from annotation_generation.parallelizers.Aggregator import Aggregator
+from annotation_generation.datatypes.parallelizability.Parallelizer import Parallelizer
+from annotation_generation.datatypes.parallelizability.Mapper import Mapper
+from annotation_generation.datatypes.parallelizability.Aggregator import Aggregator
 
 import annotation_generation.AnnotationGeneration as AnnotationGeneration
 

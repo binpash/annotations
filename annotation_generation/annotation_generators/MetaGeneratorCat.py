@@ -1,8 +1,8 @@
 
-from annotation_generation.metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
-from annotation_generation.parallelizers.Parallelizer import Parallelizer
-from annotation_generation.parallelizers.Mapper import Mapper
-from annotation_generation.parallelizers.Aggregator import Aggregator
+from annotation_generation.annotation_generators.MetaGenerator_Interface import MetaGeneratorInterface
+from annotation_generation.datatypes.parallelizability.Parallelizer import Parallelizer
+from annotation_generation.datatypes.parallelizability.Mapper import Mapper
+from annotation_generation.datatypes.parallelizability.Aggregator import Aggregator
 
 
 class MetaGeneratorCat(MetaGeneratorInterface):
@@ -31,7 +31,7 @@ class MetaGeneratorCat(MetaGeneratorInterface):
     # for
 
     def apply_transformers_for_parallelizers(self) -> None:
-        if self.arg_list_contains_at_least_one_of(["-n"]) and not self.arg_list_contains_at_least_one_of(["-s"]):
+        if self.does_flag_option_list_contains_at_least_one_of(["-n"]) and not self.does_flag_option_list_contains_at_least_one_of(["-s"]):
             # case (True, False): # we can have mappers that take offset as argument and without -s, this is stable
                 # TODO: instantiate special mapper
                 mapper = Mapper.make_mapper_custom("cus")
@@ -41,7 +41,7 @@ class MetaGeneratorCat(MetaGeneratorInterface):
                 self.meta.append_to_parallelizer_list(parallelizer_rr_cus_conc)
             # case (True, True):
             #     pass    # do not add any since it is tricky
-        elif not self.arg_list_contains_at_least_one_of(["-n"]) and self.arg_list_contains_at_least_one_of(["-s"]):
+        elif not self.does_flag_option_list_contains_at_least_one_of(["-n"]) and self.does_flag_option_list_contains_at_least_one_of(["-s"]):
             # case (False, True):
                 # not numbered but need to compare adjacent lines and possibly remove one blank line
                 aggregator = Aggregator.make_aggregator_adj_lines_func("squeeze_blanks")
@@ -49,7 +49,7 @@ class MetaGeneratorCat(MetaGeneratorInterface):
                 self.meta.append_to_parallelizer_list(parallelizer_if_seq_adjf)
                 parallelizer_rr_seq_adjf = Parallelizer.make_parallelizer_round_robin(aggregator=aggregator)
                 self.meta.append_to_parallelizer_list(parallelizer_rr_seq_adjf)
-        elif not self.arg_list_contains_at_least_one_of(["-n"]) and not self.arg_list_contains_at_least_one_of(["-s"]):
+        elif not self.does_flag_option_list_contains_at_least_one_of(["-n"]) and not self.does_flag_option_list_contains_at_least_one_of(["-s"]):
             # case (False, False):
                 # add two parallelizers: IF and RR with SEQ and CONC each
                 parallelizer_if_seq_conc = Parallelizer.make_parallelizer_indiv_files()

@@ -1,21 +1,19 @@
 from __future__ import annotations
 from typing import List
 
-from datatypes.Arg import Arg
+from util import standard_repr, standard_eq
+from datatypes.FlagOption import FlagOption
 from datatypes.Operand import Operand
 
 class CommandInvocation:
 
-    def __init__(self, cmd: str, arg_list: List[Arg], operand_list: List[Operand]) -> None:
-        self.cmd = cmd
-        self.arg_list = arg_list
+    def __init__(self, cmd_name: str, flag_option_list: List[FlagOption], operand_list: List[Operand]) -> None:
+        self.cmd_name = cmd_name
+        self.flag_option_list = flag_option_list
         self.operand_list = operand_list
 
     def __repr__(self):
-#         TODO: add rest
-        return self.cmd
+        return standard_repr(self)
 
     def __eq__(self, other: CommandInvocation):
-        return self.cmd == other.cmd \
-            and self.arg_list == other.arg_list \
-            and self.operand_list == other.operand_list
+        return standard_eq(self, other)

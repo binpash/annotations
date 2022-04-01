@@ -1,4 +1,4 @@
-from datatypes.Arg import make_arg_simple
+from util import make_arg_simple
 from datatypes.Operand import Operand
 
 import annotation_generation.AnnotationGeneration as AnnotationGeneration

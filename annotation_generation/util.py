@@ -1,7 +1,7 @@
-from annotation_generation.datatypes.FileName import FileName
-from annotation_generation.datatypes.FileDescriptor import FileDescriptor, FileDescriptorEnum
-from annotation_generation.parallelizers.Aggregator import Aggregator
-from annotation_generation.parallelizers.Mapper import Mapper
+from datatypes.FileName import FileName
+from datatypes.FileDescriptor import FileDescriptor, FileDescriptorEnum
+from annotation_generation.datatypes.parallelizability.Aggregator import Aggregator
+from annotation_generation.datatypes.parallelizability.Mapper import Mapper
 from typing import Any, List, Optional, Union, TypeVar
 
 TType = TypeVar("TType")

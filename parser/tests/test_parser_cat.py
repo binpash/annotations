@@ -1,5 +1,5 @@
 import pytest
-from datatypes.Arg import make_arg_simple
+from util import make_arg_simple
 from datatypes.Operand import Operand
 from parser.parser import parse_json
 

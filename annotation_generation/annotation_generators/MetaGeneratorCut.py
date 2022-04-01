@@ -1,5 +1,5 @@
-from annotation_generation.metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
-from annotation_generation.parallelizers.Parallelizer import Parallelizer
+from annotation_generation.annotation_generators.MetaGenerator_Interface import MetaGeneratorInterface
+from annotation_generation.datatypes.parallelizability.Parallelizer import Parallelizer
 
 
 class MetaGeneratorCut(MetaGeneratorInterface):

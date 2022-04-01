@@ -1,6 +1,6 @@
 
-from datatypes.Arg import Arg, ArgKindEnum
-from annotation_generation.metagenerators.MetaGenerator_Interface import MetaGeneratorInterface
+from datatypes.FlagOption import FlagOption
+from annotation_generation.annotation_generators.MetaGenerator_Interface import MetaGeneratorInterface
 
 
 class MetaGeneratorMv(MetaGeneratorInterface):
@@ -36,7 +36,7 @@ class MetaGeneratorMv(MetaGeneratorInterface):
     #     depending on all the different options but recomputing quite some program logic then
 
     def apply_standard_filedescriptor_transformer_for_input_output_lists(self) -> None:
-        version_or_help_write_to_stdout = self.arg_list_contains_at_least_one_of(["--help", "--version"])
+        version_or_help_write_to_stdout = self.does_flag_option_list_contains_at_least_one_of(["--help", "--version"])
         if version_or_help_write_to_stdout:
             self.meta.append_stdout_to_output_list()
         # no way to suppress error messages hence added
@@ -46,7 +46,7 @@ class MetaGeneratorMv(MetaGeneratorInterface):
         # -T shall treat destination as file, not directory, not considered currently
         # -t gives destination directory as an argument to option and determines
         #    how operands are interpreted
-        list_options_t = self.filter_arg_list_with(["-t"])
+        list_options_t = self.get_flag_option_list_filtered_with(["-t"])
         if len(list_options_t) == 0:
             # all but last input, last output
             self.meta.add_list_to_input_list(self.operand_names_list[:-1])
@@ -69,7 +69,7 @@ class MetaGeneratorMv(MetaGeneratorInterface):
         #         # multiple -t options not allowed (checked using cmd)
         #         raise Exception("multiple -t options defined for mv")
 
-    def apply_indiv_arg_transformer_for_input_output_lists(self, arg: Arg) -> None:
+    def apply_indiv_arg_transformer_for_input_output_lists(self, arg: FlagOption) -> None:
         if arg.get_name() == "-t":
             self.meta.prepend_el_to_output_list(arg.option_arg)
 

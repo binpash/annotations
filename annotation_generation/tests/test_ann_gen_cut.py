@@ -1,6 +1,6 @@
-from datatypes.Arg import make_arg_simple
+from util import make_arg_simple
 from datatypes.Operand import Operand
-from annotation_generation.parallelizers.Parallelizer import Parallelizer
+from annotation_generation.datatypes.parallelizability.Parallelizer import Parallelizer
 
 import annotation_generation.AnnotationGeneration as AnnotationGeneration
 
