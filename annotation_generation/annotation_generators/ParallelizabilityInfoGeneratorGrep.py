@@ -1,57 +1,16 @@
-
-from datatypes.FlagOption import FlagOption
-from annotation_generation.annotation_generators.MetaGenerator_Interface import MetaGeneratorInterface
+from annotation_generation.annotation_generators.ParallelizabilityInfoGenerator_Interface import ParallelizabilityInfoGeneratorInterface
 from annotation_generation.datatypes.parallelizability.Parallelizer import Parallelizer
 from annotation_generation.datatypes.parallelizability.Mapper import Mapper
 from annotation_generation.datatypes.parallelizability.Aggregator import Aggregator
 
 
-class MetaGeneratorGrep(MetaGeneratorInterface):
-    # for details on what the functions do, check comments in MetaGeneratorInterface
+class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface):
 
     # list_of_all_flags = ["-V", "--help", "-E", "-F", "-G", "-P", "-i", "--no-ignore-case", "-v", "-w",
     #                      "-x", "-y", "-c", "-L", "-l", "-o", "-q", "-s", "-b", "-H", "-h", "-n", "-T", "-Z",
     #                      "--no-group-separator", "-a", "-I", "-r", "-R", "--line-buffered", "-U", "-z"]
     # list_of_all_options = ["-e", "-f", "--color", "-m", "--label", "-A", "-B", "-C", "--group-separator",
     #                        "--binary-files", "-D", "-d", "--exclude", "--exclude-from", "--exclude-dir", "--include"]
-
-    # Which ones do affect input/output?
-    # -f affects input
-    # -r actually does not really affect both since files and directories are both identified by their name
-    # for now, we ignore --exclude, --exclude-from, --exclude-dir, and --include and, thus, over-approximate
-    # for now, we ignore -D/-d with actions
-
-    def apply_standard_filedescriptor_transformer_for_input_output_lists(self) -> None:
-        # in general, output is written to stdout but can be suppressed
-        # though, --help and --version overrules this (and no actual result returned)
-        output_suppressed = self.does_flag_option_list_contains_at_least_one_of(["-q"])
-        version_or_help_write_to_stdout = self.does_flag_option_list_contains_at_least_one_of(["--help"]) \
-                                          or self.does_flag_option_list_contains_at_least_one_of(["--version"])
-        if not output_suppressed or version_or_help_write_to_stdout:
-            self.meta.append_stdout_to_output_list()
-        # errors are written to stderr but can be suppressed
-        errors_suppressed = self.does_flag_option_list_contains_at_least_one_of(["-s"])
-        if not errors_suppressed:
-            self.meta.append_stderr_to_output_list()
-
-    def apply_operands_transformer_for_input_output_lists(self) -> None:
-        if self.does_flag_option_list_contains_at_least_one_of(["-e", "-f"]):
-            operand_slicing_parameter = 0
-        else:
-            operand_slicing_parameter = 1
-        operand_list_filenames = self.operand_names_list[operand_slicing_parameter:]
-        # deciding on whether there is an input to check, add to input_list
-        if len(operand_list_filenames) == 0:
-            if self.does_flag_option_list_contains_at_least_one_of(["-r"]):
-                self.meta.add_list_to_input_list(["$CWD"])
-            else:
-                self.meta.prepend_stdin_to_input_list()
-        else:
-            self.meta.add_list_to_input_list(operand_list_filenames)
-
-    def apply_indiv_arg_transformer_for_input_output_lists(self, arg: FlagOption) -> None:
-        if arg.get_name() == "-f":
-            self.meta.prepend_el_to_input_list(arg.option_arg)
 
     # Which ones do affect parallelizability?
     # -c, -L, -l, -b, -n;
@@ -60,6 +19,10 @@ class MetaGeneratorGrep(MetaGeneratorInterface):
     # and -A, -B, and -C but we do not parallelize within file boundaries since they require context
     # for -q, the input is not read further after some condition is met, so we do not parallelize at all
     # for -m, we only do IF
+
+    def generate_info(self) -> None:
+        # TODO
+        pass
 
     def apply_transformers_for_parallelizers(self) -> None:
         if not self.does_flag_option_list_contains_at_least_one_of(["-q"]):

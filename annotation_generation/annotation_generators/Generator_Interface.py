@@ -31,3 +31,9 @@ class Generator_Interface(ABC):
     def get_flag_option_list_filtered_with(self, list_names: List[str]) -> List[FlagOption]:
         return [flagoption for flagoption in self.flag_option_list if flagoption.get_name() in list_names]
 
+    def is_version_or_help_in_flag_option_list(self) -> bool:
+        return self.does_flag_option_list_contains_at_least_one_of(["--help"]) \
+                or self.does_flag_option_list_contains_at_least_one_of(["--version"])
+
+    def get_operand_list_length(self):
+        return len(self.operand_list)

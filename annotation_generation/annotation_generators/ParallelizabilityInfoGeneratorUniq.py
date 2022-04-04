@@ -1,39 +1,12 @@
-from annotation_generation.annotation_generators.MetaGenerator_Interface import MetaGeneratorInterface
+from annotation_generation.annotation_generators.ParallelizabilityInfoGenerator_Interface import ParallelizabilityInfoGeneratorInterface
 from annotation_generation.datatypes.parallelizability.Parallelizer import Parallelizer
 from annotation_generation.datatypes.parallelizability.Aggregator import Aggregator
-from datatypes.FlagOption import FlagOption
 
 
-class MetaGeneratorUniq(MetaGeneratorInterface):
-    # for details on what the functions do, check comments in its super class MetaGeneratorInterface
+class ParallelizabilityInfoGeneratorUniq(ParallelizabilityInfoGeneratorInterface):
 
     # list_of_all_flags = ["-c", "-d", "-D", "-i", "-u", "-z", "--help", "--version"]
     # list_of_all_options = ["--all-repeated", "-f", "--group", "-s", "-w"]
-
-    # Which ones do affect input/output?
-    # only the number of operands and flags --help and --version
-
-    def apply_standard_filedescriptor_transformer_for_input_output_lists(self) -> None:
-        self.meta.append_stderr_to_output_list()
-        # we add stdout and stdin in transformer_for_operands
-
-    def apply_operands_transformer_for_input_output_lists(self) -> None:
-        # tested this with the command, man-page a bit inconclusive with optional OUTPUT
-        if len(self.operand_names_list) == 0:
-            self.meta.prepend_stdin_to_input_list()
-            self.meta.append_stdout_to_output_list()
-        elif len(self.operand_names_list) == 1:
-            self.meta.add_list_to_input_list(self.operand_names_list)
-            self.meta.append_stdout_to_output_list()
-        elif len(self.operand_names_list) == 2:
-            self.meta.add_list_to_input_list(self.operand_names_list[:-1])
-            self.meta.add_list_to_output_list(self.operand_names_list[-1:])
-        else:
-            pass    # only stderr with "uniq: extra operand '...'"
-
-    def apply_indiv_arg_transformer_for_input_output_lists(self, arg: FlagOption) -> None:
-        if arg.get_name() in ["--help", "--version"]:
-            self.meta.append_stdout_to_output_list()
 
     # Which ones do affect parallelizability?
     # base-line: parallelization possible with RR/(CJ) x SEQ x ADJF
@@ -42,6 +15,10 @@ class MetaGeneratorUniq(MetaGeneratorInterface):
     # -c makes it harder but feasible:
     #   one needs to cut the prefix of numbers, run the sequential and see whether it is merged
     # TODO: what does --group do?
+
+    def generate_info(self) -> None:
+    #     TODO
+        pass
 
     def apply_transformers_for_parallelizers(self) -> None:
         # check for flags/options that make it super hard

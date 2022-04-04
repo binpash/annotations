@@ -1,21 +1,12 @@
-from annotation_generation.annotation_generators.MetaGenerator_Interface import MetaGeneratorInterface
+from annotation_generation.annotation_generators.ParallelizabilityInfoGenerator_Interface import ParallelizabilityInfoGeneratorInterface
 from annotation_generation.datatypes.parallelizability.Parallelizer import Parallelizer
 from annotation_generation.datatypes.parallelizability.Aggregator import Aggregator
 
 
-class MetaGeneratorTr(MetaGeneratorInterface):
-    # for details on what the functions do, check comments in its super class MetaGeneratorInterface
+class ParallelizabilityInfoGeneratorTr(ParallelizabilityInfoGeneratorInterface):
 
     # list_of_all_flags = ["-c", "-d", "-s", "-t", "--help", "--version",
     # list_of_all_options = []
-
-    # Which ones do affect input/output?
-    # none, takes from stdin and prints to stdout and no way to suppress output
-
-    def apply_standard_filedescriptor_transformer_for_input_output_lists(self) -> None:
-        self.meta.prepend_stdin_to_input_list()
-        self.meta.append_stdout_to_output_list()
-        self.meta.append_stderr_to_output_list()
 
     # Which ones do affect parallelizability?
     # -d which deletes (instead of translating)
@@ -23,6 +14,10 @@ class MetaGeneratorTr(MetaGeneratorInterface):
     # -s which squeezes repetitions of characters in last spec. set
     #    -> if '\n' is effectively included in SET1, then Mp[ADJ] and Ag[ADJ]
     # for both, if nothing is true, standard things work
+
+    def generate_info(self) -> None:
+        #     TODO
+        pass
 
     def apply_transformers_for_parallelizers(self) -> None:
         # tr does only take input from stdin, so we can always apply RR parallelizer (but Mp and Ag may change slightly)

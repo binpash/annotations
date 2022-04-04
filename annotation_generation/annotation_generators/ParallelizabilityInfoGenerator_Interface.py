@@ -8,12 +8,12 @@ from datatypes.CommandInvocation import CommandInvocation
 from annotation_generation.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
 
 
-class ParallelizabilityInfoGenerator_Interface(Generator_Interface, ABC):
+class ParallelizabilityInfoGeneratorInterface(Generator_Interface, ABC):
 
     # This is the select_subcommand from the original proposal,
     #   instead of returning functions, it initializes the object
     #   and then we can call its methods.
-    def __init__(self, cmd_invocation: CommandInvocation) -> ParallelizabilityInfoGenerator_Interface:
+    def __init__(self, cmd_invocation: CommandInvocation) -> ParallelizabilityInfoGeneratorInterface:
         Generator_Interface.__init__(cmd_invocation)
         self.parallelizability_info: ParallelizabilityInfo = ParallelizabilityInfo()
 

@@ -1,5 +1,5 @@
-from datatypes.FileName import FileName
-from datatypes.FileDescriptor import FileDescriptor, FileDescriptorEnum
+from datatypes.FileDescriptor import FileDescriptor, FileName, StdDescriptor, StdDescriptorEnum
+from datatypes.Operand import Operand
 from annotation_generation.datatypes.parallelizability.Aggregator import Aggregator
 from annotation_generation.datatypes.parallelizability.Mapper import Mapper
 from typing import Any, List, Optional, Union, TypeVar
@@ -20,16 +20,16 @@ def list_deduplication(list_to_dedup: List[TType]) -> List[TType]:
     return deduplicated_input_list
 
 
-def compute_actual_el_for_input(input_el: str) -> Union[FileName, FileDescriptor]:
+def compute_actual_el_for_input(input_el: Operand) -> FileDescriptor:
     if input_el == "-":
-        return FileDescriptor(FileDescriptorEnum.STDIN)
+        return StdDescriptor(StdDescriptorEnum.STDIN)
     else:
         return FileName(input_el)
 
 
-def compute_actual_el_for_output(output_el: str) -> Union[FileName, FileDescriptor]:
+def compute_actual_el_for_output(output_el: Operand) -> FileDescriptor:
     if output_el == "-":
-        return FileDescriptor(FileDescriptorEnum.STDOUT)
+        return StdDescriptor(StdDescriptorEnum.STDOUT)
     else:
         return FileName(output_el)
 

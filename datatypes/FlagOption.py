@@ -1,11 +1,9 @@
 from __future__ import annotations
-from typing import Union
-from typing import NewType
+from typing import Union, NewType
 
-from datatypes.FileName import FileName
 from datatypes.FileDescriptor import FileDescriptor
 
-OptionArg = NewType('OptionArg', Union[str, FileName, FileDescriptor])
+OptionArg = NewType('OptionArg', Union[str, FileDescriptor])
 
 from abc import ABC
 

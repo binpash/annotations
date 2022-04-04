@@ -1,4 +1,6 @@
 from __future__ import annotations
+from typing import List
+from datatypes.Operand import Operand
 
 from abc import ABC, abstractmethod
 
@@ -7,9 +9,9 @@ from datatypes.CommandInvocation import CommandInvocation
 from annotation_generation.datatypes.InputOutputInfo import InputOutputInfo
 
 
-class InputOutputInfoGenerator_Interface(Generator_Interface, ABC):
+class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
 
-    def __init__(self, cmd_invocation: CommandInvocation) -> InputOutputInfoGenerator_Interface:
+    def __init__(self, cmd_invocation: CommandInvocation) -> InputOutputInfoGeneratorInterface:
         Generator_Interface.__init__(cmd_invocation)
         self.input_output_info: InputOutputInfo = InputOutputInfo
 
@@ -20,11 +22,51 @@ class InputOutputInfoGenerator_Interface(Generator_Interface, ABC):
     def get_info(self) -> InputOutputInfo:
         return self.input_output_info
 
+    ## Member attributes only changed through these functions
 
-    ## HELPERS/Library functions: modifying input output info
+    def set_ioinfo_positional_config_list(self, value: List[Operand]) -> None:
+        self.input_output_info.set_positional_config_list(value)
 
-    # TODO: check functions in MetaGeneratorInterface, adapt and move here
+    def set_ioinfo_positional_input_list(self, value: List[Operand]) -> None:
+        self.input_output_info.set_positional_input_list(value)
 
-    def if_no_file_given_stdin_implicitly_used_as_input(self) -> None:
-        # TODO
-        pass
+    def set_ioinfo_positional_output_list(self, value: List[Operand]) -> None:
+        self.input_output_info.set_positional_output_list(value)
+
+    # use default values here as counter-measure for using False as default values in constructor
+    def set_ioinfo_implicit_use_of_stdin(self, value: bool = True) -> None:
+        self.input_output_info.set_implicit_use_of_stdin(value)
+
+    def set_ioinfo_implicit_use_of_stdout(self, value: bool = True) -> None:
+        self.input_output_info.set_implicit_use_of_stdout(value)
+
+    def set_ioinfo_multiple_inputs_possible(self, value: bool = True) -> None:
+        self.input_output_info.set_implicit_use_of_stdout(value)
+
+    ## Library functions
+
+    def get_length_ioinfo_positional_input_list(self) -> int:
+        return len(self.input_output_info.positional_input_list)
+
+    def if_no_operands_given_stdin_implicitly_used(self) -> None:
+        if self.operand_list is []:
+            self.set_ioinfo_implicit_use_of_stdin(True)
+
+    def all_operands_are_inputs(self) -> None:
+        self.set_ioinfo_positional_input_list(self.operand_list)
+
+    def if_version_or_help_stdout_implicitly_used(self) -> bool:
+        if self.is_version_or_help_in_flag_option_list():
+            self.set_ioinfo_implicit_use_of_stdout()
+
+    def all_but_last_operand_is_input(self):
+        self.set_ioinfo_positional_input_list(self.operand_list[:-1])
+
+    def all_but_first_operand_is_input(self):
+        self.set_ioinfo_positional_input_list(self.operand_list[1:])
+
+    def only_last_operand_is_output(self):
+        self.set_ioinfo_positional_output_list(self.operand_names_list[-1:])
+
+    def set_first_operand_as_positional_config(self):
+        self.set_ioinfo_positional_config_list(self.operand_list[:1])
