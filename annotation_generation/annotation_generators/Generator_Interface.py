@@ -8,8 +8,9 @@ from datatypes.CommandInvocation import CommandInvocation
 
 class Generator_Interface(ABC):
 
-    # TODO: proper type for constructor of this super class
-    def __init__(self, cmd_invocation: CommandInvocation) -> Generator_Interface:
+    def __init__(self, cmd_invocation: CommandInvocation) -> None:
+        # we unfold to have easier access, it will not be fed back from here anywhere
+        self.cmd_name : str = cmd_invocation.cmd_name
         self.flag_option_list : List[FlagOption] = cmd_invocation.flag_option_list
         self.operand_list : List[Operand] = cmd_invocation.operand_list
 

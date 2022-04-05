@@ -4,7 +4,7 @@ import json
 import shlex
 import os
 from util import make_arg_simple
-from FlagOption import FlagOption
+from datatypes.FlagOption import FlagOption
 from datatypes.Operand import Operand
 from config.definitions import ROOT_DIR
 

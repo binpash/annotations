@@ -13,7 +13,7 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
 
     def __init__(self, cmd_invocation: CommandInvocation) -> InputOutputInfoGeneratorInterface:
         Generator_Interface.__init__(cmd_invocation)
-        self.input_output_info: InputOutputInfo = InputOutputInfo
+        self.input_output_info: InputOutputInfo = InputOutputInfo()
 
     @abstractmethod
     def generate_info(self) -> None:

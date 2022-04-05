@@ -34,7 +34,7 @@ def test_uniq_2() -> None:
 
     assert len(meta.get_parallelizer_list()) == 1
     [parallelizer1] = meta.get_parallelizer_list()
-    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_adj_lines_func("merge_count"))
+    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin()
 
 
 def test_uniq_3() -> None:
@@ -48,7 +48,7 @@ def test_uniq_3() -> None:
 
     assert len(meta.get_parallelizer_list()) == 1
     [parallelizer1] = meta.get_parallelizer_list()
-    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_adj_lines_func("seq"))
+    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin()
 
 
 def test_uniq_4() -> None:

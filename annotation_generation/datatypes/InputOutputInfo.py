@@ -4,13 +4,14 @@ from annotation_generation.util import compute_actual_el_for_input, compute_actu
 from typing import List, Optional, Union
 from datatypes.Operand import Operand
 from datatypes.FileDescriptor import FileDescriptor
+from datatypes.FlagOption import OptionArgPosConfigType
 
 from annotation_generation.util import return_empty_list_if_none_else_itself
 
 class InputOutputInfo:
 
     def __init__(self,
-                 positional_config_list : Optional[List[Operand]] = None,  # None translates to empty list
+                 positional_config_list : Optional[List[OptionArgPosConfigType]] = None,  # None translates to empty list
                  positional_input_list : Optional[List[FileDescriptor]] = None,  # None translates to empty list
                  positional_output_list : Optional[List[FileDescriptor]] = None,  # None translates to empty list
                  implicit_use_of_stdin : bool = False,

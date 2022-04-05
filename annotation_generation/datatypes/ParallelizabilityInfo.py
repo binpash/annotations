@@ -18,3 +18,6 @@ class ParallelizabilityInfo:
 
     def __repr__(self) -> str:
         return standard_repr(self)
+
+    def append_to_parallelizer_list(self, parallelizer: Parallelizer) -> None:
+        self.parallelizer_list.append(parallelizer)

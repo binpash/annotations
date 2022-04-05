@@ -1,4 +1,5 @@
 from annotation_generation.annotation_generators.InputOutputInfoGenerator_Interface import InputOutputInfoGeneratorInterface
+from datatypes.Operand import Operand
 
 
 class InputOutputInfoGeneratorGrep(InputOutputInfoGeneratorInterface):
@@ -40,9 +41,9 @@ class InputOutputInfoGeneratorGrep(InputOutputInfoGeneratorInterface):
             self.set_first_operand_as_positional_config()
             self.all_but_first_operand_is_input()
         # deciding on whether there is an input to check, add to input_list
-        if self.input_output_info.get_length_ioinfo_positional_input_list == 0:
+        if self.get_length_ioinfo_positional_input_list() == 0:
             if self.does_flag_option_list_contains_at_least_one_of(["-r"]):
-                self.set_ioinfo_positional_input_list(["$PWD"]) # TODO: this is not exactly equivalent due to path
+                self.set_ioinfo_positional_input_list([Operand("$PWD")]) # TODO: this is not exactly equivalent due to path and type wrong
             else:
                 self.set_ioinfo_implicit_use_of_stdin()
 

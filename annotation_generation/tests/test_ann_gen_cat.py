@@ -56,8 +56,8 @@ def test_cat_3() -> None:
 
     assert len(meta.get_parallelizer_list()) == 2
     [parallelizer1, parallelizer2] = meta.get_parallelizer_list()
-    assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files(mapper=Mapper.make_mapper_custom("cus"))
-    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(mapper=Mapper.make_mapper_custom("cus"))
+    assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
+    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
 
 
 def test_cat_4() -> None:
@@ -85,6 +85,6 @@ def test_cat_5() -> None:
 
     assert len(meta.get_parallelizer_list()) == 2
     [parallelizer1, parallelizer2] = meta.get_parallelizer_list()
-    assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files(aggregator=Aggregator.make_aggregator_adj_lines_func("squeeze_blanks"))
-    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_adj_lines_func("squeeze_blanks"))
+    assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
+    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
 

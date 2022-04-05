@@ -1,7 +1,7 @@
 from annotation_generation.annotation_generators.ParallelizabilityInfoGenerator_Interface import ParallelizabilityInfoGeneratorInterface
 from annotation_generation.datatypes.parallelizability.Parallelizer import Parallelizer
-from annotation_generation.datatypes.parallelizability.Mapper import Mapper
-from annotation_generation.datatypes.parallelizability.Aggregator import Aggregator
+from annotation_generation.datatypes.parallelizability.MapperSpec import MapperSpec
+from annotation_generation.datatypes.parallelizability.AggregatorSpec import AggregatorSpec
 
 
 class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface):
@@ -21,37 +21,29 @@ class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface
     # for -m, we only do IF
 
     def generate_info(self) -> None:
-        # TODO
-        pass
-
-    def apply_transformers_for_parallelizers(self) -> None:
         if not self.does_flag_option_list_contains_at_least_one_of(["-q"]):
-            parallelizer_if_seq_conc = Parallelizer.make_parallelizer_indiv_files()
-            self.meta.append_to_parallelizer_list(parallelizer_if_seq_conc)
+            # for indiv files
+            self.append_to_parallelizer_list_if_seq_conc()
+            # rest for round-robin
+            mapper_spec = None
+            aggregator_spec = None
             if not self.does_flag_option_list_contains_at_least_one_of(["-A", "-B", "-C", "-m"]):
                 if self.does_flag_option_list_contains_at_least_one_of(["-L", "-l"]):
-                    aggregator = Aggregator.make_aggregator_custom_2_ary("merge_keeping_longer_output")
-                    parallelizer_rr_seq_cus2 = Parallelizer.make_parallelizer_round_robin(aggregator=aggregator)
-                    self.meta.append_to_parallelizer_list(parallelizer_rr_seq_cus2)
+                    aggregator_spec = AggregatorSpec.make_aggregator_custom_2_ary('todo_impl_merge_keeping_longer_output', is_implemented=False)
                     # the output for both options is either empty or the filename (same for both if so)
                     # for "-l": if there was a match in one part, the filename will propagate; if not, not
                     # for "-L": if there was no match in one part, the filename will propagate; it not, not
                 elif self.does_flag_option_list_contains_at_least_one_of(["-c"]):
-                    aggregator = Aggregator.make_aggregator_custom_2_ary("sum_indiv_results_up")
-                    parallelizer_rr_seq_cus2 = Parallelizer.make_parallelizer_round_robin(aggregator=aggregator)
-                    self.meta.append_to_parallelizer_list(parallelizer_rr_seq_cus2)
+                    aggregator_spec = AggregatorSpec.make_aggregator_custom_2_ary('todo_impl_sum_indiv_results_up', is_implemented=False)
                 elif self.does_flag_option_list_contains_at_least_one_of(["-n"]) and self.does_flag_option_list_contains_at_least_one_of(["-b"]):
-                    mapper = Mapper.make_mapper_custom("add_line_number_and_byte_offset")
-                    parallelizer_rr_cus_conc = Parallelizer.make_parallelizer_round_robin(mapper=mapper)
-                    self.meta.append_to_parallelizer_list(parallelizer_rr_cus_conc)
+                    # TODO: needs additional input but cannot comment as we add wrong parallelizer down there then!
+                    mapper_spec = MapperSpec.make_mapper_spec_custom('add_line_number_and_byte_offset', is_implemented=False)
                 elif self.does_flag_option_list_contains_at_least_one_of(["-n"]):
-                    mapper = Mapper.make_mapper_custom("add_line_number_offset")
-                    parallelizer_rr_cus_conc = Parallelizer.make_parallelizer_round_robin(mapper=mapper)
-                    self.meta.append_to_parallelizer_list(parallelizer_rr_cus_conc)
+                    mapper_spec = MapperSpec.make_mapper_spec_custom('add_line_number_offset', is_implemented=False)
                 elif self.does_flag_option_list_contains_at_least_one_of(["-b"]):
-                    mapper = Mapper.make_mapper_custom("add_byte_offset")
-                    parallelizer_rr_cus_conc = Parallelizer.make_parallelizer_round_robin(mapper=mapper)
-                    self.meta.append_to_parallelizer_list(parallelizer_rr_cus_conc)
+                    mapper_spec = MapperSpec.make_mapper_spec_custom('add_byte_offset', is_implemented=False)
                 else:   # none of the above affecting flags
-                    parallelizer_rr_seq_conc = Parallelizer.make_parallelizer_round_robin()
-                    self.meta.append_to_parallelizer_list(parallelizer_rr_seq_conc)
+                    self.append_to_parallelizer_list_rr_seq_conc()
+            # we exploit that mapper_spec becomes seq and aggregator_spec becomes conc if given None
+            parallelizer_rr = Parallelizer.make_parallelizer_round_robin(mapper_spec=mapper_spec, aggregator_spec=aggregator_spec)
+            self.append_to_parallelizer_list(parallelizer_rr)

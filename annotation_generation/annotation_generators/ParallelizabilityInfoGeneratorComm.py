@@ -11,5 +11,5 @@ class ParallelizabilityInfoGeneratorComm(ParallelizabilityInfoGeneratorInterface
     # none, it is very hard to parallelize because of potentially different speed of traversing both files
 
     def generate_info(self) -> None:
-        # TODO
+        # No parallelizers
         pass

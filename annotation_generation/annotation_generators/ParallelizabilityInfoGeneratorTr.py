@@ -1,6 +1,6 @@
 from annotation_generation.annotation_generators.ParallelizabilityInfoGenerator_Interface import ParallelizabilityInfoGeneratorInterface
 from annotation_generation.datatypes.parallelizability.Parallelizer import Parallelizer
-from annotation_generation.datatypes.parallelizability.Aggregator import Aggregator
+from annotation_generation.datatypes.parallelizability.AggregatorSpec import AggregatorSpec
 
 
 class ParallelizabilityInfoGeneratorTr(ParallelizabilityInfoGeneratorInterface):
@@ -16,29 +16,21 @@ class ParallelizabilityInfoGeneratorTr(ParallelizabilityInfoGeneratorInterface):
     # for both, if nothing is true, standard things work
 
     def generate_info(self) -> None:
-        #     TODO
-        pass
-
-    def apply_transformers_for_parallelizers(self) -> None:
+        # TODO: assert somewhere that only one set is given with -d -> should go in minimizer
         # tr does only take input from stdin, so we can always apply RR parallelizer (but Mp and Ag may change slightly)
         # check for deletion of newlines
         does_delete_newlines = self.does_flag_option_list_contains_at_least_one_of(["-d"]) and \
                                self.does_last_set_effectively_contain_newline()  # only allowed to have a single set
-        # TODO: assert somewhere that only one set is given with -d
         # check for squeezing newlines
         does_squeeze_newlines = self.does_flag_option_list_contains_at_least_one_of(["-s"]) and \
                                 self.does_last_set_effectively_contain_newline()
         if does_delete_newlines or does_squeeze_newlines:
             # for RR, we need an adjacent aggregator
-            # TODO: change seq to something reasonable
-            aggregator = Aggregator.make_aggregator_adj_lines_merge()
-            parallelizer_rr_seq_adjm = Parallelizer.make_parallelizer_round_robin(aggregator=aggregator)
-            self.meta.append_to_parallelizer_list(parallelizer_rr_seq_adjm)
+            self.append_to_parallelizer_list_rr_seq_adjm()
+            # TODO: at the end, it should be a single line; this should work if we fold over results
         else:
             # for RR, we can just use concatenation
-            # TODO: change seq to something reasonable
-            parallelizer_rr_seq_conc = Parallelizer.make_parallelizer_round_robin()
-            self.meta.append_to_parallelizer_list(parallelizer_rr_seq_conc)
+            self.append_to_parallelizer_list_rr_seq_conc()
 
     def does_last_set_effectively_contain_newline(self) -> bool:
         last_operand = self.operand_names_list[len(self.operand_names_list) - 1]

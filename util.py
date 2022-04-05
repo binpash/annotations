@@ -1,9 +1,8 @@
-from datatypes.FlagOption import FlagOption, Option
-from typing import Union
+from datatypes.FlagOption import FlagOption, Option, Flag
 
-def make_arg_simple(arg: list) -> Union[FlagOption, Option]:
+def make_arg_simple(arg: list) -> FlagOption:
     if len(arg) == 1:
-        return FlagOption(arg[0])
+        return Flag(arg[0])
     elif len(arg) == 2:
         return Option(arg[0], arg[1])
     else:

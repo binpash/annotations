@@ -2,7 +2,6 @@ from annotation_generation.annotation_generators.ParallelizabilityInfoGenerator_
 
 
 class ParallelizabilityInfoGeneratorMv(ParallelizabilityInfoGeneratorInterface):
-    # for details on what the functions do, check comments in its super class ParallelizabilityInfoGeneratorInterface
 
     # list_of_all_flags = ["-b", "-f", "-i", "-n", "--strip-trailing-slashes", "-T",
     #                      "-u", "-v", "-Z", "--help", "--version"]
@@ -13,5 +12,5 @@ class ParallelizabilityInfoGeneratorMv(ParallelizabilityInfoGeneratorInterface):
     # We parallelize data streams to exploit multi cores but mv deals with the disk e.g.
 
     def generate_info(self) -> None:
-        #     TODO
+        # no parallelizers
         pass

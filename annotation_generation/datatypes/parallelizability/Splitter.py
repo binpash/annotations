@@ -3,7 +3,6 @@ from __future__ import annotations
 from enum import Enum
 
 
-
 class Splitter:
 
     def __init__(self, kind: SplitterKindEnum) -> None:
@@ -24,7 +23,7 @@ class Splitter:
         return Splitter(SplitterKindEnum.ROUND_ROBIN)
 
     @staticmethod
-    def make_splitter_consec_junks():
+    def make_splitter_consec_junks() -> Splitter:
         return Splitter(SplitterKindEnum.CONSEC_JUNKS)
 
 

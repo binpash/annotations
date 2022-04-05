@@ -22,7 +22,7 @@ def test_tr_1() -> None:
 
     assert len(meta.get_parallelizer_list()) == 1
     [parallelizer1] = meta.get_parallelizer_list()
-    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_adj_lines_merge())
+    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin()
 
 
 def test_tr_2() -> None:
@@ -65,7 +65,7 @@ def test_tr_4() -> None:
 
     assert len(meta.get_parallelizer_list()) == 1
     [parallelizer1] = meta.get_parallelizer_list()
-    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_adj_lines_merge())
+    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin()
 
 
 def test_tr_5() -> None:
@@ -93,4 +93,4 @@ def test_tr_6() -> None:
 
     assert len(meta.get_parallelizer_list()) == 1
     [parallelizer1] = meta.get_parallelizer_list()
-    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_adj_lines_merge())
+    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin()

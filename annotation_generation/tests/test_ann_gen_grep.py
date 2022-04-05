@@ -22,7 +22,7 @@ def test_grep_1() -> None:
     assert len(meta.get_parallelizer_list()) == 2
     [parallelizer1, parallelizer2] = meta.get_parallelizer_list()
     assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
-    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(aggregator=Aggregator.make_aggregator_custom_2_ary("merge_keeping_longer_output"))
+    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
 
 
 def test_grep_2() -> None:
@@ -38,7 +38,7 @@ def test_grep_2() -> None:
     assert len(meta.get_parallelizer_list()) == 2
     [parallelizer1, parallelizer2] = meta.get_parallelizer_list()
     assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
-    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(mapper=Mapper.make_mapper_custom("add_byte_offset"))
+    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
 
 
 def test_grep_3() -> None:
@@ -71,7 +71,7 @@ def test_grep_4() -> None:
     assert len(meta.get_parallelizer_list()) == 2
     [parallelizer1, parallelizer2] = meta.get_parallelizer_list()
     assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
-    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(mapper=Mapper.make_mapper_custom("add_line_number_and_byte_offset"))
+    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
 
 
 def test_grep_5() -> None:

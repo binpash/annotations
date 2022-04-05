@@ -1,37 +1,40 @@
 from __future__ import annotations
 from typing import Union, NewType
 
+from util import standard_eq, standard_repr
+
 from datatypes.FileDescriptor import FileDescriptor
 
-OptionArg = NewType('OptionArg', Union[str, FileDescriptor])
+OptionArgPosConfigType = NewType('OptionArgPosConfigType', Union[str, FileDescriptor])
 
-from abc import ABC
+from abc import ABC, abstractmethod
 
 
 class FlagOption(ABC):
 
+    @abstractmethod
     def get_name(self) -> str:
         """get name of either option or flag"""
 
 
 class Flag(FlagOption):
 
-    def __init__(self, name: str) -> Flag:
+    def __init__(self, name: str) -> None:
         self.flag_name = name
 
     def __repr__(self) -> str:
         return self.flag_name
 
     def __eq__(self, other) -> bool:
-        if isinstance(other, Flag):
-            return self.flag_name == other.flag_name
+        return standard_eq(self, other)
 
     def get_name(self) -> str:
         return self.flag_name
 
+
 class Option(FlagOption):
 
-    def __init__(self, name: str, option_arg: OptionArg) -> Option:
+    def __init__(self, name: str, option_arg: OptionArgPosConfigType) -> None:
         self.option_name = name
         self.option_arg = option_arg
 
@@ -39,8 +42,7 @@ class Option(FlagOption):
         return self.option_name
 
     def __eq__(self, other) -> bool:
-        if isinstance(other, Option):
-            return self.option_name == other.option_name and self.option_arg == other.option_arg
+        return standard_eq(self, other)
 
     def get_name(self) -> str:
         return self.option_name

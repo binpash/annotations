@@ -1,6 +1,6 @@
 from annotation_generation.annotation_generators.ParallelizabilityInfoGenerator_Interface import ParallelizabilityInfoGeneratorInterface
 from annotation_generation.datatypes.parallelizability.Parallelizer import Parallelizer
-from annotation_generation.datatypes.parallelizability.Aggregator import Aggregator
+from annotation_generation.datatypes.parallelizability.AggregatorSpec import AggregatorSpec
 
 
 class ParallelizabilityInfoGeneratorUniq(ParallelizabilityInfoGeneratorInterface):
@@ -17,21 +17,16 @@ class ParallelizabilityInfoGeneratorUniq(ParallelizabilityInfoGeneratorInterface
     # TODO: what does --group do?
 
     def generate_info(self) -> None:
-    #     TODO
-        pass
-
-    def apply_transformers_for_parallelizers(self) -> None:
         # check for flags/options that make it super hard
         if not self.does_flag_option_list_contains_at_least_one_of(["-d", "-D", "--all-repeated"]):
             if self.does_flag_option_list_contains_at_least_one_of(["-c"]):
                 # we need a special merge
-                aggregator = Aggregator.make_aggregator_adj_lines_func("merge_count")
-                parallelizer_rr_seq_adjf = Parallelizer.make_parallelizer_round_robin(aggregator=aggregator)
-                self.meta.append_to_parallelizer_list(parallelizer_rr_seq_adjf)
+                aggregator_spec = AggregatorSpec.make_aggregator_adj_lines_func('todo_impl_merge_count_uniq', is_implemented=False)
+                parallelizer_rr_seq_adjf = Parallelizer.make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
+                self.append_to_parallelizer_list(parallelizer_rr_seq_adjf)
             else:
-                aggregator = Aggregator.make_aggregator_adj_lines_func("seq")
-                parallelizer_rr_seq_adjf = Parallelizer.make_parallelizer_round_robin(aggregator=aggregator)
-                self.meta.append_to_parallelizer_list(parallelizer_rr_seq_adjf)
+                # just apply the sequential command to the last and first line
+                self.append_to_parallelizer_list_rr_seq_adjs()
 
 
 

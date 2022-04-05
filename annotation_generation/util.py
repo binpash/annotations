@@ -24,14 +24,14 @@ def compute_actual_el_for_input(input_el: Operand) -> FileDescriptor:
     if input_el == "-":
         return StdDescriptor(StdDescriptorEnum.STDIN)
     else:
-        return FileName(input_el)
+        return FileName(input_el.name)
 
 
 def compute_actual_el_for_output(output_el: Operand) -> FileDescriptor:
     if output_el == "-":
         return StdDescriptor(StdDescriptorEnum.STDOUT)
     else:
-        return FileName(output_el)
+        return FileName(output_el.name)
 
 
 def return_empty_list_if_none_else_itself(arg: Optional[TType]) -> Union[TType, List[Any]]: #list always empty
@@ -40,16 +40,9 @@ def return_empty_list_if_none_else_itself(arg: Optional[TType]) -> Union[TType, 
     else:
         return arg
 
-
-def return_mapper_seq_if_none_else_itself(arg: Optional[Mapper]) -> Mapper:
+def return_default_if_none_else_itself(arg: Optional[TType], default: TType) -> TType:
     if arg is None:
-        return Mapper.make_mapper_seq()
+        return default
     else:
         return arg
 
-
-def return_aggregator_conc_if_none_else_itself(arg: Optional[Aggregator]) -> Aggregator:
-    if arg is None:
-        return Aggregator.make_aggregator_concatenate()
-    else:
-        return arg

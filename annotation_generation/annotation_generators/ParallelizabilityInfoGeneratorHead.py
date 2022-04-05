@@ -11,9 +11,4 @@ class ParallelizabilityInfoGeneratorHead(ParallelizabilityInfoGeneratorInterface
     # we can parallelize individual files
 
     def generate_info(self) -> None:
-        #     TODO
-        pass
-
-    def apply_transformers_for_parallelizers(self) -> None:
-        parallelizer_if_seq_conc = Parallelizer.make_parallelizer_indiv_files()
-        self.meta.append_to_parallelizer_list(parallelizer_if_seq_conc)
+        self.append_to_parallelizer_list_if_seq_conc()
