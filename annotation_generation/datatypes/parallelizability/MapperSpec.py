@@ -21,17 +21,17 @@ class MapperSpec:
 
     def __init__(self,
                  kind: MapperSpecKindEnum = MapperSpecKindEnum.SAME_AS_SEQ,
-                 spec_mapper_cmd_name: Optional[str] = None,                                # None translates to original command
+                 spec_mapper_cmd_name: Optional[str] = None,  # None translates to original command
                  # TODO: if info_splitter_to_mapper, needs to be defined here so develop a way to use it
                  flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,  # None translates to same as seq
-                 pos_config_list_transformer: Optional[TransformerPosConfigList] = None,    # None translates to empty list
+                 pos_config_list_transformer: Optional[TransformerPosConfigList] = None,  # None translates to empty list
                  num_outputs: int = 1,
                  is_implemented: bool = False
                  ) -> None:
         self.kind: MapperSpecKindEnum = kind
         self.spec_mapper_cmd_name: Optional[str] = spec_mapper_cmd_name
         self.flag_option_list_transformer: TransformerFlagOptionList = \
-            TransformerFlagOptionList.return_transformer_same_as_seq_if_none_else_itself(flag_option_list_transformer),
+            TransformerFlagOptionList.return_transformer_same_as_seq_if_none_else_itself(flag_option_list_transformer)
         self.pos_config_list_transformer: TransformerPosConfigList = \
             TransformerPosConfigList.return_transformer_same_as_seq_if_none_else_itself(pos_config_list_transformer)
         self.num_outputs : int = num_outputs
@@ -92,9 +92,9 @@ class MapperSpec:
                                 is_implemented: bool = False
                                 ) -> MapperSpec:
         actual_flag_option_list_transformer: TransformerFlagOptionList = \
-            TransformerFlagOptionList.return_transformer_same_as_seq_if_none_else_itself(flag_option_list_transformer),
+            TransformerFlagOptionList.return_transformer_same_as_seq_if_none_else_itself(flag_option_list_transformer)
         actual_pos_config_list_transformer: TransformerPosConfigList = \
-            TransformerPosConfigList.return_transformer_same_as_seq_if_none_else_itself(pos_config_list_transformer),
+            TransformerPosConfigList.return_transformer_same_as_seq_if_none_else_itself(pos_config_list_transformer)
         return MapperSpec(MapperSpecKindEnum.CUSTOM,
                           spec_mapper_cmd_name,
                           flag_option_list_transformer= actual_flag_option_list_transformer,

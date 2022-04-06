@@ -1,5 +1,6 @@
 from datatypes.FileDescriptor import FileDescriptor, FileName, StdDescriptor, StdDescriptorEnum
 from datatypes.Operand import Operand
+from datatypes.FlagOption import FlagOption, OptionArgPosConfigType
 from annotation_generation.datatypes.parallelizability.Aggregator import Aggregator
 from annotation_generation.datatypes.parallelizability.Mapper import Mapper
 from typing import Any, List, Optional, Union, TypeVar
@@ -33,6 +34,17 @@ def compute_actual_el_for_output(output_el: Operand) -> FileDescriptor:
     else:
         return FileName(output_el.name)
 
+def return_empty_flag_option_list_if_none_else_itself(arg: List[FlagOption] | None) -> List[FlagOption]:
+    if arg is None:
+        return []
+    else:
+        return arg
+
+def return_empty_pos_config_list_if_none_else_itself(arg: Optional[List[OptionArgPosConfigType]]) -> List[OptionArgPosConfigType]:
+    if arg is None:
+        return []
+    else:
+        return arg
 
 def return_empty_list_if_none_else_itself(arg: Optional[TType]) -> Union[TType, List[Any]]: #list always empty
     if arg is None:

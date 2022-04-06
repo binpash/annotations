@@ -1,48 +1,41 @@
 from __future__ import annotations
-from typing import Optional, Union, List, NewType, Any
+from typing import List, Tuple, Optional
+from datatypes.FlagOption import OptionArgPosConfigType
+
+from abc import ABC, abstractmethod
 
 from enum import Enum
 
-from annotation_generation.util import return_empty_list_if_none_else_itself
 from util import standard_repr, standard_eq
 
-from datatypes.FileDescriptor import FileDescriptor
+# We offer the following different transformers for positional config lists:
+#     SAME_AS_SEQ   : the original flag option list
+#     ADD           : the provided list (deduped) will be added to the original one
+#     REMOVE        : the provided list will be removed from the original list
+#     CUSTOM        : custom flag option list
+#     Note that we only allow to amend arguments for options with CUSTOM.
+#     In contrast to transformers for flag option lists, we do not provide empty and filter
+#     since their use would be error-prone.
+#     The interpretation of operands may change so CUSTOM should be used for this.
+
 
 class ListIndexEnum(Enum):
     FIRST = 'first'
     LAST = 'last'
 
-GeneralIndex = NewType('GeneralIndex', Union[int, ListIndexEnum])
+GeneralIndex = int | ListIndexEnum
 
-def compute_actual_index(index: GeneralIndex, current_list: List[FileDescriptor]) -> int:
-    actual_index = index
+def compute_actual_index(index: GeneralIndex, current_list: List[OptionArgPosConfigType]) -> int:
     if index is ListIndexEnum.FIRST:
         actual_index = 0
     elif index is ListIndexEnum.LAST:
         actual_index = len(current_list)
+    else:
+        actual_index = index
     return actual_index
 
-class TransformerPosConfigListKindEnum(Enum):
-    SAME_AS_SEQ = 'same_as_seq'
-    ADD = 'add'         # [(GeneralIndex, arg)]
-    REMOVE = 'remove'   # [GeneralIndex]
-    CUSTOM = 'custom'
-    # we do not offer EMPTY here since it will be error-prone,
-    # would need to update certain flags not to change things in weird ways
 
-DataTypeSEQ = NewType('DataTypeSeq', List[Any]) # actually always empty list
-DataTypeAdd = NewType('DataTypeAdd', List[(GeneralIndex, FileDescriptor)])
-DataTypeRemove = NewType('DataTypeRemove', List[GeneralIndex])
-DataTypeCustom = NewType('DataTypeCustom', List[FileDescriptor])
-
-class TransformerPosConfigList:
-
-    def __init__(self,
-                 kind: TransformerPosConfigListKindEnum,
-                 data: Optional[Union[DataTypeAdd, DataTypeRemove, DataTypeCustom]] = None, # None does NOT translate to []
-                 ) -> None:
-        self.kind = kind
-        self.data: Union[DataTypeSEQ, DataTypeAdd, DataTypeRemove, DataTypeCustom] = return_empty_list_if_none_else_itself(data)
+class TransformerPosConfigList(ABC):
 
     def __eq__(self, other: TransformerPosConfigList) -> bool:
         return standard_eq(self, other)
@@ -50,48 +43,74 @@ class TransformerPosConfigList:
     def __repr__(self) -> str:
         return standard_repr(self)
 
-    def get_positional_config_list_after_transformer_application(self, original_list: List[FileDescriptor]) \
-        -> List[FileDescriptor]:
-        if self.kind == TransformerPosConfigListKindEnum.SAME_AS_SEQ:
-            return original_list
-        elif self.kind == TransformerPosConfigListKindEnum.ADD:
-            updated_list = original_list
-            for (index, filedescriptor) in self.data:
-                actual_index = compute_actual_index(index, updated_list)
-                updated_list.insert(actual_index, filedescriptor)
-            return updated_list
-        elif self.kind == TransformerPosConfigListKindEnum.REMOVE:
-            updated_list = original_list
-            for (index, filedescriptor) in self.data:
-                actual_index = compute_actual_index(index, updated_list)
-                updated_list.remove(actual_index)
-            return updated_list
-        elif self.kind == TransformerPosConfigListKindEnum.CUSTOM:
-            return self.data
-
-
-    ## factory methods to hide the kind in API
-    @staticmethod
-    def make_transformer_same_as_seq():
-        return TransformerPosConfigList(TransformerPosConfigListKindEnum.SAME_AS_SEQ)
-
-    @staticmethod
-    def make_transformer_add(list_to_add):
-        return TransformerPosConfigList(TransformerPosConfigListKindEnum.ADD, list_to_add)
-
-    @staticmethod
-    def make_transformer_remove(list_to_remove):
-        return TransformerPosConfigList(TransformerPosConfigListKindEnum.REMOVE, list_to_remove)
-
-    @staticmethod
-    def make_transformer_custom(new_list):
-        return TransformerPosConfigList(TransformerPosConfigListKindEnum.CUSTOM, new_list)
+    @abstractmethod
+    def get_positional_config_list_after_transformer_application(self, original_list: List[OptionArgPosConfigType]) \
+        -> List[OptionArgPosConfigType]:
+        pass
 
     @staticmethod
     def return_transformer_same_as_seq_if_none_else_itself(arg: Optional[TransformerPosConfigList]) \
             -> TransformerPosConfigList:
         if arg is None:
-            return TransformerPosConfigList.make_transformer_same_as_seq()
+            return make_transformer_same_as_seq()
         else:
             return arg
+
+class TransformerPosConfigListSeq(TransformerPosConfigList):
+
+    def __init__(self) -> None:
+        pass
+
+    def get_positional_config_list_after_transformer_application(self, original_list: List[OptionArgPosConfigType]) \
+        -> List[OptionArgPosConfigType]:
+            return original_list
+
+class TransformerPosConfigListAdd(TransformerPosConfigList):
+
+    def __init__(self, list_to_add: List[Tuple[GeneralIndex, OptionArgPosConfigType]]) -> None:
+        self.list_to_add = list_to_add
+
+    def get_positional_config_list_after_transformer_application(self, original_list: List[OptionArgPosConfigType]) \
+        -> List[OptionArgPosConfigType]:
+        updated_list = original_list
+        for (index, pos_config_arg) in self.list_to_add:
+            actual_index = compute_actual_index(index, updated_list)
+            updated_list.insert(actual_index, pos_config_arg)
+        return updated_list
+
+
+class TransformerPosConfigListRemove(TransformerPosConfigList):
+
+    def __init__(self, list_to_remove: List[GeneralIndex]) -> None:
+        self.list_to_remove = list_to_remove
+
+    def get_positional_config_list_after_transformer_application(self, original_list: List[OptionArgPosConfigType]) \
+            -> List[OptionArgPosConfigType]:
+        updated_list = original_list
+        for index in self.list_to_remove:
+            actual_index : int = compute_actual_index(index, updated_list)
+            del updated_list[actual_index]
+        return updated_list
+
+class TransformerPosConfigListCustom(TransformerPosConfigList):
+
+    def __init__(self, list_custom: List[OptionArgPosConfigType]) -> None:
+        self.list_custom = list_custom
+
+    def get_positional_config_list_after_transformer_application(self, original_list: List[OptionArgPosConfigType]) \
+            -> List[OptionArgPosConfigType]:
+        return self.list_custom
+
+## factory methods to hide details for API
+def make_transformer_same_as_seq():
+    return TransformerPosConfigListSeq()
+
+def make_transformer_add(list_to_add):
+    return TransformerPosConfigListAdd(list_to_add)
+
+def make_transformer_remove(list_to_remove):
+    return TransformerPosConfigListRemove(list_to_remove)
+
+def make_transformer_custom(list_custom):
+    return TransformerPosConfigListCustom(list_custom)
 

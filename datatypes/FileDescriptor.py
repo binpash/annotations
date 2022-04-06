@@ -43,4 +43,5 @@ class StdDescriptorEnum(Enum):
     STDOUT = 1
     STDERR = 2
 
-FileDescriptor = NewType('FileDescriptor', Union[FileName, StdDescriptor])
+# FileDescriptor = NewType('FileDescriptor', Union[FileName, StdDescriptor])
+FileDescriptor = FileName | StdDescriptor

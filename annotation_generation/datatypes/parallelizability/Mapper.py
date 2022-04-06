@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Optional, List
 
 from util import standard_repr, standard_eq
-from annotation_generation.util import return_empty_list_if_none_else_itself
+from annotation_generation.util import return_empty_flag_option_list_if_none_else_itself, return_empty_pos_config_list_if_none_else_itself
 
 from datatypes.FlagOption import FlagOption, OptionArgPosConfigType
 from datatypes.CommandInvocationPrefix import CommandInvocationPrefix
@@ -17,8 +17,8 @@ class Mapper:
                  ) -> None:
         # for now, we also store if the mapper is the same to handle the cases similarly
         self.cmd_name: str = cmd_name
-        self.flag_option_list: List[FlagOption] = return_empty_list_if_none_else_itself(flag_option_list),
-        self.positional_config_list: List[OptionArgPosConfigType] = return_empty_list_if_none_else_itself(positional_config_list)
+        self.flag_option_list: List[FlagOption] = return_empty_flag_option_list_if_none_else_itself(flag_option_list)
+        self.positional_config_list: List[OptionArgPosConfigType] = return_empty_pos_config_list_if_none_else_itself(positional_config_list)
         self.num_outputs : int = num_outputs
 
     def __eq__(self, other: Mapper) -> bool:

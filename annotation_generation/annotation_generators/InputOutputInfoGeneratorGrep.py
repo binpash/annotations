@@ -38,7 +38,7 @@ class InputOutputInfoGeneratorGrep(InputOutputInfoGeneratorInterface):
         if self.does_flag_option_list_contains_at_least_one_of(["-e", "-f"]):
             self.all_operands_are_inputs() # this is true also if empty
         else:
-            self.set_first_operand_as_positional_config()
+            self.set_first_operand_as_positional_config_arg_type_string()
             self.all_but_first_operand_is_input()
         # deciding on whether there is an input to check, add to input_list
         if self.get_length_ioinfo_positional_input_list() == 0:
@@ -47,7 +47,7 @@ class InputOutputInfoGeneratorGrep(InputOutputInfoGeneratorInterface):
             else:
                 self.set_ioinfo_implicit_use_of_stdin()
 
-    # TODO: options shall be handled in parser
+    # option args shall be handled in parser
     # def apply_flagoptionlist_transformer(self, flagoption: FlagOption):
     #     if flagoption.get_name() == "-f":
     #         self.meta.prepend_el_to_input_list(arg.option_arg)

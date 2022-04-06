@@ -20,28 +20,27 @@ class AggregatorKindEnum(Enum):
     CUSTOM_2_ARY = 5
     CUSTOM_N_ARY = 6
 
+# TODO: splitting would be better for typing, similar to Transformer for FlagOptions;
+#       currently hack for ADJ_LINES_SEQ to make spec_agg_cmd non-optional
 
 class AggregatorSpec:
 
     def __init__(self,
-                 kind: AggregatorKindEnum = AggregatorKindEnum.CONCATENATE,
-                 spec_agg_cmd_name: Optional[str] = None,
-                 # TODO: if info_mapper_to_aggregator, needs to be defined here so develop a way to use it
+                 kind: AggregatorKindEnum,
+                 spec_agg_cmd_name: str,
+                 # if info_mapper_to_aggregator, needs to be defined here so develop a way to use it
                  flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,  # None translates to same as seq
                  pos_config_list_transformer: Optional[TransformerPosConfigList] = None,  # None translates to empty list
                  is_implemented: bool = False
                  ) -> None:
         self.kind: AggregatorKindEnum = kind
-        if self.kind == AggregatorKindEnum.CONCATENATE:
-            spec_agg_cmd_name = 'cat'
-        elif self.kind == AggregatorKindEnum.ADJ_LINES_MERGE:
-            spec_agg_cmd_name = 'impl_todo_merge_adj_lines' # will never be generated currently
         self.spec_agg_cmd_name: str = spec_agg_cmd_name # for the rest, it should be specified
         self.flag_option_list_transformer: TransformerFlagOptionList = \
-            TransformerFlagOptionList.return_transformer_same_as_seq_if_none_else_itself(flag_option_list_transformer),
+            TransformerFlagOptionList.return_transformer_same_as_seq_if_none_else_itself(flag_option_list_transformer)
         self.pos_config_list_transformer: TransformerPosConfigList = \
             TransformerPosConfigList.return_transformer_same_as_seq_if_none_else_itself(pos_config_list_transformer)
         self.is_implemented = is_implemented
+
 
     def __eq__(self, other: AggregatorSpec) -> bool:
         return standard_eq(self, other)
@@ -67,65 +66,65 @@ class AggregatorSpec:
                           positional_config_list=pos_config_list )
 
 
-    @staticmethod
-    def make_aggregator_concatenate(flag_option_list_transformer: Optional[TransformerFlagOptionList]=None,
-                                    pos_config_list_transformer: Optional[TransformerPosConfigList]=None
-                                    ) -> AggregatorSpec:
-        return AggregatorSpec(AggregatorKindEnum.CONCATENATE,
-                              flag_option_list_transformer=flag_option_list_transformer,
-                              pos_config_list_transformer=pos_config_list_transformer,
-                              is_implemented=True)
+    @classmethod
+    def make_aggregator_concatenate(cls) -> AggregatorSpec:
+        return cls(AggregatorKindEnum.CONCATENATE,
+                   spec_agg_cmd_name='cat',
+                   is_implemented=True)
 
-    @staticmethod
-    def make_aggregator_adj_lines_merge(flag_option_list_transformer: Optional[TransformerFlagOptionList]=None,
-                                        pos_config_list_transformer: Optional[TransformerPosConfigList]=None
-                                        ) -> AggregatorSpec:
-        return AggregatorSpec(AggregatorKindEnum.ADJ_LINES_MERGE,
-                              flag_option_list_transformer=flag_option_list_transformer,
-                              pos_config_list_transformer=pos_config_list_transformer,
-                              is_implemented=False)
+    @classmethod
+    def make_aggregator_adj_lines_merge(cls) -> AggregatorSpec:
+        return cls(AggregatorKindEnum.ADJ_LINES_MERGE,
+                   spec_agg_cmd_name='todo_impl_adj_lines_merge',
+                   is_implemented=False)
 
-    @staticmethod
-    def make_aggregator_adj_lines_seq(flag_option_list_transformer: Optional[TransformerFlagOptionList]=None,
-                                        pos_config_list_transformer: Optional[TransformerPosConfigList]=None
-                                        ) -> AggregatorSpec:
-        return AggregatorSpec(AggregatorKindEnum.ADJ_LINES_SEQ,
-                              flag_option_list_transformer=flag_option_list_transformer,
-                              pos_config_list_transformer=pos_config_list_transformer,
-                              is_implemented=False)
+    @classmethod
+    def make_aggregator_adj_lines_seq(cls,
+                                      spec_agg_cmd_name='never_used_adj_lines_seq', # dummy
+                                      flag_option_list_transformer: Optional[TransformerFlagOptionList]=None,
+                                      pos_config_list_transformer: Optional[TransformerPosConfigList]=None
+                                      ) -> AggregatorSpec:
+        return cls(AggregatorKindEnum.ADJ_LINES_SEQ,
+                   spec_agg_cmd_name=spec_agg_cmd_name,
+                   flag_option_list_transformer=flag_option_list_transformer,
+                   pos_config_list_transformer=pos_config_list_transformer,
+                   is_implemented=False)
 
-    @staticmethod
-    def make_aggregator_adj_lines_func(spec_agg_cmd_name: str,
+    @classmethod
+    def make_aggregator_adj_lines_func(cls,
+                                       spec_agg_cmd_name: str,
                                        flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,
                                        pos_config_list_transformer: Optional[TransformerPosConfigList] = None,
                                        is_implemented: bool= False) -> AggregatorSpec:
-        return AggregatorSpec(kind=AggregatorKindEnum.ADJ_LINES_FUNC,
-                              spec_agg_cmd_name=spec_agg_cmd_name,
-                              flag_option_list_transformer=flag_option_list_transformer,
-                              pos_config_list_transformer=pos_config_list_transformer,
-                              is_implemented=is_implemented)
+        return cls(kind=AggregatorKindEnum.ADJ_LINES_FUNC,
+                   spec_agg_cmd_name=spec_agg_cmd_name,
+                   flag_option_list_transformer=flag_option_list_transformer,
+                   pos_config_list_transformer=pos_config_list_transformer,
+                   is_implemented=is_implemented)
 
-    @staticmethod
-    def make_aggregator_custom_2_ary(spec_agg_cmd_name: str,
+    @classmethod
+    def make_aggregator_custom_2_ary(cls,
+                                     spec_agg_cmd_name: str,
                                      flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,
                                      pos_config_list_transformer: Optional[TransformerPosConfigList] = None,
                                      is_implemented: bool= False) -> AggregatorSpec:
-        return AggregatorSpec(kind=AggregatorKindEnum.CUSTOM_2_ARY,
-                              flag_option_list_transformer=flag_option_list_transformer,
-                              pos_config_list_transformer=pos_config_list_transformer,
-                              spec_agg_cmd_name=spec_agg_cmd_name,
-                              is_implemented=is_implemented)
+        return cls(kind=AggregatorKindEnum.CUSTOM_2_ARY,
+                   flag_option_list_transformer=flag_option_list_transformer,
+                   pos_config_list_transformer=pos_config_list_transformer,
+                   spec_agg_cmd_name=spec_agg_cmd_name,
+                   is_implemented=is_implemented)
 
-    @staticmethod
-    def make_aggregator_custom_n_ary(spec_agg_cmd_name: str,
+    @classmethod
+    def make_aggregator_custom_n_ary(cls,
+                                     spec_agg_cmd_name: str,
                                      flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,
                                      pos_config_list_transformer: Optional[TransformerPosConfigList] = None,
                                      is_implemented: bool= False) -> AggregatorSpec:
-        return AggregatorSpec(kind=AggregatorKindEnum.CUSTOM_N_ARY,
-                              flag_option_list_transformer=flag_option_list_transformer,
-                              pos_config_list_transformer=pos_config_list_transformer,
-                              spec_agg_cmd_name=spec_agg_cmd_name,
-                              is_implemented=is_implemented)
+        return cls(kind=AggregatorKindEnum.CUSTOM_N_ARY,
+                   flag_option_list_transformer=flag_option_list_transformer,
+                   pos_config_list_transformer=pos_config_list_transformer,
+                   spec_agg_cmd_name=spec_agg_cmd_name,
+                   is_implemented=is_implemented)
 
     @staticmethod
     def return_aggregator_conc_if_none_else_itself(arg: Optional[AggregatorSpec]) -> AggregatorSpec:

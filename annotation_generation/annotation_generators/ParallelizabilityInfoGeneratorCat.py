@@ -29,9 +29,9 @@ class ParallelizabilityInfoGeneratorCat(ParallelizabilityInfoGeneratorInterface)
         elif not self.does_flag_option_list_contains_at_least_one_of(["-n"]) and self.does_flag_option_list_contains_at_least_one_of(["-s"]):
                 # not numbered but need to compare adjacent lines and possibly remove one blank line
                 aggregator_spec = AggregatorSpec.make_aggregator_adj_lines_func('todo_impl_merge_2blanks_to_1', is_implemented=False)
-                parallelizer_if_seq_adjf = Parallelizer.make_parallelizer_indiv_files(aggregator_spec)
+                parallelizer_if_seq_adjf = Parallelizer.make_parallelizer_indiv_files(aggregator_spec=aggregator_spec)
                 self.append_to_parallelizer_list(parallelizer_if_seq_adjf)
-                parallelizer_rr_seq_adjf = Parallelizer.make_parallelizer_round_robin(aggregator_spec)
+                parallelizer_rr_seq_adjf = Parallelizer.make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
                 self.append_to_parallelizer_list(parallelizer_rr_seq_adjf)
         elif not self.does_flag_option_list_contains_at_least_one_of(["-n"]) and not self.does_flag_option_list_contains_at_least_one_of(["-s"]):
                 # add two parallelizers: IF and RR with SEQ and CONC each

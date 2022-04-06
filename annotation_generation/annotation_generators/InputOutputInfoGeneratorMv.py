@@ -56,7 +56,7 @@ class InputOutputInfoGeneratorMv(InputOutputInfoGeneratorInterface):
             # multiple -t options not allowed (checked using cmd)
             raise Exception("multiple -t options defined for mv")
 
-    # TODO: options shall be handled in parser
+    # option args shall be handled in parser
     # def apply_indiv_arg_transformer_for_input_output_lists(self, arg: FlagOption) -> None:
     #     if arg.get_name() == "-t":
     #         self.meta.prepend_el_to_output_list(arg.option_arg)

@@ -17,13 +17,14 @@ class ParallelizabilityInfoGeneratorInterface(Generator_Interface, ABC):
     # This is the select_subcommand from the original proposal,
     #   instead of returning functions, it initializes the object
     #   and then we can call its methods.
-    def __init__(self, cmd_invocation: CommandInvocation) -> ParallelizabilityInfoGeneratorInterface:
-        Generator_Interface.__init__(cmd_invocation)
+    def __init__(self, cmd_invocation: CommandInvocation) -> None:
+        super().__init__(cmd_invocation=cmd_invocation)
         self.parallelizability_info: ParallelizabilityInfo = ParallelizabilityInfo()
 
     @abstractmethod
     def generate_info(self) -> None:
         # info to provide: parallelizer_list, round_robin_comp_with_cat, is_commutative (for optimisations)
+        # TODO: add info about RR_cat and is_comm in existent generators
         pass
 
     def get_info(self) -> ParallelizabilityInfo:

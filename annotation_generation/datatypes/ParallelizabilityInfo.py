@@ -11,7 +11,7 @@ class ParallelizabilityInfo:
                  parallelizer_list: Optional[List[Parallelizer]] = None,    # None translates to empty list
                  round_robin_compatible_with_cat: bool  = False,
                  is_commutative: bool = False
-                 ) -> ParallelizabilityInfo:
+                 ) -> None:
         self.parallelizer_list = return_empty_list_if_none_else_itself(parallelizer_list)
         self.round_robin_compatible_with_cat = round_robin_compatible_with_cat
         self.is_commutative = is_commutative

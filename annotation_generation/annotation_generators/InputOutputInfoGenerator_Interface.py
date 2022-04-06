@@ -1,18 +1,20 @@
 from __future__ import annotations
 from typing import List
 from datatypes.Operand import Operand
+from datatypes.FlagOption import OptionArgPosConfigType
 
 from abc import ABC, abstractmethod
 
 from Generator_Interface import Generator_Interface
 from datatypes.CommandInvocation import CommandInvocation
 from annotation_generation.datatypes.InputOutputInfo import InputOutputInfo
+from annotation_generation.util import compute_actual_el_for_input
 
 
 class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
 
-    def __init__(self, cmd_invocation: CommandInvocation) -> InputOutputInfoGeneratorInterface:
-        Generator_Interface.__init__(cmd_invocation)
+    def __init__(self, cmd_invocation: CommandInvocation) -> None:
+        super().__init__(cmd_invocation=cmd_invocation)
         self.input_output_info: InputOutputInfo = InputOutputInfo()
 
     @abstractmethod
@@ -24,7 +26,7 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
 
     ## Member attributes only changed through these functions
 
-    def set_ioinfo_positional_config_list(self, value: List[Operand]) -> None:
+    def set_ioinfo_positional_config_list(self, value: List[OptionArgPosConfigType]) -> None:
         self.input_output_info.set_positional_config_list(value)
 
     def set_ioinfo_positional_input_list(self, value: List[Operand]) -> None:
@@ -55,7 +57,7 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
     def all_operands_are_inputs(self) -> None:
         self.set_ioinfo_positional_input_list(self.operand_list)
 
-    def if_version_or_help_stdout_implicitly_used(self) -> bool:
+    def if_version_or_help_stdout_implicitly_used(self) -> None:
         if self.is_version_or_help_in_flag_option_list():
             self.set_ioinfo_implicit_use_of_stdout()
 
@@ -66,7 +68,14 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
         self.set_ioinfo_positional_input_list(self.operand_list[1:])
 
     def only_last_operand_is_output(self):
-        self.set_ioinfo_positional_output_list(self.operand_names_list[-1:])
+        self.set_ioinfo_positional_output_list(self.operand_list[-1:])
 
-    def set_first_operand_as_positional_config(self):
-        self.set_ioinfo_positional_config_list(self.operand_list[:1])
+    def set_first_operand_as_positional_config_arg_type_string(self):
+        # type actual List[StringType] but pyright cannot do the cast for the variable
+        pos_config_list: List[OptionArgPosConfigType] = [operand.get_name() for operand in self.operand_list[:1]]
+        self.set_ioinfo_positional_config_list(pos_config_list)
+
+    def set_first_operand_as_positional_config_arg_type_filedescriptor(self):
+        # type actual List[FileDescriptor] but pyright cannot do the cast for the variable
+        pos_config_list: List[OptionArgPosConfigType] = [compute_actual_el_for_input(operand) for operand in self.operand_list[:1]]
+        self.set_ioinfo_positional_config_list(pos_config_list)
