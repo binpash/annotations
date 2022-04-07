@@ -25,6 +25,7 @@ class InputOutputInfo:
         self.implicit_use_of_stdout : bool = implicit_use_of_stdout
         self.multiple_inputs_possible : bool = multiple_inputs_possible
         # TODO: add reasonability checks somewhere -> would need getter-functions for this
+        #       e.g. implicit use of stdin only when positional input list is empty
 
     def __repr__(self) -> str:
         return standard_repr(self)
