@@ -21,7 +21,7 @@ class ParallelizabilityInfoGeneratorUniq(ParallelizabilityInfoGeneratorInterface
         if not self.does_flag_option_list_contains_at_least_one_of(["-d", "-D", "--all-repeated"]):
             if self.does_flag_option_list_contains_at_least_one_of(["-c"]):
                 # we need a special merge
-                aggregator_spec = AggregatorSpec.make_aggregator_adj_lines_func('todo_impl_merge_count_uniq', is_implemented=False)
+                aggregator_spec = AggregatorSpec.make_aggregator_spec_adj_lines_func('todo_impl_merge_count_uniq', is_implemented=False)
                 parallelizer_rr_seq_adjf = Parallelizer.make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
                 self.append_to_parallelizer_list(parallelizer_rr_seq_adjf)
             else:

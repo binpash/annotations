@@ -1,10 +1,9 @@
 from __future__ import annotations
 from typing import Optional, List
 from util import standard_repr, standard_eq
-from annotation_generation.util import return_empty_flag_option_list_if_none_else_itself, return_empty_pos_config_list_if_none_else_itself, \
-    return_default_if_none_else_itself
+from annotation_generation.util import return_empty_flag_option_list_if_none_else_itself, return_empty_pos_config_list_if_none_else_itself
 
-from annotation_generation.datatypes.parallelizability.AggregatorSpec import AggregatorKindEnum
+from annotation_generation.datatypes.parallelizability.AggregatorKind import AggregatorKindEnum
 
 from datatypes.FlagOption import FlagOption, OptionArgPosConfigType
 
@@ -28,3 +27,8 @@ class Aggregator:
 
     def __repr__(self) -> str:
         return standard_repr(self)
+
+    @classmethod
+    def make_aggregator_concatenate(cls) -> Aggregator:
+        return cls(AggregatorKindEnum.CONCATENATE,
+                   cmd_name='cat')

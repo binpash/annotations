@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import Union
 
 from util import standard_eq, standard_repr
 

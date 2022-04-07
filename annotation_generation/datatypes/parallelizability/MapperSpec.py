@@ -9,6 +9,7 @@ from datatypes.CommandInvocationPrefix import CommandInvocationPrefix
 from annotation_generation.datatypes.parallelizability.TransformerFlagOptionList import TransformerFlagOptionList
 from annotation_generation.datatypes.parallelizability.TransformerPosConfigList import TransformerPosConfigList
 from annotation_generation.datatypes.parallelizability.Mapper import Mapper
+from annotation_generation.datatypes.parallelizability.AdditionalInfoFromSplitter import AdditionalInfoFromSplitter
 from annotation_generation.util import return_default_if_none_else_itself
 
 
@@ -26,6 +27,7 @@ class MapperSpec:
                  flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,  # None translates to same as seq
                  pos_config_list_transformer: Optional[TransformerPosConfigList] = None,  # None translates to empty list
                  num_outputs: int = 1,
+                 add_info_from_splitter: AdditionalInfoFromSplitter = AdditionalInfoFromSplitter.NO_ADD_INPUT,
                  is_implemented: bool = False
                  ) -> None:
         self.kind: MapperSpecKindEnum = kind
@@ -35,6 +37,7 @@ class MapperSpec:
         self.pos_config_list_transformer: TransformerPosConfigList = \
             TransformerPosConfigList.return_transformer_same_as_seq_if_none_else_itself(pos_config_list_transformer)
         self.num_outputs : int = num_outputs
+        self.add_info_from_splitter: AdditionalInfoFromSplitter = add_info_from_splitter
         self.is_implemented = is_implemented
         # sanity check
         if kind == MapperSpecKindEnum.SAME_AS_SEQ:
@@ -78,17 +81,18 @@ class MapperSpec:
     ## factory methods
     @staticmethod
     def make_mapper_spec_seq() -> MapperSpec:
-        return MapperSpec(MapperSpecKindEnum.SAME_AS_SEQ)
+        return MapperSpec(MapperSpecKindEnum.SAME_AS_SEQ, is_implemented=True)
 
     @staticmethod
     def return_mapper_spec_seq_if_none_else_itself(mapper_spec) -> MapperSpec:
-        return return_default_if_none_else_itself(mapper_spec, MapperSpec(MapperSpecKindEnum.SAME_AS_SEQ))
+        return return_default_if_none_else_itself(mapper_spec, MapperSpec.make_mapper_spec_seq())
 
     @staticmethod
     def make_mapper_spec_custom(spec_mapper_cmd_name: str,
                                 flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,
                                 pos_config_list_transformer: Optional[TransformerPosConfigList] = None,
                                 num_outputs: int = 1,
+                                add_info_from_splitter: AdditionalInfoFromSplitter = AdditionalInfoFromSplitter.NO_ADD_INPUT,
                                 is_implemented: bool = False
                                 ) -> MapperSpec:
         actual_flag_option_list_transformer: TransformerFlagOptionList = \
@@ -100,5 +104,6 @@ class MapperSpec:
                           flag_option_list_transformer= actual_flag_option_list_transformer,
                           pos_config_list_transformer= actual_pos_config_list_transformer,
                           num_outputs= num_outputs,
+                          add_info_from_splitter=add_info_from_splitter,
                           is_implemented= is_implemented)
 

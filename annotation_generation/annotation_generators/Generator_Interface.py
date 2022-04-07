@@ -22,7 +22,8 @@ class Generator_Interface(ABC):
     def get_info(self):
         pass
 
-    ## HELPERS/Library functions: help to check conditions
+    ## HELPERS/Library functions: to check conditions
+
     def get_operand_names_list(self) -> List[str]:
         return [operand.name for operand in self.operand_list]
 

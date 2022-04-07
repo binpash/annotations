@@ -56,6 +56,14 @@ class TransformerPosConfigList(ABC):
         else:
             return arg
 
+    @staticmethod
+    def return_transformer_same_as_seq_if_none_else_itself(arg: Optional[TransformerPosConfigList]) \
+            -> TransformerPosConfigList:
+        if arg is None:
+            return make_transformer_same_as_seq()
+        else:
+            return arg
+
 class TransformerPosConfigListSeq(TransformerPosConfigList):
 
     def __init__(self) -> None:
@@ -92,6 +100,15 @@ class TransformerPosConfigListRemove(TransformerPosConfigList):
             del updated_list[actual_index]
         return updated_list
 
+class TransformerPosConfigListEmpty(TransformerPosConfigList):
+
+    def __init__(self) -> None:
+        pass
+
+    def get_positional_config_list_after_transformer_application(self, original_list: List[OptionArgPosConfigType]) \
+            -> List[OptionArgPosConfigType]:
+        return []
+
 class TransformerPosConfigListCustom(TransformerPosConfigList):
 
     def __init__(self, list_custom: List[OptionArgPosConfigType]) -> None:
@@ -113,4 +130,3 @@ def make_transformer_remove(list_to_remove):
 
 def make_transformer_custom(list_custom):
     return TransformerPosConfigListCustom(list_custom)
-

@@ -28,6 +28,7 @@ class InputOutputInfoGeneratorGrep(InputOutputInfoGeneratorInterface):
         version_or_help_write_to_stdout = self.if_version_or_help_stdout_implicitly_used()
         if not output_suppressed or version_or_help_write_to_stdout:
             self.set_ioinfo_implicit_use_of_stdout()
+        # TODO: stderr
         # deprecated since we assume stderr as log for errors and do add to annotation
         # errors are written to stderr but can be suppressed
         # errors_suppressed = self.does_flag_option_list_contains_at_least_one_of(["-s"])
@@ -39,6 +40,7 @@ class InputOutputInfoGeneratorGrep(InputOutputInfoGeneratorInterface):
             self.all_operands_are_inputs() # this is true also if empty
         else:
             self.set_first_operand_as_positional_config_arg_type_string()
+            # TODO: types distinguish -e -f
             self.all_but_first_operand_is_input()
         # deciding on whether there is an input to check, add to input_list
         if self.get_length_ioinfo_positional_input_list() == 0:

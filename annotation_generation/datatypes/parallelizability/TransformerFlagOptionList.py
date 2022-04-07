@@ -30,6 +30,14 @@ class TransformerFlagOptionList(ABC):
         pass
 
     @staticmethod
+    def return_transformer_empty_if_none_else_itself(arg: Optional[TransformerFlagOptionList]) \
+            -> TransformerFlagOptionList:
+        if arg is None:
+            return make_transformer_empty()
+        else:
+            return arg
+
+    @staticmethod
     def return_transformer_same_as_seq_if_none_else_itself(arg: Optional[TransformerFlagOptionList]) \
             -> TransformerFlagOptionList:
         if arg is None:

@@ -3,8 +3,9 @@ from typing import List, Optional
 
 from abc import ABC, abstractmethod
 
-from Generator_Interface import Generator_Interface
 from datatypes.CommandInvocation import CommandInvocation
+
+from annotation_generation.annotation_generators.Generator_Interface import Generator_Interface
 from annotation_generation.datatypes.parallelizability.Parallelizer import Parallelizer
 from annotation_generation.datatypes.parallelizability.Splitter import Splitter
 from annotation_generation.datatypes.parallelizability.MapperSpec import MapperSpec
@@ -41,7 +42,7 @@ class ParallelizabilityInfoGeneratorInterface(Generator_Interface, ABC):
         self.append_to_parallelizer_list(parallelizer_if_seq_conc)
 
     def append_to_parallelizer_list_if_seq_adjm(self) -> None:
-        aggregator_spec = AggregatorSpec.make_aggregator_adj_lines_merge()
+        aggregator_spec = AggregatorSpec.make_aggregator_spec_adj_lines_merge()
         parallelizer_rr_seq_adjm = Parallelizer.make_parallelizer_indiv_files(aggregator_spec=aggregator_spec)
         self.append_to_parallelizer_list(parallelizer_rr_seq_adjm)
 
@@ -50,11 +51,11 @@ class ParallelizabilityInfoGeneratorInterface(Generator_Interface, ABC):
         self.append_to_parallelizer_list(parallelizer_rr_seq_conc)
 
     def append_to_parallelizer_list_rr_seq_adjm(self) -> None:
-        aggregator_spec = AggregatorSpec.make_aggregator_adj_lines_merge()
+        aggregator_spec = AggregatorSpec.make_aggregator_spec_adj_lines_merge()
         parallelizer_rr_seq_adjm = Parallelizer.make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
         self.append_to_parallelizer_list(parallelizer_rr_seq_adjm)
 
     def append_to_parallelizer_list_rr_seq_adjs(self) -> None:
-        aggregator_spec = AggregatorSpec.make_aggregator_adj_lines_seq()
+        aggregator_spec = AggregatorSpec.make_aggregator_spec_adj_lines_seq()
         parallelizer_rr_seq_adjs = Parallelizer.make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
         self.append_to_parallelizer_list(parallelizer_rr_seq_adjs)

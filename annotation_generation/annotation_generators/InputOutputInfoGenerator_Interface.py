@@ -5,7 +5,7 @@ from datatypes.FlagOption import OptionArgPosConfigType
 
 from abc import ABC, abstractmethod
 
-from Generator_Interface import Generator_Interface
+from annotation_generation.annotation_generators.Generator_Interface import Generator_Interface
 from datatypes.CommandInvocation import CommandInvocation
 from annotation_generation.datatypes.InputOutputInfo import InputOutputInfo
 from annotation_generation.util import compute_actual_el_for_input
@@ -35,7 +35,10 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
     def set_ioinfo_positional_output_list(self, value: List[Operand]) -> None:
         self.input_output_info.set_positional_output_list(value)
 
+    ## Library functions
+
     # use default values here as counter-measure for using False as default values in constructor
+
     def set_ioinfo_implicit_use_of_stdin(self, value: bool = True) -> None:
         self.input_output_info.set_implicit_use_of_stdin(value)
 
@@ -43,9 +46,8 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
         self.input_output_info.set_implicit_use_of_stdout(value)
 
     def set_ioinfo_multiple_inputs_possible(self, value: bool = True) -> None:
-        self.input_output_info.set_implicit_use_of_stdout(value)
+        self.input_output_info.set_multiple_inputs_possible(value)
 
-    ## Library functions
 
     def get_length_ioinfo_positional_input_list(self) -> int:
         return len(self.input_output_info.positional_input_list)

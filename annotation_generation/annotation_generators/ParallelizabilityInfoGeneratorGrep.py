@@ -29,12 +29,12 @@ class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface
             aggregator_spec = None
             if not self.does_flag_option_list_contains_at_least_one_of(["-A", "-B", "-C", "-m"]):
                 if self.does_flag_option_list_contains_at_least_one_of(["-L", "-l"]):
-                    aggregator_spec = AggregatorSpec.make_aggregator_custom_2_ary('todo_impl_merge_keeping_longer_output', is_implemented=False)
                     # the output for both options is either empty or the filename (same for both if so)
                     # for "-l": if there was a match in one part, the filename will propagate; if not, not
                     # for "-L": if there was no match in one part, the filename will propagate; it not, not
+                    aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary('todo_impl_merge_keeping_longer_output', is_implemented=False)
                 elif self.does_flag_option_list_contains_at_least_one_of(["-c"]):
-                    aggregator_spec = AggregatorSpec.make_aggregator_custom_2_ary('todo_impl_sum_indiv_results_up', is_implemented=False)
+                    aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary('todo_impl_sum_indiv_results_up', is_implemented=False)
                 elif self.does_flag_option_list_contains_at_least_one_of(["-n"]) and self.does_flag_option_list_contains_at_least_one_of(["-b"]):
                     # TODO: needs additional input but cannot comment as we add wrong parallelizer down there then!
                     mapper_spec = MapperSpec.make_mapper_spec_custom('add_line_number_and_byte_offset', is_implemented=False)

@@ -1,15 +1,13 @@
 from datatypes.FileDescriptor import FileDescriptor, FileName, StdDescriptor, StdDescriptorEnum
 from datatypes.Operand import Operand
 from datatypes.FlagOption import FlagOption, OptionArgPosConfigType
-from annotation_generation.datatypes.parallelizability.Aggregator import Aggregator
-from annotation_generation.datatypes.parallelizability.Mapper import Mapper
 from typing import Any, List, Optional, Union, TypeVar
 
 TType = TypeVar("TType")
 
-def foldl(func, acc0, list):
+def foldl(func, acc0, some_list):
     acc = acc0
-    for el in list:
+    for el in some_list:
         acc = func(el, acc)    
     return acc
 
