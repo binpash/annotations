@@ -13,6 +13,6 @@ class InputOutputInfoGeneratorTr(InputOutputInfoGeneratorInterface):
         self.apply_standard_filedescriptor_transformer()
 
     def apply_standard_filedescriptor_transformer(self) -> None:
-        self.set_ioinfo_implicit_use_of_stdin()
-        self.set_ioinfo_implicit_use_of_stdout()
+        self.set_implicit_use_of_stdin()
+        self.set_implicit_use_of_stdout()
         # self.meta.append_stderr_to_output_list()

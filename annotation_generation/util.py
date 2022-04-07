@@ -1,6 +1,4 @@
-from datatypes.FileDescriptor import FileDescriptor, FileName, StdDescriptor, StdDescriptorEnum
-from datatypes.Operand import Operand
-from datatypes.FlagOption import FlagOption, OptionArgPosConfigType
+from datatypes.BasicDatatypes import *
 from typing import Any, List, Optional, Union, TypeVar
 
 TType = TypeVar("TType")

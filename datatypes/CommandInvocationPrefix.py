@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import List
 
 from util import standard_repr, standard_eq
-from datatypes.FlagOption import FlagOption, OptionArgPosConfigType
+from datatypes.BasicDatatypes import FlagOption, OptionArgPosConfigType
 
 class CommandInvocationPrefix:
 

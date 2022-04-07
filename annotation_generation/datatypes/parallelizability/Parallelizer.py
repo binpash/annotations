@@ -52,9 +52,6 @@ class Parallelizer:
     def get_actual_aggregator(self, cmd_invocation_prefix: CommandInvocationPrefix) -> Optional[Aggregator]:
         return self.core_aggregator_spec.get_aggregator(cmd_invocation_prefix)
 
-    def get_info_splitter_mapper(self) -> AdditionalInfoSplitterToMapper:
-        return self.info_splitter_mapper
-
     def get_info_mapper_aggregator(self) -> AdditionalInfoMapperSpecToAggregator:
         return self.info_mapper_aggregator
 
@@ -75,9 +72,10 @@ class Parallelizer:
         return Parallelizer(Splitter.make_splitter_round_robin(), mapper_spec, aggregator_spec)
 
     @staticmethod
+    # TODO: rename
     def make_parallelizer_consec_junks(mapper_spec: Optional[MapperSpec]=None,
                                        aggregator_spec: Optional[AggregatorSpec]=None
                                        ) -> Parallelizer:
         mapper_spec = MapperSpec.return_mapper_spec_seq_if_none_else_itself(mapper_spec)
         aggregator_spec = AggregatorSpec.return_aggregator_conc_if_none_else_itself(aggregator_spec)
-        return Parallelizer(Splitter.make_splitter_consec_junks(), mapper_spec, aggregator_spec)
+        return Parallelizer(Splitter.make_splitter_consec_chunks(), mapper_spec, aggregator_spec)

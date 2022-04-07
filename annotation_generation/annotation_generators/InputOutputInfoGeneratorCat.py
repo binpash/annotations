@@ -10,7 +10,7 @@ class InputOutputInfoGeneratorCat(InputOutputInfoGeneratorInterface):
     # basically only operands and the stdout as standard output (and stderr for errors)
 
     def generate_info(self) -> None:
-        self.set_ioinfo_multiple_inputs_possible()
-        self.set_ioinfo_implicit_use_of_stdout()
+        self.set_multiple_inputs_possible()
+        self.set_implicit_use_of_stdout()
         self.if_no_operands_given_stdin_implicitly_used()
         self.all_operands_are_inputs()

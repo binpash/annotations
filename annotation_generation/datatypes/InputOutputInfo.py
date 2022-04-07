@@ -1,10 +1,8 @@
 from __future__ import annotations
 from util import standard_repr
 from annotation_generation.util import compute_actual_el_for_input, compute_actual_el_for_output
-from typing import List, Optional, Union
-from datatypes.Operand import Operand
-from datatypes.FileDescriptor import FileDescriptor
-from datatypes.FlagOption import OptionArgPosConfigType
+from typing import List, Optional
+from datatypes.BasicDatatypes import OptionArgPosConfigType, Operand, FileDescriptor
 
 from annotation_generation.util import return_empty_list_if_none_else_itself
 
@@ -26,7 +24,7 @@ class InputOutputInfo:
         self.implicit_use_of_stdin : bool = implicit_use_of_stdin
         self.implicit_use_of_stdout : bool = implicit_use_of_stdout
         self.multiple_inputs_possible : bool = multiple_inputs_possible
-        # TODO: add reasonability checks somewhere
+        # TODO: add reasonability checks somewhere -> would need getter-functions for this
 
     def __repr__(self) -> str:
         return standard_repr(self)

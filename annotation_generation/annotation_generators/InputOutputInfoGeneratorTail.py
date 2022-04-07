@@ -15,7 +15,7 @@ class InputOutputInfoGeneratorTail(InputOutputInfoGeneratorInterface):
         self.apply_operands_transformer()
 
     def apply_standard_filedescriptor_transformer(self) -> None:
-        self.set_ioinfo_implicit_use_of_stdout()
+        self.set_implicit_use_of_stdout()
         self.if_no_operands_given_stdin_implicitly_used()
         # self.meta.append_stderr_to_output_list()  # errors are written to stderr and cannot be suppressed
 

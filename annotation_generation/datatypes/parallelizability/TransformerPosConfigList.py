@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import List, Tuple, Optional
-from datatypes.FlagOption import OptionArgPosConfigType
+from datatypes.BasicDatatypes import OptionArgPosConfigType
 
 from abc import ABC, abstractmethod
 
@@ -49,10 +49,10 @@ class TransformerPosConfigList(ABC):
         pass
 
     @staticmethod
-    def return_transformer_same_as_seq_if_none_else_itself(arg: Optional[TransformerPosConfigList]) \
+    def return_transformer_empty_if_none_else_itself(arg: Optional[TransformerPosConfigList]) \
             -> TransformerPosConfigList:
         if arg is None:
-            return make_transformer_same_as_seq()
+            return make_transformer_empty()
         else:
             return arg
 
@@ -127,6 +127,9 @@ def make_transformer_add(list_to_add):
 
 def make_transformer_remove(list_to_remove):
     return TransformerPosConfigListRemove(list_to_remove)
+
+def make_transformer_empty():
+    return TransformerPosConfigListEmpty()
 
 def make_transformer_custom(list_custom):
     return TransformerPosConfigListCustom(list_custom)

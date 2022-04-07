@@ -2,8 +2,7 @@ from __future__ import annotations
 from typing import List
 from abc import ABC, abstractmethod
 
-from datatypes.FlagOption import FlagOption
-from datatypes.Operand import Operand
+from datatypes.BasicDatatypes import *
 from datatypes.CommandInvocation import CommandInvocation
 
 class Generator_Interface(ABC):

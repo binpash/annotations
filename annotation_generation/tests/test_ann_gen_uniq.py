@@ -1,64 +1,99 @@
-from util import make_arg_simple
-from datatypes.Operand import Operand
+from util_flag_option import make_arg_simple
+from typing import List
+from datatypes.BasicDatatypes import FlagOption, Operand
+from datatypes.CommandInvocation import CommandInvocation
+from datatypes.CommandInvocationPrefix import CommandInvocationPrefix
+from annotation_generation.datatypes.InputOutputInfo import InputOutputInfo
+from annotation_generation.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
+
 from annotation_generation.datatypes.parallelizability.Parallelizer import Parallelizer
+from annotation_generation.datatypes.parallelizability.Mapper import Mapper
 from annotation_generation.datatypes.parallelizability.Aggregator import Aggregator
+from annotation_generation.datatypes.parallelizability.AggregatorSpec import AggregatorSpec
 
 import annotation_generation.AnnotationGeneration as AnnotationGeneration
 
 cmd_name = "uniq"
 
-# commands taken from spell script in one-liners
-
 
 def test_uniq_1() -> None:
-    args = [make_arg_simple(["-D"])]
-    operands = [Operand("in.txt"),
-                Operand("out.txt")]
+    args: List[FlagOption] = [make_arg_simple(["-D"])]
+    operands: List[Operand] = [Operand("in.txt"),
+                               Operand("out.txt")]
 
-    meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
+    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    # cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
-    assert len(meta.get_input_list()) == 1
-    assert len(meta.get_output_list()) == 2     # out and stderr
+    # IO Info
+    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert len(io_info.positional_config_list) == 0
+    assert len(io_info.positional_input_list) == 1
+    assert len(io_info.positional_output_list) == 1
+    assert not io_info.implicit_use_of_stdin
+    assert not io_info.implicit_use_of_stdout
+    assert not io_info.multiple_inputs_possible
 
-    assert len(meta.get_parallelizer_list()) == 0
+    # Parallelizability Info
+    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert len(para_info.parallelizer_list) == 0
 
 
 def test_uniq_2() -> None:
-    args = [make_arg_simple(["-c"])]
-    operands = []
+    args: List[FlagOption] = [make_arg_simple(["-c"])]
+    operands: List[Operand] = []
+    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
-    meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
+    # IO Info
+    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert len(io_info.positional_config_list) == 0
+    assert len(io_info.positional_input_list) == 0
+    assert len(io_info.positional_output_list) == 0
+    assert io_info.implicit_use_of_stdin
+    assert io_info.implicit_use_of_stdout
+    assert not io_info.multiple_inputs_possible # TODO: I guess it changes the result as it does for head and tail?
 
-    assert len(meta.get_input_list()) == 1  # i.e. stdin
-    assert len(meta.get_output_list()) == 2  # stdout and stderr
-
-    assert len(meta.get_parallelizer_list()) == 1
-    [parallelizer1] = meta.get_parallelizer_list()
-    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin()
+    # Parallelizability Info
+    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert len(para_info.parallelizer_list) == 1
+    parallelizer1: Parallelizer = para_info.parallelizer_list[0]
+    # check that specs for mapper and aggregator are fine
+    aggregator_spec = AggregatorSpec.make_aggregator_spec_adj_lines_func('uniq_merge_count_uniq', is_implemented=False)
+    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
+    # check that results of getting mapper and aggregator are fine
+    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
+    # goal_aggregator = Aggregator.make_aggregator_concatenate()
+    # aggregator not implemented
+    # assert parallelizer1.get_actual_aggregator(cmd_inv_pref) == goal_aggregator
 
 
 def test_uniq_3() -> None:
-    args = [make_arg_simple(["--help"])]
-    operands = [Operand("in.txt")]
+    args: List[FlagOption] = []
+    operands: List[Operand] = [Operand("in.txt"),
+                               Operand("out.txt")]
+    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
-    meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
+    # IO Info
+    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert len(io_info.positional_config_list) == 0
+    assert len(io_info.positional_input_list) == 1
+    assert len(io_info.positional_output_list) == 1
+    assert not io_info.implicit_use_of_stdin
+    assert not io_info.implicit_use_of_stdout
+    assert not io_info.multiple_inputs_possible # TODO: I guess it changes the result as it does for head and tail?
 
-    assert len(meta.get_input_list()) == 1  # we could do better here b/c of --help
-    assert len(meta.get_output_list()) == 2  # stdout and stderr
-
-    assert len(meta.get_parallelizer_list()) == 1
-    [parallelizer1] = meta.get_parallelizer_list()
-    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin()
-
-
-def test_uniq_4() -> None:
-    args = [make_arg_simple(["-s", "10"])]
-    operands = [Operand("in1.txt"),
-                Operand("in2.txt"),
-                Operand("out.txt")]
-
-    meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
-
-    assert len(meta.get_input_list()) == 0  # none because of error
-    assert len(meta.get_output_list()) == 1  # stderr
-
+    # Parallelizability Info
+    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert len(para_info.parallelizer_list) == 1
+    parallelizer1: Parallelizer = para_info.parallelizer_list[0]
+    # check that specs for mapper and aggregator are fine
+    aggregator_spec = AggregatorSpec.make_aggregator_spec_adj_lines_seq()
+    assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
+    # check that results of getting mapper and aggregator are fine
+    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
+    goal_aggregator = Aggregator.make_aggregator_concatenate()
+    # aggregator not implemented
+    # assert parallelizer1.get_actual_aggregator(cmd_inv_pref) == goal_aggregator

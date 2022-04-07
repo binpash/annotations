@@ -1,5 +1,5 @@
 from typing import List
-from datatypes.FlagOption import FlagOption
+from datatypes.BasicDatatypes import FlagOption
 from annotation_generation.annotation_generators.InputOutputInfoGenerator_Interface import InputOutputInfoGeneratorInterface
 
 

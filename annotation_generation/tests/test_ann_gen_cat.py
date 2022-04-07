@@ -1,7 +1,6 @@
 from util_flag_option import make_arg_simple
 from typing import List
-from datatypes.FlagOption import FlagOption
-from datatypes.Operand import Operand
+from datatypes.BasicDatatypes import FlagOption, Operand
 from datatypes.CommandInvocation import CommandInvocation
 from datatypes.CommandInvocationPrefix import CommandInvocationPrefix
 from annotation_generation.datatypes.InputOutputInfo import InputOutputInfo

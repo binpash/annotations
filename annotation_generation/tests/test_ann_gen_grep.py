@@ -1,8 +1,17 @@
-from util import make_arg_simple
-from datatypes.Operand import Operand
+from util_flag_option import make_arg_simple
+from typing import List
+from datatypes.BasicDatatypes import FlagOption, ArgStringType, Operand, FileName
+from datatypes.CommandInvocation import CommandInvocation
+from datatypes.CommandInvocationPrefix import CommandInvocationPrefix
+from annotation_generation.datatypes.InputOutputInfo import InputOutputInfo
+from annotation_generation.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
+
 from annotation_generation.datatypes.parallelizability.Parallelizer import Parallelizer
 from annotation_generation.datatypes.parallelizability.Mapper import Mapper
+from annotation_generation.datatypes.parallelizability.MapperSpec import MapperSpec
+from annotation_generation.datatypes.parallelizability.AdditionalInfoFromSplitter import AdditionalInfoFromSplitter
 from annotation_generation.datatypes.parallelizability.Aggregator import Aggregator
+from annotation_generation.datatypes.parallelizability.AggregatorSpec import AggregatorSpec
 
 import annotation_generation.AnnotationGeneration as AnnotationGeneration
 
@@ -10,68 +19,155 @@ cmd_name = "grep"
 
 
 def test_grep_1() -> None:
-    args = [make_arg_simple(["-c"]), make_arg_simple(["-L"]), make_arg_simple(["-f", "dict.txt"])]
-    operands = [Operand("in1.txt"),
-                Operand("in2.txt")]
+    args: List[FlagOption] = [make_arg_simple(["-L"]), make_arg_simple(["-f", FileName("dict.txt")])]
+    operands: List[Operand] = [Operand("in1.txt"),
+                               Operand("in2.txt")]
+    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
-    meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
+    # IO Info
+    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert len(io_info.positional_config_list) == 0
+    assert len(io_info.positional_input_list) == 2
+    assert len(io_info.positional_output_list) == 0
+    assert not io_info.implicit_use_of_stdin
+    assert io_info.implicit_use_of_stdout
+    assert io_info.multiple_inputs_possible
 
-    assert len(meta.get_input_list()) == 3
-    assert len(meta.get_output_list()) == 2
-
-    assert len(meta.get_parallelizer_list()) == 2
-    [parallelizer1, parallelizer2] = meta.get_parallelizer_list()
+    # Parallelizability Info
+    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert len(para_info.parallelizer_list) == 2
+    parallelizer1: Parallelizer = para_info.parallelizer_list[0]
+    parallelizer2: Parallelizer = para_info.parallelizer_list[1]
+    # check that specs for mapper and aggregator are fine
     assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
-    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
+    aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary('merge_keeping_longer_output',
+                                                                          is_implemented=False)
+    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
+    # check that results of getting mapper and aggregator are fine
+    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
+    assert parallelizer2.get_actual_mapper(cmd_inv_pref) == goal_mapper
+    # aggregator not implemented yet
+    # goal_aggregator = Aggregator.make_aggregator_concatenate()
+    # assert parallelizer1.get_actual_aggregator(cmd_inv_pref) == goal_aggregator
+    # assert parallelizer2.get_actual_aggregator(cmd_inv_pref) == goal_aggregator
 
 
 def test_grep_2() -> None:
-    args = [make_arg_simple(["-f", "dict.txt"]), make_arg_simple(["-e", "*"]), make_arg_simple(["-b"])]
-    operands = [Operand("in1.txt"),
-                Operand("in2.txt")]
+    args: List[FlagOption] = [make_arg_simple(["-f", FileName("dict.txt")]),
+                              make_arg_simple(["-e", "*"]),
+                              make_arg_simple(["-b"])]
+    operands: List[Operand] = [Operand("in1.txt"),
+                               Operand("in2.txt")]
+    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
-    meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
+    # IO Info
+    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert len(io_info.positional_config_list) == 0
+    assert len(io_info.positional_input_list) == 2
+    assert len(io_info.positional_output_list) == 0
+    assert not io_info.implicit_use_of_stdin
+    assert io_info.implicit_use_of_stdout
+    assert io_info.multiple_inputs_possible
 
-    assert len(meta.get_input_list()) == 3
-    assert len(meta.get_output_list()) == 2
-
-    assert len(meta.get_parallelizer_list()) == 2
-    [parallelizer1, parallelizer2] = meta.get_parallelizer_list()
+    # Parallelizability Info
+    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert len(para_info.parallelizer_list) == 2
+    parallelizer1: Parallelizer = para_info.parallelizer_list[0]
+    parallelizer2: Parallelizer = para_info.parallelizer_list[1]
+    # check that specs for mapper and aggregator are fine
     assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
-    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
+    mapper_spec = MapperSpec.make_mapper_spec_custom('grep_add_byte_offset',
+                                                     add_info_from_splitter=AdditionalInfoFromSplitter.BYTE_OFFSET,
+                                                     is_implemented=False)
+    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(mapper_spec=mapper_spec)
+    # check that results of getting mapper and aggregator are fine
+    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
+    # 2nd mapper not implemented yet
+    # assert parallelizer2.get_actual_mapper(cmd_inv_pref) ==
+    goal_aggregator = Aggregator.make_aggregator_concatenate()
+    assert parallelizer1.get_actual_aggregator(cmd_inv_pref) == goal_aggregator
+    assert parallelizer2.get_actual_aggregator(cmd_inv_pref) == goal_aggregator
 
 
 def test_grep_3() -> None:
-    args = [make_arg_simple(["-f", "dict.txt"]), make_arg_simple(["-e", "*"]), make_arg_simple(["-f", "dict2.txt"])]
+    args = [make_arg_simple(["-f", FileName("dict.txt")]),
+            make_arg_simple(["-e", ArgStringType("*")]),
+            make_arg_simple(["-f", FileName("dict2.txt")])]
     operands = [Operand("in1.txt"),
                 Operand("-")]
+    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
-    meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
+    # IO Info
+    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert len(io_info.positional_config_list) == 0
+    assert len(io_info.positional_input_list) == 2
+    assert len(io_info.positional_output_list) == 0
+    assert not io_info.implicit_use_of_stdin
+    assert io_info.implicit_use_of_stdout
+    assert io_info.multiple_inputs_possible
 
-    assert len(meta.get_input_list()) == 4
-    assert len(meta.get_output_list()) == 2
-
-    assert len(meta.get_parallelizer_list()) == 2
-    [parallelizer1, parallelizer2] = meta.get_parallelizer_list()
+    # Parallelizability Info
+    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert len(para_info.parallelizer_list) == 2
+    parallelizer1: Parallelizer = para_info.parallelizer_list[0]
+    parallelizer2: Parallelizer = para_info.parallelizer_list[1]
+    # check that specs for mapper and aggregator are fine
     assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
     assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
+    # check that results of getting mapper and aggregator are fine
+    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
+    assert parallelizer2.get_actual_mapper(cmd_inv_pref) == goal_mapper
+    goal_aggregator = Aggregator.make_aggregator_concatenate()
+    assert parallelizer1.get_actual_aggregator(cmd_inv_pref) == goal_aggregator
+    assert parallelizer2.get_actual_aggregator(cmd_inv_pref) == goal_aggregator
 
 
 def test_grep_4() -> None:
-    args = [make_arg_simple(["-f", "dict.txt"]), make_arg_simple(["-e", "*"]), make_arg_simple(["-f", "dict2.txt"]),
-            make_arg_simple(["-n"]), make_arg_simple(["-b"])]
+    args = [make_arg_simple(["-f", FileName("dict.txt")]),
+            make_arg_simple(["-e", ArgStringType("*")]),
+            make_arg_simple(["-f", FileName("dict2.txt")]),
+            make_arg_simple(["-n"]),
+            make_arg_simple(["-b"])]
     operands = [Operand("in1.txt"),
-                Operand("in2.txt")]
+                Operand("in2.txt"),
+                Operand("in3.txt")]
+    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
-    meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
+    # IO Info
+    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert len(io_info.positional_config_list) == 0
+    assert len(io_info.positional_input_list) == 3
+    assert len(io_info.positional_output_list) == 0
+    assert not io_info.implicit_use_of_stdin
+    assert io_info.implicit_use_of_stdout
+    assert io_info.multiple_inputs_possible
 
-    assert len(meta.get_input_list()) == 4
-    assert len(meta.get_output_list()) == 2
-
-    assert len(meta.get_parallelizer_list()) == 2
-    [parallelizer1, parallelizer2] = meta.get_parallelizer_list()
+    # Parallelizability Info
+    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert len(para_info.parallelizer_list) == 2
+    parallelizer1: Parallelizer = para_info.parallelizer_list[0]
+    parallelizer2: Parallelizer = para_info.parallelizer_list[1]
+    # check that specs for mapper and aggregator are fine
     assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
-    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
+    mapper_spec = MapperSpec.make_mapper_spec_custom('grep_add_line_number_and_byte_offset',
+                                                     add_info_from_splitter=AdditionalInfoFromSplitter.LINE_NUM_AND_BYTE_OFFSET,
+                                                     is_implemented=False)
+    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(mapper_spec=mapper_spec)
+    # check that results of getting mapper and aggregator are fine
+    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
+    # 2nd mapper not implemented yet
+    # assert parallelizer2.get_actual_mapper(cmd_inv_pref) == goal_mapper
+    goal_aggregator = Aggregator.make_aggregator_concatenate()
+    assert parallelizer1.get_actual_aggregator(cmd_inv_pref) == goal_aggregator
+    assert parallelizer2.get_actual_aggregator(cmd_inv_pref) == goal_aggregator
 
 
 def test_grep_5() -> None:
@@ -79,22 +175,50 @@ def test_grep_5() -> None:
     operands = [Operand("*"),
                 Operand("in1.txt"),
                 Operand("in2.txt")]
+    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    # cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
-    meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
+    # IO Info
+    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert len(io_info.positional_config_list) == 1
+    assert len(io_info.positional_input_list) == 2
+    assert len(io_info.positional_output_list) == 0
+    assert not io_info.implicit_use_of_stdin
+    assert not io_info.implicit_use_of_stdout
+    assert io_info.multiple_inputs_possible
 
-    assert len(meta.get_input_list()) == 2
-    assert len(meta.get_output_list()) == 0
-
-    assert len(meta.get_parallelizer_list()) == 0
+    # Parallelizability Info
+    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert len(para_info.parallelizer_list) == 0
 
 
 def test_grep_6() -> None:
-    args = []
-    operands = [Operand("*")]
+    args: List[FlagOption] = []
+    operands: List[Operand] = [Operand("*")]
+    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
-    meta = AnnotationGeneration.get_meta_from_cmd_invocation(cmd_name, args, operands)
+    # IO Info
+    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert len(io_info.positional_config_list) == 1
+    assert len(io_info.positional_input_list) == 0
+    assert len(io_info.positional_output_list) == 0
+    assert io_info.implicit_use_of_stdin
+    assert io_info.implicit_use_of_stdout
+    assert io_info.multiple_inputs_possible
 
-    assert len(meta.get_input_list()) == 1  # only stdin
-    assert len(meta.get_output_list()) == 2
-
-# TODO: add each one test case where only stdout and stderr is used (similar to 5)
+    # Parallelizability Info
+    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert len(para_info.parallelizer_list) == 2
+    parallelizer1: Parallelizer = para_info.parallelizer_list[0]
+    parallelizer2: Parallelizer = para_info.parallelizer_list[1]
+    # check that specs for mapper and aggregator are fine
+    assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
+    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
+    # check that results of getting mapper and aggregator are fine
+    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
+    assert parallelizer2.get_actual_mapper(cmd_inv_pref) == goal_mapper
+    goal_aggregator = Aggregator.make_aggregator_concatenate()
+    assert parallelizer1.get_actual_aggregator(cmd_inv_pref) == goal_aggregator
+    assert parallelizer2.get_actual_aggregator(cmd_inv_pref) == goal_aggregator

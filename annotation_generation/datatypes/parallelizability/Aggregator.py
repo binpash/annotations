@@ -5,7 +5,7 @@ from annotation_generation.util import return_empty_flag_option_list_if_none_els
 
 from annotation_generation.datatypes.parallelizability.AggregatorKind import AggregatorKindEnum
 
-from datatypes.FlagOption import FlagOption, OptionArgPosConfigType
+from datatypes.BasicDatatypes import FlagOption, OptionArgPosConfigType
 
 
 class Aggregator:
@@ -32,3 +32,8 @@ class Aggregator:
     def make_aggregator_concatenate(cls) -> Aggregator:
         return cls(AggregatorKindEnum.CONCATENATE,
                    cmd_name='cat')
+
+    @classmethod
+    def make_aggregator_adj_lines_merge(cls) -> Aggregator:
+        return cls(AggregatorKindEnum.ADJ_LINES_MERGE,
+                   cmd_name='adj_lines_merge')

@@ -3,9 +3,8 @@ from typing import Any, Union
 import json
 import shlex
 import os
-from util import make_arg_simple
-from datatypes.FlagOption import FlagOption
-from datatypes.Operand import Operand
+from util_flag_option import make_arg_simple
+from datatypes.BasicDatatypes import FlagOption, Operand
 from config.definitions import ROOT_DIR
 
 
@@ -48,6 +47,7 @@ def parse_json(command, command_json_fn) -> list[Union[str, FlagOption, Operand]
             if term in tag_map.keys():
                 xbd_list.append(make_arg_simple([tag_map[term]]))
             else:
+                # TODO: need to provide correct types here
                 xbd_list.append(make_arg_simple([term]))
         elif (term in unique_options) and ((i+1) < len(command_list)):
             xbd_list.append(make_arg_simple([term, command_list[i+1]]))

@@ -1,5 +1,5 @@
 from annotation_generation.annotation_generators.ParallelizabilityInfoGenerator_Interface import ParallelizabilityInfoGeneratorInterface
-from datatypes.Operand import Operand
+from datatypes.BasicDatatypes import Operand
 
 
 class ParallelizabilityInfoGeneratorTr(ParallelizabilityInfoGeneratorInterface):
@@ -13,6 +13,8 @@ class ParallelizabilityInfoGeneratorTr(ParallelizabilityInfoGeneratorInterface):
     # -s which squeezes repetitions of characters in last spec. set
     #    -> if '\n' is effectively included in SET1, then Mp[ADJ] and Ag[ADJ]
     # for both, if nothing is true, standard things work
+
+    # tr only takes input from stdin so IF-splitter do not make a lot of sense since RR is superior anyway
 
     def generate_info(self) -> None:
         # TODO: assert somewhere that only one set is given with -d -> should go in minimizer

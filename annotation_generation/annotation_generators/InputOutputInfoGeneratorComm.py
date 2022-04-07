@@ -15,9 +15,8 @@ class InputOutputInfoGeneratorComm(InputOutputInfoGeneratorInterface):
         self.apply_operands_transformer()
 
     def apply_standard_filedescriptor_transformer(self) -> None:
-        self.set_ioinfo_implicit_use_of_stdout()
+        self.set_implicit_use_of_stdout()
 
     def apply_operands_transformer(self) -> None:
-        # if not self.does_flag_option_list_contains_at_least_one_of(["--help", "--version"]): assume minimized command
-        # assert(len(self.operand_names_list) == 2)  # needs two files to compare;
+        assert(self.get_operand_list_length() == 2)  # needs two files to compare;
         self.all_operands_are_inputs()

@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Optional, List
-from datatypes.FlagOption import FlagOption
+from datatypes.BasicDatatypes import FlagOption
 
 from abc import ABC, abstractmethod
 

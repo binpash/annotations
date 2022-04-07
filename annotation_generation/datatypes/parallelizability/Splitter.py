@@ -23,12 +23,12 @@ class Splitter:
         return Splitter(SplitterKindEnum.ROUND_ROBIN)
 
     @staticmethod
-    def make_splitter_consec_junks() -> Splitter:
-        return Splitter(SplitterKindEnum.CONSEC_JUNKS)
+    def make_splitter_consec_chunks() -> Splitter:
+        return Splitter(SplitterKindEnum.CONSEC_CHUNKS)
 
 
 class SplitterKindEnum(Enum):
     INDIV_FILES = 1
     ROUND_ROBIN = 2
-    CONSEC_JUNKS = 3
+    CONSEC_CHUNKS = 3
 

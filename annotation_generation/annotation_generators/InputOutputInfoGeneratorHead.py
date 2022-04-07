@@ -14,7 +14,7 @@ class InputOutputInfoGeneratorHead(InputOutputInfoGeneratorInterface):
         self.apply_operands_transformer()
 
     def apply_standard_filedescriptor_transformer(self) -> None:
-        self.set_ioinfo_implicit_use_of_stdout()
+        self.set_implicit_use_of_stdout()
         self.if_no_operands_given_stdin_implicitly_used()
 
     def apply_operands_transformer(self) -> None:

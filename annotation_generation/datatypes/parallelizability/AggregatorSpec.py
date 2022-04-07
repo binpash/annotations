@@ -68,7 +68,7 @@ class AggregatorSpec:
     @classmethod
     def make_aggregator_spec_adj_lines_merge(cls) -> AggregatorSpec:
         return cls(AggregatorKindEnum.ADJ_LINES_MERGE,
-                   spec_agg_cmd_name='todo_impl_adj_lines_merge',   # tr -d '\n' | sed '$a\' seems to do the job
+                   spec_agg_cmd_name='adj_lines_merge',   # tr -d '\n' | sed '$a\' seems to do the job
                    # TODO: change this when implementing the procedure
                    # flag_option_list_transformer=,   # or custom if needed
                    # pos_config_list_transformer=,     # or custom if needed

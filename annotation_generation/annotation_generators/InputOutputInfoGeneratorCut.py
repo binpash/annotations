@@ -10,12 +10,7 @@ class InputOutputInfoGeneratorCut(InputOutputInfoGeneratorInterface):
     # none, takes from stdin and prints to stdout and no way to suppress output
 
     def generate_info(self) -> None:
-        self.apply_standard_filedescriptor_transformer()
-        self.apply_operands_transformer()
-
-    def apply_standard_filedescriptor_transformer(self) -> None:
-        self.set_ioinfo_implicit_use_of_stdout()
+        self.set_implicit_use_of_stdout()
         self.if_no_operands_given_stdin_implicitly_used()
-
-    def apply_operands_transformer(self) -> None:
         self.all_operands_are_inputs()
+        self.set_multiple_inputs_possible()

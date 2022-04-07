@@ -4,7 +4,7 @@ from typing import Optional, List
 from util import standard_repr, standard_eq
 from annotation_generation.util import return_empty_flag_option_list_if_none_else_itself, return_empty_pos_config_list_if_none_else_itself
 
-from datatypes.FlagOption import FlagOption, OptionArgPosConfigType
+from datatypes.BasicDatatypes import FlagOption, OptionArgPosConfigType
 from datatypes.CommandInvocationPrefix import CommandInvocationPrefix
 
 class Mapper:
