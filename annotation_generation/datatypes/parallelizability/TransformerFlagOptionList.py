@@ -5,6 +5,7 @@ from datatypes.BasicDatatypes import FlagOption
 from abc import ABC, abstractmethod
 
 from util import standard_repr, standard_eq
+from annotation_generation.util import foldl
 
 
 # We offer the following different transformers for flag option lists
@@ -45,6 +46,12 @@ class TransformerFlagOptionList(ABC):
         else:
             return arg
 
+    @staticmethod
+    def apply_individual_transformer(transformer: TransformerFlagOptionList,
+                                     current_list: List[FlagOption]
+                                     ) -> List[FlagOption]:
+        return transformer.get_flag_option_list_after_transformer_application(current_list)
+
 
 class TransformerFlagOptionListSeq(TransformerFlagOptionList):
 
@@ -57,7 +64,7 @@ class TransformerFlagOptionListSeq(TransformerFlagOptionList):
 class TransformerFlagOptionListAdd(TransformerFlagOptionList):
 
     def __init__(self, list_to_add: List[FlagOption]) -> None:
-        self.list_to_add = list_to_add
+        self.list_to_add: List[FlagOption] = list_to_add
 
     def get_flag_option_list_after_transformer_application(self, original_flag_option_list: List[FlagOption]) -> List[FlagOption]:
         list_of_flagoptions_without_the_ones_in_original_one = [flagoption
@@ -117,3 +124,17 @@ def make_transformer_filter(list_to_filter) -> TransformerFlagOptionList:
 
 def make_transformer_custom(list_custom) -> TransformerFlagOptionList:
     return TransformerFlagOptionListCustom(list_custom)
+
+
+# a class which allows to chain multiple Transformers
+# implements the same method as the others for uniformity
+class ChainTransformerFlagOptionList(TransformerFlagOptionList):
+
+    def __init__(self, list_transformers) -> None:
+        self.list_transformers = list_transformers
+
+    def get_flag_option_list_after_transformer_application(self,
+                                                           original_flag_option_list: List[FlagOption]
+                                                           ) -> List[FlagOption]:
+        return foldl(TransformerFlagOptionList.apply_individual_transformer, original_flag_option_list, self.list_transformers)
+

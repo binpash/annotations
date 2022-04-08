@@ -37,3 +37,14 @@ class Aggregator:
     def make_aggregator_adj_lines_merge(cls) -> Aggregator:
         return cls(AggregatorKindEnum.ADJ_LINES_MERGE,
                    cmd_name='adj_lines_merge')
+
+    @classmethod
+    def make_aggregator_custom_2_ary(cls,
+                                     cmd_name: str,
+                                     flag_option_list: List[FlagOption],
+                                     positional_config_list: Optional[List[OptionArgPosConfigType]] = None,
+                                     ) -> Aggregator:
+        return cls(AggregatorKindEnum.CUSTOM_2_ARY,
+                   cmd_name=cmd_name,
+                   flag_option_list=flag_option_list,
+                   positional_config_list=positional_config_list)

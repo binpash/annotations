@@ -21,6 +21,7 @@ from annotation_generation.annotation_generators.InputOutputInfoGeneratorTail im
 from annotation_generation.annotation_generators.InputOutputInfoGeneratorCut import  InputOutputInfoGeneratorCut
 from annotation_generation.annotation_generators.InputOutputInfoGeneratorUniq import InputOutputInfoGeneratorUniq
 from annotation_generation.annotation_generators.InputOutputInfoGeneratorComm import InputOutputInfoGeneratorComm
+from annotation_generation.annotation_generators.InputOutputInfoGeneratorSort import InputOutputInfoGeneratorSort
 
 from annotation_generation.annotation_generators.ParallelizabilityInfoGeneratorGrep import ParallelizabilityInfoGeneratorGrep
 from annotation_generation.annotation_generators.ParallelizabilityInfoGeneratorMv import   ParallelizabilityInfoGeneratorMv
@@ -31,6 +32,7 @@ from annotation_generation.annotation_generators.ParallelizabilityInfoGeneratorT
 from annotation_generation.annotation_generators.ParallelizabilityInfoGeneratorCut import  ParallelizabilityInfoGeneratorCut
 from annotation_generation.annotation_generators.ParallelizabilityInfoGeneratorUniq import ParallelizabilityInfoGeneratorUniq
 from annotation_generation.annotation_generators.ParallelizabilityInfoGeneratorComm import ParallelizabilityInfoGeneratorComm
+from annotation_generation.annotation_generators.ParallelizabilityInfoGeneratorSort import ParallelizabilityInfoGeneratorSort
 
 # Dictionary that contains the MetaGenerator for each command
 dict_cmd_name_inputoutput_info_generator_module = {
@@ -42,7 +44,8 @@ dict_cmd_name_inputoutput_info_generator_module = {
     "tail": InputOutputInfoGeneratorTail,
     "cut":  InputOutputInfoGeneratorCut,
     "uniq": InputOutputInfoGeneratorUniq,
-    "comm": InputOutputInfoGeneratorComm
+    "comm": InputOutputInfoGeneratorComm,
+    "sort": InputOutputInfoGeneratorSort
 }
 dict_cmd_name_parallelizability_info_generator_module = {
     "grep": ParallelizabilityInfoGeneratorGrep,
@@ -53,7 +56,8 @@ dict_cmd_name_parallelizability_info_generator_module = {
     "tail": ParallelizabilityInfoGeneratorTail,
     "cut":  ParallelizabilityInfoGeneratorCut,
     "uniq": ParallelizabilityInfoGeneratorUniq,
-    "comm": ParallelizabilityInfoGeneratorComm
+    "comm": ParallelizabilityInfoGeneratorComm,
+    "sort": ParallelizabilityInfoGeneratorSort
 }
 
 # "mv": "Mv",

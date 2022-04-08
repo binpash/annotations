@@ -36,6 +36,7 @@ class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface
                     # for "-L": if there was no match in one part, the filename will propagate; it not, not
                     aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary('merge_keeping_longer_output',
                                                                                        is_implemented=False)
+                    # TODO
                 elif self.does_flag_option_list_contains_at_least_one_of(["-c"]):
                     aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary('sum_indiv_results_up',
                                                                                        is_implemented=False)
