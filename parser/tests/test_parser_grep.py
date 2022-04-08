@@ -1,11 +1,9 @@
-import pytest
 from util_flag_option import make_arg_simple
 from datatypes.BasicDatatypes import ArgStringType, Operand
 from datatypes.CommandInvocation import CommandInvocation
 from parser.parser import parse_json
 
 
-# @pytest.mark.skip(reason="we want the main branch not to have failing test cases")
 def test_grep_1():
     parser_result = parse_json(r"grep -e '^\s*def' -m 3 -n test.py", "grep.json")
 

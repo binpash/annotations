@@ -1,11 +1,7 @@
-import pytest
 from util_flag_option import make_arg_simple
 from datatypes.BasicDatatypes import Operand
 from datatypes.CommandInvocation import CommandInvocation
 from parser.parser import parse_json
-
-# Result from parsing should have the following format:
-# [ <cmd_name>, [ Arg ], [ Operand ] ]  where Arg can either be a single flag or a single option
 
 
 def test_cat_1():

@@ -27,9 +27,9 @@ def find_matches(line, past_flags):
 
         # option flag and argument separated by space or equal sign
         if "=" in phrases[i]:
-            phrase_parts = re.split("=", phrases[i])
+            phrase_parts = re.split(r"=", phrases[i])
         else:
-            phrase_parts = re.split("\s+", phrases[i])
+            phrase_parts = re.split(r"\s+", phrases[i])
 
         if len(phrase_parts) >= 1 and (re.match(r"^-[-]*[a-z][a-z-]*$", phrase_parts[0]) or re.match(r"^-[-]*[A-Z]$", phrase_parts[0])):
             flag = re.sub("-", '', phrase_parts[0])
