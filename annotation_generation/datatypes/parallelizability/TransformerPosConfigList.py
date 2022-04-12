@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Union
 from datatypes.BasicDatatypes import OptionArgPosConfigType
 
 from abc import ABC, abstractmethod
@@ -23,7 +23,7 @@ class ListIndexEnum(Enum):
     FIRST = 'first'
     LAST = 'last'
 
-GeneralIndex = int | ListIndexEnum
+GeneralIndex = Union[int, ListIndexEnum]
 
 def compute_actual_index(index: GeneralIndex, current_list: List[OptionArgPosConfigType]) -> int:
     if index is ListIndexEnum.FIRST:

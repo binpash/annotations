@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Union
 
 from util import standard_eq, standard_repr
 
@@ -54,7 +55,7 @@ class StdDescriptorEnum(Enum):
     STDOUT = 1
     STDERR = 2
 
-FileDescriptor = FileName | StdDescriptor
+FileDescriptor = Union[FileName, StdDescriptor]
 
 class ArgStringType(BaseClassForBasicDatatypes):
 
@@ -64,7 +65,7 @@ class ArgStringType(BaseClassForBasicDatatypes):
     def get_name(self) -> str:
         return self.name
 
-OptionArgPosConfigType = ArgStringType | FileDescriptor
+OptionArgPosConfigType = Union[ArgStringType, FileDescriptor]
 
 class Flag(BaseClassForBasicDatatypes):
 
@@ -84,7 +85,7 @@ class Option(BaseClassForBasicDatatypes):
     def get_name(self) -> str:
         return self.option_name
 
-FlagOption = Flag | Option
+FlagOption = Union[Flag, Option]
 
 class Operand(BaseClassForBasicDatatypes):
 

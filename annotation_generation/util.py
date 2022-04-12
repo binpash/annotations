@@ -30,7 +30,7 @@ def compute_actual_el_for_output(output_el: Operand) -> FileDescriptor:
     else:
         return FileName(output_el.name)
 
-def return_empty_flag_option_list_if_none_else_itself(arg: List[FlagOption] | None) -> List[FlagOption]:
+def return_empty_flag_option_list_if_none_else_itself(arg: Optional[List[FlagOption]]) -> List[FlagOption]:
     if arg is None:
         return []
     else:
