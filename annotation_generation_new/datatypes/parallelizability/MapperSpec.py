@@ -64,7 +64,7 @@ class MapperSpec:
         if not self.is_implemented:
             return None
         if self.kind == MapperSpecKindEnum.SAME_AS_SEQ:
-            return Mapper.make_mapper_from_command_invocation_prefix(original_cmd_invocation_prefix)
+            return Mapper.make_same_as_seq_mapper_from_command_invocation_prefix(original_cmd_invocation_prefix)
         elif self.kind == MapperSpecKindEnum.CUSTOM:
             flag_option_list = self.flag_option_list_transformer.get_flag_option_list_after_transformer_application(
                 original_cmd_invocation_prefix.flag_option_list)

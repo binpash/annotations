@@ -38,7 +38,7 @@ def test_tail_1() -> None:
     # check that specs for mapper and aggregator are fine
     assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
     # check that results of getting mapper and aggregator are fine
-    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    goal_mapper = Mapper.make_same_as_seq_mapper_from_command_invocation_prefix(cmd_inv_pref)
     assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
     goal_aggregator = Aggregator.make_aggregator_concatenate()
     assert parallelizer1.get_actual_aggregator(cmd_inv_pref) == goal_aggregator
@@ -68,7 +68,7 @@ def test_tail_2() -> None:
     # check that specs for mapper and aggregator are fine
     assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
     # check that results of getting mapper and aggregator are fine
-    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    goal_mapper = Mapper.make_same_as_seq_mapper_from_command_invocation_prefix(cmd_inv_pref)
     assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
     goal_aggregator = Aggregator.make_aggregator_concatenate()
     assert parallelizer1.get_actual_aggregator(cmd_inv_pref) == goal_aggregator

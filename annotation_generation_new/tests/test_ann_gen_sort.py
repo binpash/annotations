@@ -46,7 +46,7 @@ def test_sort_1() -> None:
     assert parallelizer1.get_splitter() == Splitter.make_splitter_indiv_files()
     assert parallelizer2.get_splitter() == Splitter.make_splitter_round_robin()
     # check that results of getting mapper and aggregator are fine
-    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    goal_mapper = Mapper.make_same_as_seq_mapper_from_command_invocation_prefix(cmd_inv_pref)
     assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
     assert parallelizer2.get_actual_mapper(cmd_inv_pref) == goal_mapper
     goal_aggregator = Aggregator.make_aggregator_custom_2_ary(cmd_name='sort', flag_option_list=[make_arg_simple(['-m'])])
@@ -78,7 +78,7 @@ def test_sort_2() -> None:
     assert parallelizer1.get_splitter() == Splitter.make_splitter_indiv_files()
     assert parallelizer2.get_splitter() == Splitter.make_splitter_round_robin()
     # check that results of getting mapper and aggregator are fine
-    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    goal_mapper = Mapper.make_same_as_seq_mapper_from_command_invocation_prefix(cmd_inv_pref)
     assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
     assert parallelizer2.get_actual_mapper(cmd_inv_pref) == goal_mapper
     flag_option_list = [make_arg_simple(["-b"]), make_arg_simple(["-f"]), make_arg_simple(["-m"])]

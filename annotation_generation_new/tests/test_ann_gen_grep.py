@@ -45,7 +45,7 @@ def test_grep_1() -> None:
                                                                           is_implemented=False)
     assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
     # check that results of getting mapper and aggregator are fine
-    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    goal_mapper = Mapper.make_same_as_seq_mapper_from_command_invocation_prefix(cmd_inv_pref)
     assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
     assert parallelizer2.get_actual_mapper(cmd_inv_pref) == goal_mapper
     # aggregator not implemented yet
@@ -84,7 +84,7 @@ def test_grep_2() -> None:
                                                      is_implemented=False)
     assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(mapper_spec=mapper_spec)
     # check that results of getting mapper and aggregator are fine
-    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    goal_mapper = Mapper.make_same_as_seq_mapper_from_command_invocation_prefix(cmd_inv_pref)
     assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
     # 2nd mapper not implemented yet
     # assert parallelizer2.get_actual_mapper(cmd_inv_pref) ==
@@ -120,7 +120,7 @@ def test_grep_3() -> None:
     assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
     assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
     # check that results of getting mapper and aggregator are fine
-    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    goal_mapper = Mapper.make_same_as_seq_mapper_from_command_invocation_prefix(cmd_inv_pref)
     assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
     assert parallelizer2.get_actual_mapper(cmd_inv_pref) == goal_mapper
     goal_aggregator = Aggregator.make_aggregator_concatenate()
@@ -161,7 +161,7 @@ def test_grep_4() -> None:
                                                      is_implemented=False)
     assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(mapper_spec=mapper_spec)
     # check that results of getting mapper and aggregator are fine
-    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    goal_mapper = Mapper.make_same_as_seq_mapper_from_command_invocation_prefix(cmd_inv_pref)
     assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
     # 2nd mapper not implemented yet
     # assert parallelizer2.get_actual_mapper(cmd_inv_pref) == goal_mapper
@@ -216,7 +216,7 @@ def test_grep_6() -> None:
     assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
     assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
     # check that results of getting mapper and aggregator are fine
-    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    goal_mapper = Mapper.make_same_as_seq_mapper_from_command_invocation_prefix(cmd_inv_pref)
     assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
     assert parallelizer2.get_actual_mapper(cmd_inv_pref) == goal_mapper
     goal_aggregator = Aggregator.make_aggregator_concatenate()

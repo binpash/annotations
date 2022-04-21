@@ -61,7 +61,7 @@ def test_uniq_2() -> None:
     aggregator_spec = AggregatorSpec.make_aggregator_spec_adj_lines_func('uniq_merge_count_uniq', is_implemented=False)
     assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
     # check that results of getting mapper and aggregator are fine
-    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    goal_mapper = Mapper.make_same_as_seq_mapper_from_command_invocation_prefix(cmd_inv_pref)
     assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
     # goal_aggregator = Aggregator.make_aggregator_concatenate()
     # aggregator not implemented
@@ -92,7 +92,7 @@ def test_uniq_3() -> None:
     aggregator_spec = AggregatorSpec.make_aggregator_spec_adj_lines_seq()
     assert parallelizer1 == Parallelizer.make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
     # check that results of getting mapper and aggregator are fine
-    goal_mapper = Mapper.make_mapper_from_command_invocation_prefix(cmd_inv_pref)
+    goal_mapper = Mapper.make_same_as_seq_mapper_from_command_invocation_prefix(cmd_inv_pref)
     assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
     goal_aggregator = Aggregator.make_aggregator_concatenate()
     # aggregator not implemented

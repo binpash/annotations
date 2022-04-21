@@ -28,7 +28,7 @@ class Mapper:
         return standard_repr(self)
 
     @staticmethod
-    def make_mapper_from_command_invocation_prefix(command_invocation_prefix: CommandInvocationPrefix):
+    def make_same_as_seq_mapper_from_command_invocation_prefix(command_invocation_prefix: CommandInvocationPrefix):
         return Mapper(command_invocation_prefix.cmd_name,
                       command_invocation_prefix.flag_option_list,
                       command_invocation_prefix.positional_config_list)

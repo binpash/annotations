@@ -14,6 +14,9 @@ class Splitter:
     def __repr__(self) -> str:
         return f'{self.kind}'
 
+    def is_splitter_round_robin(self) -> bool:
+        return self.kind == SplitterKindEnum.ROUND_ROBIN
+
     @staticmethod
     def make_splitter_indiv_files() -> Splitter:
         return Splitter(SplitterKindEnum.INDIV_FILES)
