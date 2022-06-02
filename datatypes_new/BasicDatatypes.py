@@ -55,7 +55,7 @@ class StdDescriptorEnum(Enum):
     STDOUT = 1
     STDERR = 2
 
-FileDescriptor = Union[FileName, StdDescriptor]
+FileNameOrStdDescriptor = Union[FileName, StdDescriptor]
 
 class ArgStringType(BaseClassForBasicDatatypes):
 
@@ -65,7 +65,7 @@ class ArgStringType(BaseClassForBasicDatatypes):
     def get_name(self) -> str:
         return self.name
 
-OptionArgPosConfigType = Union[ArgStringType, FileDescriptor]
+OptionArgPosConfigType = Union[ArgStringType, FileNameOrStdDescriptor]
 
 class Flag(BaseClassForBasicDatatypes):
 
@@ -85,7 +85,19 @@ class Option(BaseClassForBasicDatatypes):
     def get_name(self) -> str:
         return self.option_name
 
+    def get_arg(self) -> OptionArgPosConfigType:
+        return self.option_arg
+
+    def is_arg_of_type_string(self):
+        return isinstance(self.option_arg, ArgStringType)
+
+    def is_arg_of_type_filename_or_stddescriptor(self):
+        return isinstance(self.option_arg, FileName) or isinstance(self.option_arg, StdDescriptor)
+
 FlagOption = Union[Flag, Option]
+
+# Note difference between Option argument and Operand after parsing:
+# for option arguments, we know which is a filename; for operands, we don't
 
 class Operand(BaseClassForBasicDatatypes):
 

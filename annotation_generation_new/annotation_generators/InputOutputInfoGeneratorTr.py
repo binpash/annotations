@@ -1,4 +1,5 @@
 from annotation_generation_new.annotation_generators.InputOutputInfoGenerator_Interface import InputOutputInfoGeneratorInterface
+from datatypes_new.BasicDatatypes import ArgStringType
 
 
 class InputOutputInfoGeneratorTr(InputOutputInfoGeneratorInterface):
@@ -10,9 +11,6 @@ class InputOutputInfoGeneratorTr(InputOutputInfoGeneratorInterface):
     # none, takes from stdin and prints to stdout and no way to suppress output
 
     def generate_info(self) -> None:
-        self.apply_standard_filedescriptor_transformer()
-
-    def apply_standard_filedescriptor_transformer(self) -> None:
         self.set_implicit_use_of_stdin()
         self.set_implicit_use_of_stdout()
-        # self.meta.append_stderr_to_output_list()
+        self.set_all_operands_as_positional_config_arg_type_string()

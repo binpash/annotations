@@ -72,12 +72,17 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
     def only_last_operand_is_output(self):
         self.set_ioinfo_positional_output_list(self.operand_list[-1:])
 
+    def set_all_operands_as_positional_config_arg_type_string(self):
+        # type actual List[StringType] but pyright cannot do the cast for the variable
+        pos_config_list: List[OptionArgPosConfigType] = [operand.to_arg_string_type() for operand in self.operand_list]
+        self.set_ioinfo_positional_config_list(pos_config_list)
+
     def set_first_operand_as_positional_config_arg_type_string(self):
         # type actual List[StringType] but pyright cannot do the cast for the variable
         pos_config_list: List[OptionArgPosConfigType] = [operand.to_arg_string_type() for operand in self.operand_list[:1]]
         self.set_ioinfo_positional_config_list(pos_config_list)
 
     def set_first_operand_as_positional_config_arg_type_filedescriptor(self):
-        # type actual List[FileDescriptor] but pyright cannot do the cast for the variable
+        # type actual List[FileNameOrStdDescriptor] but pyright cannot do the cast for the variable
         pos_config_list: List[OptionArgPosConfigType] = [compute_actual_el_for_input(operand) for operand in self.operand_list[:1]]
         self.set_ioinfo_positional_config_list(pos_config_list)

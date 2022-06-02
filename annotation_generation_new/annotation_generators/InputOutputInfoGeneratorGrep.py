@@ -20,21 +20,13 @@ class InputOutputInfoGeneratorGrep(InputOutputInfoGeneratorInterface):
         self.apply_standard_filedescriptor_transformer()
         self.apply_operands_transformer()
         self.set_multiple_inputs_possible()
-        # self.apply_flagoptionlist_transformer(arg: FlagOption)
 
     def apply_standard_filedescriptor_transformer(self) -> None:
-        # in general, output is written to stdout but can be suppressed
         # though, --help and --version overrules this (and no actual result returned)
         output_suppressed = self.does_flag_option_list_contains_at_least_one_of(["-q"])
-        version_or_help_write_to_stdout = self.if_version_or_help_stdout_implicitly_used()
+        version_or_help_write_to_stdout = self.is_version_or_help_in_flag_option_list()
         if not output_suppressed or version_or_help_write_to_stdout:
             self.set_implicit_use_of_stdout()
-        # TODO: stderr
-        # deprecated since we assume stderr as log for errors and do add to annotation
-        # errors are written to stderr but can be suppressed
-        # errors_suppressed = self.does_flag_option_list_contains_at_least_one_of(["-s"])
-        # if not errors_suppressed:
-        #     stderr is used
 
     def apply_operands_transformer(self) -> None:
         if self.does_flag_option_list_contains_at_least_one_of(["-e", "-f"]):
@@ -48,8 +40,3 @@ class InputOutputInfoGeneratorGrep(InputOutputInfoGeneratorInterface):
                 self.set_ioinfo_positional_input_list([Operand("$PWD")]) # TODO: this is not exactly equivalent due to path and type wrong
             else:
                 self.set_implicit_use_of_stdin()
-
-    # option args shall be handled in parser_new
-    # def apply_flagoptionlist_transformer(self, flagoption: FlagOption):
-    #     if flagoption.get_name() == "-f":
-    #         self.meta.prepend_el_to_input_list(arg.option_arg)

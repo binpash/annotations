@@ -17,14 +17,14 @@ def list_deduplication(list_to_dedup: List[TType]) -> List[TType]:
     return deduplicated_input_list
 
 
-def compute_actual_el_for_input(input_el: Operand) -> FileDescriptor:
+def compute_actual_el_for_input(input_el: Operand) -> FileNameOrStdDescriptor:
     if input_el == "-":
         return StdDescriptor(StdDescriptorEnum.STDIN)
     else:
         return FileName(input_el.name)
 
 
-def compute_actual_el_for_output(output_el: Operand) -> FileDescriptor:
+def compute_actual_el_for_output(output_el: Operand) -> FileNameOrStdDescriptor:
     if output_el == "-":
         return StdDescriptor(StdDescriptorEnum.STDOUT)
     else:
