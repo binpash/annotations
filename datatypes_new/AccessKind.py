@@ -19,8 +19,8 @@ class AccessKind:
         return AccessKind(AccessKindEnum.OTHER_INPUT)
 
     @staticmethod
-    def make_other_output() -> AccessKind:
-        return AccessKind(AccessKindEnum.OTHER_INPUT)
+    def make_output() -> AccessKind:
+        return AccessKind(AccessKindEnum.OUTPUT)
 
     def is_any_input(self):
         return self.kind == AccessKindEnum.CONF_INPUT \

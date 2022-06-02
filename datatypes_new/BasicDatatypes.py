@@ -65,6 +65,7 @@ class ArgStringType(BaseClassForBasicDatatypes):
     def get_name(self) -> str:
         return self.name
 
+# TODO: remove as confusing
 OptionArgPosConfigType = Union[ArgStringType, FileNameOrStdDescriptor]
 
 class Flag(BaseClassForBasicDatatypes):

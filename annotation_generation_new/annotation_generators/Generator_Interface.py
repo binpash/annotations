@@ -4,10 +4,12 @@ from abc import ABC, abstractmethod
 
 from datatypes_new.BasicDatatypes import *
 from datatypes_new.CommandInvocation import CommandInvocation
+from datatypes_new.CommandInvocationWithIOPartial import CommandInvocationWithIOPartial
+from datatypes_new.CommandInvocationWithIOFull import CommandInvocationWithIOFull
 
 class Generator_Interface(ABC):
 
-    def __init__(self, cmd_invocation: CommandInvocation) -> None:
+    def __init__(self, cmd_invocation: Union[CommandInvocation, CommandInvocationWithIOPartial, CommandInvocationWithIOFull]) -> None:
         # we unfold to have easier access, it will not be fed back from here anywhere
         self.cmd_name : str = cmd_invocation.cmd_name
         self.flag_option_list : List[FlagOption] = cmd_invocation.flag_option_list

@@ -19,7 +19,7 @@ class InputOutputInfoGeneratorGrep(InputOutputInfoGeneratorInterface):
     def generate_info(self) -> None:
         self.apply_standard_filedescriptor_transformer()
         self.apply_operands_transformer()
-        self.set_multiple_inputs_possible()
+        # self.set_multiple_inputs_possible()
 
     def apply_standard_filedescriptor_transformer(self) -> None:
         # though, --help and --version overrules this (and no actual result returned)
@@ -30,13 +30,15 @@ class InputOutputInfoGeneratorGrep(InputOutputInfoGeneratorInterface):
 
     def apply_operands_transformer(self) -> None:
         if self.does_flag_option_list_contains_at_least_one_of(["-e", "-f"]):
-            self.all_operands_are_inputs() # this is true also if empty
+            self.all_operands_are_streaming_inputs() # this is true also if empty
         else:
             self.set_first_operand_as_positional_config_arg_type_string()
-            self.all_but_first_operand_is_input()
+            self.all_but_first_operand_is_streaming_input()
+        # TODO: make correct CA for input list
         # deciding on whether there is an input to check, add to input_list
-        if self.get_length_ioinfo_positional_input_list() == 0:
-            if self.does_flag_option_list_contains_at_least_one_of(["-r"]):
-                self.set_ioinfo_positional_input_list([Operand("$PWD")]) # TODO: this is not exactly equivalent due to path and type wrong
-            else:
-                self.set_implicit_use_of_stdin()
+        # if self.get_length_ioinfo_positional_input_list() == 0:
+        #     if self.does_flag_option_list_contains_at_least_one_of(["-r"]):
+        #         raise Exception("-r option without dir name not handled")
+        #         # self.set_ioinfo_positional_input_list([Operand("$PWD")]) # TODO: this is not exactly equivalent due to path and type wrong
+        #     else:
+        #         self.set_implicit_use_of_stdin()

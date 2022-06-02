@@ -20,4 +20,4 @@ class InputOutputInfoGeneratorTail(InputOutputInfoGeneratorInterface):
         # self.meta.append_stderr_to_output_list()  # errors are written to stderr and cannot be suppressed
 
     def apply_operands_transformer(self) -> None:
-        self.all_operands_are_inputs()
+        self.all_operands_are_streaming_inputs()

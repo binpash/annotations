@@ -48,10 +48,11 @@ class InputOutputInfoGeneratorMv(InputOutputInfoGeneratorInterface):
         # -t gives destination directory as an argument to option and determines how operands are interpreted
         list_options_t : List[FlagOption] = self.get_flag_option_list_filtered_with(["-t"])
         if len(list_options_t) == 0:
-            self.all_but_last_operand_is_input()
+            self.all_but_last_operand_is_other_input()
+            # TODO: is there "other" output?
             self.only_last_operand_is_output()
         elif len(list_options_t) == 1:
-            self.all_operands_are_inputs()
+            self.all_operands_are_streaming_inputs()
         else:
             # multiple -t options not allowed (checked using cmd)
             raise Exception("multiple -t options defined for mv")
