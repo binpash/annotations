@@ -1,7 +1,7 @@
 from util_flag_option import make_arg_simple
 from typing import List
 from datatypes_new.BasicDatatypes import FlagOption, ArgStringType, Operand, FileName
-from datatypes_new.CommandInvocation import CommandInvocation
+from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from datatypes_new.CommandInvocationPrefix import CommandInvocationPrefix
 from annotation_generation_new.datatypes.InputOutputInfo import InputOutputInfo
 from annotation_generation_new.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
@@ -22,7 +22,7 @@ def test_grep_1() -> None:
     args: List[FlagOption] = [make_arg_simple(["-L"]), make_arg_simple(["-f", FileName("dict.txt")])]
     operands: List[Operand] = [Operand("in1.txt"),
                                Operand("in2.txt")]
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
@@ -60,7 +60,7 @@ def test_grep_2() -> None:
                               make_arg_simple(["-b"])]
     operands: List[Operand] = [Operand("in1.txt"),
                                Operand("in2.txt")]
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
@@ -99,7 +99,7 @@ def test_grep_3() -> None:
             make_arg_simple(["-f", FileName("dict2.txt")])]
     operands = [Operand("in1.txt"),
                 Operand("-")]
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
@@ -137,7 +137,7 @@ def test_grep_4() -> None:
     operands = [Operand("in1.txt"),
                 Operand("in2.txt"),
                 Operand("in3.txt")]
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
@@ -175,7 +175,7 @@ def test_grep_5() -> None:
     operands = [Operand("*"),
                 Operand("in1.txt"),
                 Operand("in2.txt")]
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
     # cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
@@ -195,7 +195,7 @@ def test_grep_5() -> None:
 def test_grep_6() -> None:
     args: List[FlagOption] = []
     operands: List[Operand] = [Operand("*")]
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info

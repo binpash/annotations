@@ -1,6 +1,6 @@
 from util_flag_option import make_arg_simple
 from datatypes_new.BasicDatatypes import ArgStringType, Operand
-from datatypes_new.CommandInvocation import CommandInvocation
+from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from parser_new.parser import parse
 
 
@@ -12,6 +12,6 @@ def test_grep_1():
             # make_arg_simple(["-m", "3"]),
             make_arg_simple(["-n"])]
     operands = [Operand("test.py")]
-    expected_result = CommandInvocation("grep", args, operands)
+    expected_result = CommandInvocationInitial("grep", args, operands)
 
     assert expected_result == parser_result

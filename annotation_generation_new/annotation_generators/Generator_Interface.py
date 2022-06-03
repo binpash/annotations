@@ -2,18 +2,13 @@ from __future__ import annotations
 from typing import List
 from abc import ABC, abstractmethod
 
-from datatypes_new.BasicDatatypes import *
-from datatypes_new.CommandInvocation import CommandInvocation
-from datatypes_new.CommandInvocationWithIOPartial import CommandInvocationWithIOPartial
-from datatypes_new.CommandInvocationWithIOFull import CommandInvocationWithIOFull
+from datatypes_new.BasicDatatypes import FlagOption
+from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 
 class Generator_Interface(ABC):
 
-    def __init__(self, cmd_invocation: Union[CommandInvocation, CommandInvocationWithIOPartial, CommandInvocationWithIOFull]) -> None:
-        # we unfold to have easier access, it will not be fed back from here anywhere
-        self.cmd_name : str = cmd_invocation.cmd_name
-        self.flag_option_list : List[FlagOption] = cmd_invocation.flag_option_list
-        self.operand_list : List[Operand] = cmd_invocation.operand_list
+    def __init__(self, cmd_invocation: CommandInvocationInitial) -> None:
+        self.cmd_inv: CommandInvocationInitial = cmd_invocation
 
     @abstractmethod
     def generate_info(self) -> None:
@@ -25,18 +20,15 @@ class Generator_Interface(ABC):
 
     ## HELPERS/Library functions: to check conditions
 
-    def get_operand_names_list(self) -> List[str]:
-        return [operand.name for operand in self.operand_list]
-
-    def does_flag_option_list_contains_at_least_one_of(self, list_names: List[str]) -> bool:
+    def does_flag_option_list_contain_at_least_one_of(self, list_names: List[str]) -> bool:
         return len(self.get_flag_option_list_filtered_with(list_names)) > 0
 
     def get_flag_option_list_filtered_with(self, list_names: List[str]) -> List[FlagOption]:
-        return [flagoption for flagoption in self.flag_option_list if flagoption.get_name() in list_names]
+        return [flagoption for flagoption in self.cmd_inv.flag_option_list if flagoption.get_name() in list_names]
 
     def is_version_or_help_in_flag_option_list(self) -> bool:
-        return self.does_flag_option_list_contains_at_least_one_of(["--help"]) \
-                or self.does_flag_option_list_contains_at_least_one_of(["--version"])
+        return self.does_flag_option_list_contain_at_least_one_of(["--help"]) \
+                or self.does_flag_option_list_contain_at_least_one_of(["--version"])
 
     def get_operand_list_length(self):
-        return len(self.operand_list)
+        return len(self.cmd_inv.operand_list)

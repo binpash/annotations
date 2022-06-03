@@ -18,8 +18,8 @@ class ParallelizabilityInfoGeneratorUniq(ParallelizabilityInfoGeneratorInterface
 
     def generate_info(self) -> None:
         # check for flags/options that make it super hard
-        if not self.does_flag_option_list_contains_at_least_one_of(["-d", "-D", "--all-repeated"]):
-            if self.does_flag_option_list_contains_at_least_one_of(["-c"]):
+        if not self.does_flag_option_list_contain_at_least_one_of(["-d", "-D", "--all-repeated"]):
+            if self.does_flag_option_list_contain_at_least_one_of(["-c"]):
                 # we need a special merge
                 aggregator_spec = AggregatorSpec.make_aggregator_spec_adj_lines_func('uniq_merge_count_uniq', is_implemented=False)
                 parallelizer_rr_seq_adjf = Parallelizer.make_parallelizer_round_robin(aggregator_spec=aggregator_spec)

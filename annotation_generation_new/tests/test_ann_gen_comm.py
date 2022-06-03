@@ -1,6 +1,6 @@
 from util_flag_option import make_arg_simple
 from datatypes_new.BasicDatatypes import Operand
-from datatypes_new.CommandInvocation import CommandInvocation
+from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from annotation_generation_new.datatypes.InputOutputInfo import InputOutputInfo
 from annotation_generation_new.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
 
@@ -14,7 +14,7 @@ def test_comm_1() -> None:
     operands = [Operand("tocomm1.txt"),
                 Operand("tocomm2.txt")]
 
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
 
     # IO Info
     io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
@@ -36,7 +36,7 @@ def test_comm_2() -> None:
     operands = [Operand("tocomm1.txt"),
                 Operand("tocomm2.txt"),
                 Operand("tocomm3.txt")]
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
 
     try:
         _io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)

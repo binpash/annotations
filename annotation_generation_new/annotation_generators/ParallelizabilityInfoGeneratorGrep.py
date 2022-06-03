@@ -22,33 +22,33 @@ class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface
     # for -m, we only do IF
 
     def generate_info(self) -> None:
-        if not self.does_flag_option_list_contains_at_least_one_of(["-q"]):
+        if not self.does_flag_option_list_contain_at_least_one_of(["-q"]):
             # for indiv files
             self.append_to_parallelizer_list_if_seq_conc()
             # rest for round-robin
             mapper_spec = None
             aggregator_spec = None
             # CA to decide which mapper or aggregator, parallelizer added after CA
-            if not self.does_flag_option_list_contains_at_least_one_of(["-A", "-B", "-C", "-m"]):
-                if self.does_flag_option_list_contains_at_least_one_of(["-L", "-l"]):
+            if not self.does_flag_option_list_contain_at_least_one_of(["-A", "-B", "-C", "-m"]):
+                if self.does_flag_option_list_contain_at_least_one_of(["-L", "-l"]):
                     # the output for both options is either empty or the filename (same for both if so)
                     # for "-l": if there was a match in one part, the filename will propagate; if not, not
                     # for "-L": if there was no match in one part, the filename will propagate; it not, not
                     aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary('merge_keeping_longer_output',
                                                                                        is_implemented=False)
                     # TODO
-                elif self.does_flag_option_list_contains_at_least_one_of(["-c"]):
+                elif self.does_flag_option_list_contain_at_least_one_of(["-c"]):
                     aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary('sum_indiv_results_up',
                                                                                        is_implemented=False)
-                elif self.does_flag_option_list_contains_at_least_one_of(["-n"]) and self.does_flag_option_list_contains_at_least_one_of(["-b"]):
+                elif self.does_flag_option_list_contain_at_least_one_of(["-n"]) and self.does_flag_option_list_contain_at_least_one_of(["-b"]):
                     mapper_spec = MapperSpec.make_mapper_spec_custom('grep_add_line_number_and_byte_offset',
                                                                      add_info_from_splitter=AdditionalInfoFromSplitter.LINE_NUM_AND_BYTE_OFFSET,
                                                                      is_implemented=False)
-                elif self.does_flag_option_list_contains_at_least_one_of(["-n"]):
+                elif self.does_flag_option_list_contain_at_least_one_of(["-n"]):
                     mapper_spec = MapperSpec.make_mapper_spec_custom('grep_add_line_number_offset',
                                                                      add_info_from_splitter=AdditionalInfoFromSplitter.LINE_NUM_OFFSET,
                                                                      is_implemented=False)
-                elif self.does_flag_option_list_contains_at_least_one_of(["-b"]):
+                elif self.does_flag_option_list_contain_at_least_one_of(["-b"]):
                     mapper_spec = MapperSpec.make_mapper_spec_custom('grep_add_byte_offset',
                                                                      add_info_from_splitter=AdditionalInfoFromSplitter.BYTE_OFFSET,
                                                                      is_implemented=False)

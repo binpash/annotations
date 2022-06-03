@@ -1,6 +1,6 @@
 # imports for typing
 from __future__ import annotations
-from datatypes_new.CommandInvocation import CommandInvocation
+from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from annotation_generation_new.datatypes.InputOutputInfo import InputOutputInfo
 from annotation_generation_new.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
 
@@ -74,7 +74,7 @@ dict_cmd_name_parallelizability_info_generator_module = {
 # from config_new.definitions import dict_cmd_name_parallelizability_info_generator_module
 
 # cannot be merged due to types
-def get_input_output_info_from_cmd_invocation(cmd_invocation : CommandInvocation) -> InputOutputInfo:
+def get_input_output_info_from_cmd_invocation(cmd_invocation : CommandInvocationInitial) -> InputOutputInfo:
     # Get the Generator
     info_generator_class_for_cmd = dict_cmd_name_inputoutput_info_generator_module[cmd_invocation.cmd_name]
     # Initialize the info generator object
@@ -83,7 +83,7 @@ def get_input_output_info_from_cmd_invocation(cmd_invocation : CommandInvocation
     info_generator_object.generate_info()
     return info_generator_object.get_info()
 
-def get_parallelizability_info_from_cmd_invocation(cmd_invocation : CommandInvocation) -> ParallelizabilityInfo:
+def get_parallelizability_info_from_cmd_invocation(cmd_invocation : CommandInvocationInitial) -> ParallelizabilityInfo:
     # Get the Generator
     info_generator_class_for_cmd = dict_cmd_name_parallelizability_info_generator_module[cmd_invocation.cmd_name]
     # Initialize the info generator object

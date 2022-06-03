@@ -49,10 +49,10 @@ class ParallelizabilityInfoGeneratorCat(ParallelizabilityInfoGeneratorInterface)
 
     # private helper functions for conditions
     def does_squeeze_repeated_empty_output_lines(self):
-        return self.does_flag_option_list_contains_at_least_one_of(["-s"])
+        return self.does_flag_option_list_contain_at_least_one_of(["-s"])
 
     def does_number_non_empty_output_lines(self): # -b overwrites -n
-        return self.does_flag_option_list_contains_at_least_one_of(["-b"])
+        return self.does_flag_option_list_contain_at_least_one_of(["-b"])
 
     def does_number_all_output_lines(self):
-        return self.does_flag_option_list_contains_at_least_one_of(["-n"])
+        return self.does_flag_option_list_contain_at_least_one_of(["-n"])

@@ -11,7 +11,7 @@ class ParallelizabilityInfoGeneratorSort(ParallelizabilityInfoGeneratorInterface
     # Which ones do affect parallelizability?
 
     def generate_info(self) -> None:
-        if self.does_flag_option_list_contains_at_least_one_of(["-c", "-C", "-u", "-z", "-R", "-s", "-m", "--files0-from", "--random-source"]):
+        if self.does_flag_option_list_contain_at_least_one_of(["-c", "-C", "-u", "-z", "-R", "-s", "-m", "--files0-from", "--random-source"]):
             pass    # no parallelization
         else:
             # Build aggregator spec: keep certain flags with filtering and add -m

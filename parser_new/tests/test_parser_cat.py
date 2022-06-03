@@ -1,6 +1,6 @@
 from util_flag_option import make_arg_simple
 from datatypes_new.BasicDatatypes import Operand
-from datatypes_new.CommandInvocation import CommandInvocation
+from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from parser_new.parser import parse
 
 
@@ -11,7 +11,7 @@ def test_cat_1():
             make_arg_simple(["-e"])]
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
-    expected_result = CommandInvocation("cat", args, operands)
+    expected_result = CommandInvocationInitial("cat", args, operands)
 
     assert expected_result == parser_result
 
@@ -23,6 +23,6 @@ def test_cat_2():
     args = [make_arg_simple(["-b"]), make_arg_simple(["-e"])]
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
-    expected_result = CommandInvocation("cat", args, operands)
+    expected_result = CommandInvocationInitial("cat", args, operands)
 
     assert expected_result == parser_result

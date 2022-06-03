@@ -1,7 +1,7 @@
 from util_flag_option import make_arg_simple
 from typing import List
 from datatypes_new.BasicDatatypes import FlagOption, Operand
-from datatypes_new.CommandInvocation import CommandInvocation
+from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from datatypes_new.CommandInvocationPrefix import CommandInvocationPrefix
 from annotation_generation_new.datatypes.InputOutputInfo import InputOutputInfo
 from annotation_generation_new.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
@@ -21,7 +21,7 @@ def test_uniq_1() -> None:
     operands: List[Operand] = [Operand("in.txt"),
                                Operand("out.txt")]
 
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
     # cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
@@ -41,7 +41,7 @@ def test_uniq_1() -> None:
 def test_uniq_2() -> None:
     args: List[FlagOption] = [make_arg_simple(["-c"])]
     operands: List[Operand] = []
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
@@ -72,7 +72,7 @@ def test_uniq_3() -> None:
     args: List[FlagOption] = []
     operands: List[Operand] = [Operand("in.txt"),
                                Operand("out.txt")]
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info

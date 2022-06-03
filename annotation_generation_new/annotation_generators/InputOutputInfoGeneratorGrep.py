@@ -23,13 +23,13 @@ class InputOutputInfoGeneratorGrep(InputOutputInfoGeneratorInterface):
 
     def apply_standard_filedescriptor_transformer(self) -> None:
         # though, --help and --version overrules this (and no actual result returned)
-        output_suppressed = self.does_flag_option_list_contains_at_least_one_of(["-q"])
+        output_suppressed = self.does_flag_option_list_contain_at_least_one_of(["-q"])
         version_or_help_write_to_stdout = self.is_version_or_help_in_flag_option_list()
         if not output_suppressed or version_or_help_write_to_stdout:
             self.set_implicit_use_of_stdout()
 
     def apply_operands_transformer(self) -> None:
-        if self.does_flag_option_list_contains_at_least_one_of(["-e", "-f"]):
+        if self.does_flag_option_list_contain_at_least_one_of(["-e", "-f"]):
             self.all_operands_are_streaming_inputs() # this is true also if empty
         else:
             self.set_first_operand_as_positional_config_arg_type_string()

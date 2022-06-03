@@ -1,5 +1,6 @@
-from typing import List
+from typing import List, Union
 from datatypes_new.BasicDatatypes import FlagOption
+from datatypes_new.BasicDatatypesWithIO import OptionWithIO
 from annotation_generation_new.annotation_generators.InputOutputInfoGenerator_Interface import InputOutputInfoGeneratorInterface
 
 

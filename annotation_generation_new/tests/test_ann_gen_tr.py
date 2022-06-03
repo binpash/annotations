@@ -1,7 +1,7 @@
 from util_flag_option import make_arg_simple
 from typing import List
 from datatypes_new.BasicDatatypes import FlagOption, Operand
-from datatypes_new.CommandInvocation import CommandInvocation
+from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from datatypes_new.CommandInvocationPrefix import CommandInvocationPrefix
 from annotation_generation_new.datatypes.InputOutputInfo import InputOutputInfo
 from annotation_generation_new.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
@@ -22,7 +22,7 @@ def test_tr_1() -> None:
     args: List[FlagOption] = [make_arg_simple(["-c"]), make_arg_simple(["-s"])]
     operands: List[Operand] = [Operand("A-Za-z"),
                 Operand("\'\n\'")]
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
@@ -52,7 +52,7 @@ def test_tr_2() -> None:
     args: List[FlagOption] = []
     operands: List[Operand] = [Operand("A-Z"),
                 Operand("a-z")]
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
@@ -80,7 +80,7 @@ def test_tr_2() -> None:
 def test_tr_3() -> None:
     args: List[FlagOption] = [make_arg_simple(["-d"])]
     operands: List[Operand] = [Operand("'[:punct:]'")]
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
@@ -108,7 +108,7 @@ def test_tr_3() -> None:
 def test_tr_4() -> None:
     args: List[FlagOption] = [make_arg_simple(["-d"])]
     operands: List[Operand] = [Operand("'\n'")]
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
@@ -138,7 +138,7 @@ def test_tr_4() -> None:
 def test_tr_5() -> None:
     args: List[FlagOption] = [make_arg_simple(["-c"]), make_arg_simple(["-d"])]
     operands: List[Operand] = [Operand("'\n'")]
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
@@ -166,7 +166,7 @@ def test_tr_5() -> None:
 def test_tr_6() -> None:
     args: List[FlagOption] = [make_arg_simple(["-c"]), make_arg_simple(["-d"])]
     operands: List[Operand] = [Operand("A-Z")]
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info

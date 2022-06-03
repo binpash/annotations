@@ -6,11 +6,11 @@ import shlex
 import os
 from enum import Enum
 from datatypes_new.BasicDatatypes import FlagOption, Flag, Option, Operand, FileName, ArgStringType
-from datatypes_new.CommandInvocation import CommandInvocation
+from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from config_new.definitions import ROOT_DIR
 
 
-def parse(command) -> CommandInvocation:
+def parse(command) -> CommandInvocationInitial:
 
     # split all terms (command, flags, options, arguments, operands)
     parsed_elements_list : list[str] = shlex.split(command)
@@ -66,7 +66,7 @@ def parse(command) -> CommandInvocation:
 
     operand_list = [Operand(operand_name) for operand_name in parsed_elements_list[i:]]
 
-    return CommandInvocation(cmd_name, flag_option_list, operand_list)
+    return CommandInvocationInitial(cmd_name, flag_option_list, operand_list)
 
 
 def get_option_from_name_and_untyped_arg(dict_option_to_class_for_arg, option_arg_as_string, option_name_as_string):

@@ -1,11 +1,13 @@
 from __future__ import annotations
-from typing import List, Optional
+from typing import List, Union
 
 from abc import ABC, abstractmethod
 
-from datatypes_new.CommandInvocation import CommandInvocation
+from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
+from datatypes_new.BasicDatatypes import FlagOption
 
 from annotation_generation_new.annotation_generators.Generator_Interface import Generator_Interface
+
 from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer
 from annotation_generation_new.datatypes.parallelizability.Splitter import Splitter
 from annotation_generation_new.datatypes.parallelizability.MapperSpec import MapperSpec
@@ -18,8 +20,8 @@ class ParallelizabilityInfoGeneratorInterface(Generator_Interface, ABC):
     # This is the select_subcommand from the original proposal,
     #   instead of returning functions, it initializes the object
     #   and then we can call its methods.
-    def __init__(self, cmd_invocation: CommandInvocation) -> None:
-        super().__init__(cmd_invocation=cmd_invocation)
+    def __init__(self, cmd_invocation: CommandInvocationInitial) -> None:
+        self.cmd_inv = cmd_invocation
         self.parallelizability_info: ParallelizabilityInfo = ParallelizabilityInfo()
 
     @abstractmethod
@@ -30,7 +32,6 @@ class ParallelizabilityInfoGeneratorInterface(Generator_Interface, ABC):
 
     def get_info(self) -> ParallelizabilityInfo:
         return self.parallelizability_info
-
 
     ## HELPERS/Library functions: modifying parallelizability info
 

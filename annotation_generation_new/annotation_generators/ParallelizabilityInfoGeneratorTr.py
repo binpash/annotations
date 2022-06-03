@@ -20,11 +20,11 @@ class ParallelizabilityInfoGeneratorTr(ParallelizabilityInfoGeneratorInterface):
         # TODO: assert somewhere that only one set is given with -d -> should go in minimizer
         # tr does only take input from stdin, so we can always apply RR parallelizer (but Mp and Ag may change slightly)
         # check for deletion of newlines
-        does_delete_newlines: bool = self.does_flag_option_list_contains_at_least_one_of(["-d"]) and \
-                               self.does_last_set_effectively_contain_newline()  # only allowed to have a single set
+        does_delete_newlines: bool = self.does_flag_option_list_contain_at_least_one_of(["-d"]) and \
+                                     self.does_last_set_effectively_contain_newline()  # only allowed to have a single set
         # check for squeezing newlines
-        does_squeeze_newlines: bool = self.does_flag_option_list_contains_at_least_one_of(["-s"]) and \
-                                self.does_last_set_effectively_contain_newline()
+        does_squeeze_newlines: bool = self.does_flag_option_list_contain_at_least_one_of(["-s"]) and \
+                                      self.does_last_set_effectively_contain_newline()
         if does_delete_newlines or does_squeeze_newlines:
             # for RR, we need an adjacent aggregator
             self.append_to_parallelizer_list_rr_seq_adjm()
@@ -34,10 +34,11 @@ class ParallelizabilityInfoGeneratorTr(ParallelizabilityInfoGeneratorInterface):
             self.append_to_parallelizer_list_rr_seq_conc()
 
     def does_last_set_effectively_contain_newline(self) -> bool:
-        last_operand: Operand = self.operand_list[-1]
+        # TODO: refactor
+        last_operand: Operand = self.cmd_inv.operand_list[-1]
         # is contained if (a) no -c and in set, or (b) -c and not in set
         last_operand_contains_newline: bool = last_operand.contains("\n")
-        if len(self.operand_list) == 1 and self.does_flag_option_list_contains_at_least_one_of(["-c"]):
+        if len(self.cmd_inv.operand_list) == 1 and self.does_flag_option_list_contain_at_least_one_of(["-c"]):
             return not last_operand_contains_newline
         else:  # '-c' (if existent) does not refer to the given set
             return last_operand_contains_newline

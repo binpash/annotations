@@ -2,7 +2,7 @@ from typing import List
 
 from util_flag_option import make_arg_simple
 from datatypes_new.BasicDatatypes import FlagOption, Operand, FileName, ArgStringType
-from datatypes_new.CommandInvocation import CommandInvocation
+from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from datatypes_new.CommandInvocationPrefix import CommandInvocationPrefix
 from annotation_generation_new.datatypes.InputOutputInfo import InputOutputInfo
 from annotation_generation_new.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
@@ -25,7 +25,7 @@ def test_sort_1() -> None:
     args: List[FlagOption] = []
     operands: List[Operand] = [Operand("in1.txt"),
                                Operand("in2.txt")]
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
@@ -57,7 +57,7 @@ def test_sort_1() -> None:
 def test_sort_2() -> None:
     args: List[FlagOption] = [make_arg_simple(["-b"]), make_arg_simple(["-f"])]
     operands: List[Operand] = []
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
@@ -90,7 +90,7 @@ def test_sort_3() -> None:
     args: List[FlagOption] = [make_arg_simple(["-s"]),
             make_arg_simple(["-o", FileName("output.txt")])]
     operands: List[Operand] = []
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
 
     # IO Info
     io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
@@ -108,7 +108,7 @@ def test_sort_3() -> None:
 def test_sort_5() -> None:
     args: List[FlagOption] = [make_arg_simple(["-m"])]
     operands: List[Operand] = []
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
 
     # IO Info
     io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
@@ -127,7 +127,7 @@ def test_sort_5() -> None:
 def test_sort_4() -> None:
     args: List[FlagOption] = [make_arg_simple(["--files0-from", FileName("input.txt")])]
     operands: List[Operand] = []
-    cmd_inv: CommandInvocation = CommandInvocation(cmd_name, flag_option_list=args, operand_list=operands)
+    cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
 
     # IO Info
     io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
