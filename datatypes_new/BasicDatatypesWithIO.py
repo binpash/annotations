@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Union
-from BasicDatatypes import FileName, StdDescriptor, StdDescriptorEnum, Option, Operand, BaseClassForBasicDatatypes
-from AccessKind import AccessKind
+from datatypes_new.BasicDatatypes import FileName, StdDescriptor, StdDescriptorEnum, Option, Operand, BaseClassForBasicDatatypes
+from datatypes_new.AccessKind import AccessKind
 
 from abc import ABC, abstractmethod
 
@@ -41,6 +41,13 @@ class StdDescriptorWithIOInfo(StdDescriptor, BaseClassForBasicDatatypesWithIOInf
     def get_from_original(original, access):
         return StdDescriptorWithIOInfo(original.get_name(), access)
 
+    @staticmethod
+    def make_stdin_with_access_stream_input() -> StdDescriptorWithIOInfo:
+        return StdDescriptorWithIOInfo.get_from_original(StdDescriptor.get_stdin_fd(), AccessKind.make_stream_input())
+
+    @staticmethod
+    def make_stdout_with_access_output() -> StdDescriptorWithIOInfo:
+        return StdDescriptorWithIOInfo.get_from_original(StdDescriptor.get_stdout_fd(), AccessKind.make_stream_output())
 
 FileNameOrStdDescriptorWithIOInfo = Union[FileNameWithIOInfo, StdDescriptorWithIOInfo]
 

@@ -1,10 +1,10 @@
 from __future__ import annotations
-from typing import List, Union, Tuple, Optional
+from typing import List, Tuple, Optional
 
 from datatypes_new.AccessKind import AccessKind
 
 from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
-from datatypes_new.CommandInvocationWithIOFull import CommandInvocationWithIOFull
+from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
 
 from annotation_generation_new.annotation_generators.Generator_Interface import Generator_Interface
 
@@ -27,11 +27,10 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
     def generate_info(self) -> None:
         pass
 
-    @abstractmethod
     def get_info(self) -> InputOutputInfo:
         return self.input_output_info
 
-    def get_cmd_inv_with_io(self, cmd_inv: CommandInvocationInitial) -> CommandInvocationWithIOFull:
+    def get_cmd_inv_with_io(self, cmd_inv: CommandInvocationInitial) -> CommandInvocationWithIO:
         return self.input_output_info.apply_input_output_info_to_command_invocation(cmd_inv)
 
     def get_flagoption_list_typer_for_specific_list(self) -> List[Tuple[bool, Optional[AccessKind]]]:
@@ -68,6 +67,9 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
     def all_operands_are_streaming_inputs(self) -> None:
         self.input_output_info.all_operands_are_streaming_inputs()
 
+    def all_operands_are_other_inputs(self) -> None:
+        self.input_output_info.all_operands_are_other_inputs()
+
     def all_but_last_operand_is_streaming_input(self):
         self.input_output_info.all_but_last_operand_is_streaming_input()
 
@@ -80,8 +82,11 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
     def all_but_first_operand_is_other_input(self):
         self.input_output_info.all_but_first_operand_is_other_input()
 
-    def only_last_operand_is_output(self):
-        self.input_output_info.only_last_operand_is_output()
+    def only_last_operand_is_stream_output(self):
+        self.input_output_info.only_last_operand_is_stream_output()
+
+    def only_last_operand_is_other_output(self):
+        self.input_output_info.only_last_operand_is_other_output()
 
     def set_all_operands_as_positional_config_arg_type_string(self):
         self.input_output_info.set_all_operands_as_positional_config_arg_type_string()

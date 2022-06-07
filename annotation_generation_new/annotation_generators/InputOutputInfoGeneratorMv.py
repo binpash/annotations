@@ -51,9 +51,9 @@ class InputOutputInfoGeneratorMv(InputOutputInfoGeneratorInterface):
         if len(list_options_t) == 0:
             self.all_but_last_operand_is_other_input()
             # TODO: is there "other" output?
-            self.only_last_operand_is_output()
+            self.only_last_operand_is_other_output()
         elif len(list_options_t) == 1:
-            self.all_operands_are_streaming_inputs()
+            self.all_operands_are_other_inputs()
         else:
             # multiple -t options not allowed (checked using cmd)
             raise Exception("multiple -t options defined for mv")

@@ -30,6 +30,6 @@ class InputOutputInfoGeneratorUniq(InputOutputInfoGeneratorInterface):
             self.set_implicit_use_of_stdout()
         elif self.get_operand_list_length() == 2:
             self.all_but_last_operand_is_streaming_input()
-            self.only_last_operand_is_output()
+            self.only_last_operand_is_stream_output()
         else:
             raise Exception('extra operand for uniq, the 3rd one')
