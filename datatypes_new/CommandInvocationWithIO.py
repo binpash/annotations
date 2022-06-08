@@ -1,20 +1,20 @@
 from __future__ import annotations
 from typing import List, Union, Optional
 
-from datatypes_new.BasicDatatypes import FlagOption, ArgStringType
+from datatypes_new.BasicDatatypes import Flag, ArgStringType
 from datatypes_new.BasicDatatypesWithIO import OptionWithIO, FileNameOrStdDescriptorWithIOInfo, FileNameWithIOInfo, StdDescriptorWithIOInfo
 from util_standard import standard_repr, standard_eq
 
 class CommandInvocationWithIO:
 
     def __init__(self, cmd_name: str,
-                 flag_option_list: List[Union[FlagOption, OptionWithIO]],
+                 flag_option_list: List[Union[Flag, OptionWithIO]],
                  operand_list: List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]],
                  implicit_use_of_streaming_input: Optional[FileNameOrStdDescriptorWithIOInfo],
                  implicit_use_of_streaming_output: Optional[FileNameOrStdDescriptorWithIOInfo],
                  ) -> None:
         self.cmd_name: str = cmd_name
-        self.flag_option_list: List[Union[FlagOption, OptionWithIO]] = flag_option_list
+        self.flag_option_list: List[Union[Flag, OptionWithIO]] = flag_option_list
         self.operand_list: List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]] = operand_list
         self.implicit_use_of_streaming_input: Optional[FileNameOrStdDescriptorWithIOInfo] = implicit_use_of_streaming_input
         self.implicit_use_of_streaming_output: Optional[FileNameOrStdDescriptorWithIOInfo] = implicit_use_of_streaming_output

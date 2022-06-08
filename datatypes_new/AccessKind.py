@@ -54,6 +54,21 @@ class AccessKind:
     def is_any_output(self):
         return self.is_stream_output() or self.is_other_output()
 
+    @staticmethod
+    def get_access_from_string(value: str) -> AccessKind:
+        if value == "CONF_INPUT":
+            return AccessKind.make_config_input()
+        elif value == "STREAM_INPUT":
+            return AccessKind.make_stream_input()
+        elif value == "OTHER_INPUT":
+            return AccessKind.make_other_input()
+        elif value == "STREAM_OUTPUT":
+            return AccessKind.make_stream_output()
+        elif value == "OTHER_INPUT":
+            return AccessKind.make_other_output()
+        else:
+            raise Exception("unknown option for access kind")
+
 
 class AccessKindEnum(Enum):
     CONF_INPUT = 0

@@ -65,7 +65,6 @@ class ArgStringType(BaseClassForBasicDatatypes):
     def get_name(self) -> str:
         return self.name
 
-# TODO: remove as confusing
 OptionArgPosConfigType = Union[ArgStringType, FileNameOrStdDescriptor]
 
 class Flag(BaseClassForBasicDatatypes):
@@ -79,21 +78,21 @@ class Flag(BaseClassForBasicDatatypes):
 
 class Option(BaseClassForBasicDatatypes):
 
-    def __init__(self, name: str, option_arg: OptionArgPosConfigType) -> None:
+    def __init__(self, name: str, option_arg: str) -> None:
         self.option_name = name
-        self.option_arg: OptionArgPosConfigType = option_arg
+        self.option_arg: str = option_arg
 
     def get_name(self) -> str:
         return self.option_name
 
-    def get_arg(self) -> OptionArgPosConfigType:
+    def get_arg(self) -> str:
         return self.option_arg
 
-    def is_arg_of_type_string(self):
-        return isinstance(self.option_arg, ArgStringType)
-
-    def is_arg_of_type_filename_or_stddescriptor(self):
-        return isinstance(self.option_arg, FileName) or isinstance(self.option_arg, StdDescriptor)
+    # def is_arg_of_type_string(self):
+    #     return isinstance(self.option_arg, ArgStringType)
+    #
+    # def is_arg_of_type_filename_or_stddescriptor(self):
+    #     return isinstance(self.option_arg, FileName) or isinstance(self.option_arg, StdDescriptor)
 
 FlagOption = Union[Flag, Option]
 
@@ -116,3 +115,8 @@ class Operand(BaseClassForBasicDatatypes):
 
     def to_arg_string_type(self):
         return ArgStringType(self.name)
+
+class WhichClassForArg(Enum):
+    FILESTD = 'filestd'
+    ARGSTRING = 'argstring'
+    PLAINSTRING = 'str'

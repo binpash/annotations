@@ -17,18 +17,18 @@ def list_deduplication(list_to_dedup: List[TType]) -> List[TType]:
     return deduplicated_input_list
 
 
-def compute_actual_el_for_input(input_el: Operand) -> FileNameOrStdDescriptor:
+def compute_actual_el_for_input(input_el: str) -> FileNameOrStdDescriptor:
     if input_el == "-":
         return StdDescriptor(StdDescriptorEnum.STDIN)
     else:
-        return FileName(input_el.name)
+        return FileName(input_el)
 
 
-def compute_actual_el_for_output(output_el: Operand) -> FileNameOrStdDescriptor:
+def compute_actual_el_for_output(output_el: str) -> FileNameOrStdDescriptor:
     if output_el == "-":
         return StdDescriptor(StdDescriptorEnum.STDOUT)
     else:
-        return FileName(output_el.name)
+        return FileName(output_el)
 
 def return_empty_flag_option_list_if_none_else_itself(arg: Optional[List[FlagOption]]) -> List[FlagOption]:
     if arg is None:

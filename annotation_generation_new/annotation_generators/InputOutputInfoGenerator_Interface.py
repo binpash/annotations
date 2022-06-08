@@ -1,8 +1,10 @@
 from __future__ import annotations
 from typing import List, Tuple, Optional
 
+from enum import Enum
 from datatypes_new.AccessKind import AccessKind
 
+from datatypes_new.BasicDatatypes import Flag, Option, FlagOption, WhichClassForArg
 from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
 
@@ -12,12 +14,14 @@ from abc import ABC, abstractmethod
 
 from annotation_generation_new.datatypes.InputOutputInfo import InputOutputInfo
 
+from parser_new.util_parser import get_json_data
+
 
 class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
 
     def __init__(self, cmd_invocation: CommandInvocationInitial) -> None:
         super().__init__(cmd_invocation=cmd_invocation)
-        flagoption_list_typer: List[Tuple[bool, Optional[AccessKind]]] = self.get_flagoption_list_typer_for_specific_list()
+        flagoption_list_typer: List[Tuple[WhichClassForArg, Optional[AccessKind]]] = self.get_flagoption_list_typer_for_specific_list()
         self.input_output_info: InputOutputInfo = InputOutputInfo(
                                                     flagoption_list_typer=flagoption_list_typer,
                                                     number_of_operands=len(cmd_invocation.operand_list)
@@ -33,12 +37,33 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
     def get_cmd_inv_with_io(self, cmd_inv: CommandInvocationInitial) -> CommandInvocationWithIO:
         return self.input_output_info.apply_input_output_info_to_command_invocation(cmd_inv)
 
-    def get_flagoption_list_typer_for_specific_list(self) -> List[Tuple[bool, Optional[AccessKind]]]:
-        command_name = self.cmd_inv.cmd_name
-        # TODO:
-        #  - retrieve the man-page info with command_name
-        #  - iterate over flagoptions list self.cmd_inv.flagoption_list and give typer information for each
-        return []
+    def get_flagoption_list_typer_for_specific_list(self) -> List[Tuple[WhichClassForArg, Optional[AccessKind]]]:
+        dict_option_to_class_for_arg: dict[str, Tuple[WhichClassForArg, AccessKind]] = self.get_dict_option_to_class_for_arg()
+        flagoption_list_typer = []
+        for flagoption in self.cmd_inv.flag_option_list:
+            if isinstance(flagoption, Flag):
+                flagoption_list_typer.append((WhichClassForArg.PLAINSTRING, None))
+            elif isinstance(flagoption, Option):
+                flagoption_list_typer.append(dict_option_to_class_for_arg[flagoption.get_name()])
+            else:
+                raise Exception("neither Flag nor Option")
+        return flagoption_list_typer
+
+    def get_dict_option_to_class_for_arg(self) -> dict[str, Tuple[WhichClassForArg, AccessKind]]:
+        dict_option_to_class_for_arg: dict[str, Tuple[WhichClassForArg, AccessKind]] = dict()
+        json_data = get_json_data(self.cmd_inv.cmd_name)
+        for option_data in json_data["option"]:
+            option_name = option_data[0]
+            # TODO: add access in json
+            option_arg_type, option_arg_access_str = option_data[-1]
+            access = AccessKind.get_access_from_string(option_arg_access_str)
+            indicators_for_filenames = ["FILE", "GLOB", "DIR"]
+            if option_arg_type in indicators_for_filenames:
+                # for now, we do not allow to have '-' for stdin in option arguments
+                dict_option_to_class_for_arg[option_name] = (WhichClassForArg.FILESTD, access)
+            else:
+                dict_option_to_class_for_arg[option_name] = (WhichClassForArg.ARGSTRING, access)
+        return dict_option_to_class_for_arg
 
     ## Library functions
 

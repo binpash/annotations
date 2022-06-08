@@ -1,13 +1,10 @@
 from __future__ import annotations
 from typing import Set, Literal, List
 
-import json
 import shlex
-import os
-from enum import Enum
 from datatypes_new.BasicDatatypes import FlagOption, Flag, Option, Operand, FileName, ArgStringType
 from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
-from config_new.definitions import ROOT_DIR
+from parser_new.util_parser import get_json_data
 
 
 def parse(command) -> CommandInvocationInitial:
@@ -15,26 +12,15 @@ def parse(command) -> CommandInvocationInitial:
     # split all terms (command, flags, options, arguments, operands)
     parsed_elements_list : list[str] = shlex.split(command)
 
-    # add command name to xbd list
     cmd_name: str = parsed_elements_list[0]
-    command_json_fn = f'{cmd_name}.json'
-
+    json_data = get_json_data(cmd_name)
     # TODO: if there is an element "\n", we lose the quotation marks currently
-
-    # get man page data for command as dict
-    command_json_fn_absolute : str = os.path.join(ROOT_DIR, 'command_flag_option_info/data', command_json_fn)
-    try:
-        with open(command_json_fn_absolute) as f:
-            json_data = json.load(f)
-    except FileNotFoundError:
-        print(f'Error: File {command_json_fn_absolute} not found.')
-        raise Exception(f'File {command_json_fn_absolute} not found.')
 
     set_of_all_flags: Set[str] = get_set_of_all_flags(json_data)
     dict_flag_to_primary_repr: dict[str, str] = get_dict_flag_to_primary_repr(json_data)
     set_of_all_options: Set[str] = get_set_of_all_options(json_data)
     dict_option_to_primary_repr: dict[str, str] = get_dict_option_to_primary_repr(json_data)
-    dict_option_to_class_for_arg: dict[str, WhichClassForArg] = get_dict_option_to_class_for_arg(json_data)
+    # dict_option_to_class_for_arg: dict[str, WhichClassForArg] = get_dict_option_to_class_for_arg(json_data)
 
     # parse list of command invocation terms
     flag_option_list: List[FlagOption] = []
@@ -48,7 +34,7 @@ def parse(command) -> CommandInvocationInitial:
         elif (potential_flag_or_option in set_of_all_options) and ((i+1) < len(parsed_elements_list)):
             option_name_as_string: str = dict_option_to_primary_repr.get(potential_flag_or_option, potential_flag_or_option)
             option_arg_as_string: str = parsed_elements_list[i+1]
-            option = get_option_from_name_and_untyped_arg(dict_option_to_class_for_arg, option_arg_as_string, option_name_as_string)
+            option = Option(option_name_as_string, option_arg_as_string)
             flag_option_list.append(option)
             i += 1  # since we consumed another term for the argument
         elif are_all_individually_flags(potential_flag_or_option, set_of_all_flags):
@@ -69,16 +55,16 @@ def parse(command) -> CommandInvocationInitial:
     return CommandInvocationInitial(cmd_name, flag_option_list, operand_list)
 
 
-def get_option_from_name_and_untyped_arg(dict_option_to_class_for_arg, option_arg_as_string, option_name_as_string):
-    option_arg_kind = dict_option_to_class_for_arg[option_name_as_string]
-    if option_arg_kind == WhichClassForArg.FILENAME:
-        option_arg = FileName(option_arg_as_string)
-    elif option_arg_kind == WhichClassForArg.ARGSTRING:
-        option_arg = ArgStringType(option_arg_as_string)
-    else:
-        raise Exception('unknown kind for option argument')
-    return Option(option_name_as_string, option_arg)
-
+# def get_option_from_name_and_untyped_arg(dict_option_to_class_for_arg, option_arg_as_string, option_name_as_string):
+#     option_arg_kind = dict_option_to_class_for_arg[option_name_as_string]
+#     if option_arg_kind == WhichClassForArg.FILENAME:
+#         option_arg = FileName(option_arg_as_string)
+#     elif option_arg_kind == WhichClassForArg.ARGSTRING:
+#         option_arg = ArgStringType(option_arg_as_string)
+#     else:
+#         raise Exception('unknown kind for option argument')
+#     return Option(option_name_as_string, option_arg)
+#
 
 def get_set_of_all_flags(json_data) -> Set[str]:
     return get_set_of_all("flag", json_data)
@@ -110,23 +96,25 @@ def get_dict_option_to_primary_repr(json_data):
             dict_option_to_primary_repr[list_of_equiv_flag_repr[i]] = list_of_equiv_flag_repr[0]
     return dict_option_to_primary_repr
 
-def get_dict_option_to_class_for_arg(json_data) -> dict[str, WhichClassForArg]:
-    dict_option_to_class_for_arg: dict[str, WhichClassForArg] = dict()
-    for option_data in json_data["option"]:
-        option_name = option_data[0]
-        option_arg_type = option_data[-1]
-        if option_arg_type == 'FILE' or option_arg_type == 'GLOB' or option_arg_type == 'DIR':
-            # for now, we do not allow to have '-' for stdin in option arguments
-            dict_option_to_class_for_arg[option_name] = WhichClassForArg.FILENAME
-        else:
-            dict_option_to_class_for_arg[option_name] = WhichClassForArg.ARGSTRING
-    return dict_option_to_class_for_arg
+# moved ot IOInfoGenerator
+# def get_dict_option_to_class_for_arg(json_data) -> dict[str, WhichClassForArg]:
+#     dict_option_to_class_for_arg: dict[str, WhichClassForArg] = dict()
+#     for option_data in json_data["option"]:
+#         option_name = option_data[0]
+#         option_arg_type = option_data[-1]
+#         # TODO: move this to input-output annotator with list and "" for which to check (check other commands) and add access kind
+#         if option_arg_type == 'FILE' or option_arg_type == 'GLOB' or option_arg_type == 'DIR':
+#             # for now, we do not allow to have '-' for stdin in option arguments
+#             dict_option_to_class_for_arg[option_name] = WhichClassForArg.FILENAME
+#         else:
+#             dict_option_to_class_for_arg[option_name] = WhichClassForArg.ARGSTRING
+#     return dict_option_to_class_for_arg
 
 def are_all_individually_flags(potential_flag_or_option, set_of_all_flags):
     if potential_flag_or_option[0] != '-':
         return False
     return all(f'-{split_el}' in set_of_all_flags for split_el in list(potential_flag_or_option[1:]))
-
-class WhichClassForArg(Enum):
-    FILENAME = 'filename'
-    ARGSTRING = 'argstring'
+#
+# class WhichClassForArg(Enum):
+#     FILENAME = 'filename'
+#     ARGSTRING = 'argstring'

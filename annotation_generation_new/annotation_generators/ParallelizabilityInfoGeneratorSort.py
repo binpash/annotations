@@ -17,7 +17,7 @@ class ParallelizabilityInfoGeneratorSort(ParallelizabilityInfoGeneratorInterface
             # Build aggregator spec: keep certain flags with filtering and add -m
             # TODO: find a better way to represent flag options lists to filter, maybe FlagOptionNameType
             flag_option_list_to_keep = [Flag("-b"), Flag("-d"), Flag("-f"), Flag("-g"), Flag("-i"), Flag("-M"), \
-                                        Flag("-h"), Flag("-n"), Flag("-r"), Option("--sort", ArgStringType("")), Flag("-V"), Flag("-k"), Flag("-t")]
+                                        Flag("-h"), Flag("-n"), Flag("-r"), Option("--sort", ""), Flag("-V"), Flag("-k"), Flag("-t")]
             transformer_flag_option_list_filter: TransformerFlagOptionListFilter = \
                 TransformerFlagOptionListFilter(flag_option_list_to_keep)
             transformer_flag_option_list_add: TransformerFlagOptionListAdd = TransformerFlagOptionListAdd([Flag("-m")])

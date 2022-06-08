@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Union
-from datatypes_new.BasicDatatypes import FileName, StdDescriptor, StdDescriptorEnum, Option, Operand, BaseClassForBasicDatatypes
+from datatypes_new.BasicDatatypes import FileName, StdDescriptor, StdDescriptorEnum, Operand, BaseClassForBasicDatatypes, ArgStringType
 from datatypes_new.AccessKind import AccessKind
 
 from abc import ABC, abstractmethod
@@ -54,25 +54,26 @@ FileNameOrStdDescriptorWithIOInfo = Union[FileNameWithIOInfo, StdDescriptorWithI
 # only OptionWithIOInfo if argument needs it
 class OptionWithIO(BaseClassForBasicDatatypes):
 
-    def __init__(self, name: str, option_arg: FileNameOrStdDescriptorWithIOInfo) -> None:
+    def __init__(self, name: str, option_arg: Union[FileNameOrStdDescriptorWithIOInfo, ArgStringType]) -> None:
         self.option_name : str = name
-        self.option_arg : FileNameOrStdDescriptorWithIOInfo = option_arg
+        self.option_arg : Union[FileNameOrStdDescriptorWithIOInfo, ArgStringType] = option_arg
 
     def get_name(self) -> str:
         return self.option_name
 
-    def get_arg_with_ioinfo(self) -> FileNameOrStdDescriptorWithIOInfo:
+    def get_arg_with_ioinfo(self) -> Union[FileNameOrStdDescriptorWithIOInfo, ArgStringType]:
         return self.option_arg
 
-    @staticmethod
-    def get_from_original(original: Option, access: AccessKind):
-        if isinstance(original.option_arg, FileName):
-            new_option_arg = FileNameWithIOInfo.get_from_original(original.option_arg, access)
-        elif isinstance(original.option_arg, StdDescriptor):
-            new_option_arg = StdDescriptorWithIOInfo.get_from_original(original.option_arg, access)
-        else:
-            raise Exception("adding access information to wrong type")
-        return OptionWithIO(original.get_name(), new_option_arg)
+    # @staticmethod
+    # wrong with new types for original Option
+    # def get_from_original(original: Option, access: AccessKind):
+    #     if isinstance(original.option_arg, FileName):
+    #         new_option_arg = FileNameWithIOInfo.get_from_original(original.option_arg, access)
+    #     elif isinstance(original.option_arg, StdDescriptor):
+    #         new_option_arg = StdDescriptorWithIOInfo.get_from_original(original.option_arg, access)
+    #     else:
+    #         raise Exception("adding access information to wrong type")
+    #     return OptionWithIO(original.get_name(), new_option_arg)
 
 
 # only OptionWithIO if argument needs it
