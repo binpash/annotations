@@ -3,6 +3,7 @@ import sys
 import json
 
 def find_matches(line, past_flags):
+    # TODO: for mv, it recognizes 2 options as flags: -S and -t (manually fixed for now)
     """
     Patterns to match (will be separated with ", "):
        ['--opt ARG', '--opt=ARG', '--opt[=ARG]', '-o ARG', '-O ARG'

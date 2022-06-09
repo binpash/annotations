@@ -1,6 +1,9 @@
 import os
 import sys
 
+### which argument strings in command_flag_option_info/data/*.json files are interpreted as filenames/directories
+INDICATORS_FOR_FILENAMES = ["FILE", "GLOB", "DIR", "DIRECTORY"]
+
 ### directory paths
 ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
 ANNOTATION_GENERATORS = "annotation_generation_new.annotation_generators"

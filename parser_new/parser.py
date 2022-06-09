@@ -71,14 +71,18 @@ def get_set_of_all_flags(json_data) -> Set[str]:
 
 
 def get_set_of_all_options(json_data) -> Set[str]:
-    return get_set_of_all("option", json_data)
+    set_of_all: set[str] = set()
+    for list_of_flags_or_options in json_data["option"]:
+        for flag_or_option in list_of_flags_or_options[:-1]: # off by 1 due to what the argument is
+            set_of_all.add(flag_or_option)
+    return set_of_all
 
 
 def get_set_of_all(flag_or_option_str: Literal["flag", "option"], json_data) -> Set[str]:
     set_of_all: set[str] = set()
-    for flag_list in json_data[flag_or_option_str]:
-        for flag in flag_list:
-            set_of_all.add(flag)
+    for list_of_flags_or_options in json_data[flag_or_option_str]:
+        for flag_or_option in list_of_flags_or_options:
+            set_of_all.add(flag_or_option)
     return set_of_all
 
 

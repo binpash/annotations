@@ -137,11 +137,8 @@
         ],
         [
             "-f",
-            "FILE"
-        ],
-        [
             "--file",
-            "FILE"
+            ["FILE", "CONFIG_INPUT"]
         ],
         [
             "--color",
@@ -213,19 +210,19 @@
         ],
         [
             "--exclude",
-            "GLOB"
+            ["GLOB", "OTHER_INPUT"]
         ],
         [
             "--exclude-from",
-            "FILE"
+            ["FILE", "OTHER_INPUT"]
         ],
         [
             "--exclude-dir",
-            "GLOB"
+            ["GLOB", "OTHER_INPUT"]
         ],
         [
             "--include",
-            "GLOB"
+            ["GLOB", "OTHER_INPUT"]
         ]
     ]
 }

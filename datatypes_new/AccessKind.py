@@ -15,10 +15,10 @@ class AccessKind:
 
     @staticmethod
     def make_config_input() -> AccessKind:
-        return AccessKind(AccessKindEnum.CONF_INPUT)
+        return AccessKind(AccessKindEnum.CONFIG_INPUT)
 
     def is_config_input(self) -> bool:
-        return self.kind == AccessKindEnum.CONF_INPUT
+        return self.kind == AccessKindEnum.CONFIG_INPUT
 
     @staticmethod
     def make_stream_input() -> AccessKind:
@@ -56,23 +56,26 @@ class AccessKind:
 
     @staticmethod
     def get_access_from_string(value: str) -> AccessKind:
-        if value == "CONF_INPUT":
+        if value == "CONFIG_INPUT":
             return AccessKind.make_config_input()
         elif value == "STREAM_INPUT":
             return AccessKind.make_stream_input()
         elif value == "OTHER_INPUT":
+            print("reach input")
             return AccessKind.make_other_input()
         elif value == "STREAM_OUTPUT":
             return AccessKind.make_stream_output()
-        elif value == "OTHER_INPUT":
+        elif value == "OTHER_OUTPUT":
+            print("reach output")
             return AccessKind.make_other_output()
         else:
             raise Exception("unknown option for access kind")
 
 
 class AccessKindEnum(Enum):
-    CONF_INPUT = 0
+    CONFIG_INPUT = 0
     STREAM_INPUT = 1
-    OTHER_INPUT = 2
+    # TODO: for task parallelization, both make a difference
+    OTHER_INPUT = 2     # e.g. grep with exclude, and sort with --files0-from
     STREAM_OUTPUT = 3
     OTHER_OUTPUT = 4

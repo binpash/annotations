@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from util_standard import standard_repr
-from typing import List, Tuple, Union, Optional
+from typing import List, Tuple, Union, Optional, Literal
 from datatypes_new.AccessKind import AccessKind
 from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
@@ -14,13 +14,19 @@ from util_new import compute_actual_el_for_input, compute_actual_el_for_output
 class InputOutputInfo:
 
     def __init__(self,
-                 flagoption_list_typer : List[Tuple[WhichClassForArg, Optional[AccessKind]]],
+                 flagoption_list_typer : List[Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
+                                                    Tuple[Literal[WhichClassForArg.ARGSTRING], None],
+                                                    Tuple[Literal[WhichClassForArg.PLAINSTRING], None]]],
                  number_of_operands : int,
                  implicit_use_of_streaming_input : Optional[FileNameOrStdDescriptorWithIOInfo] = None,
                  implicit_use_of_streaming_output : Optional[FileNameOrStdDescriptorWithIOInfo] = None,
                  ) -> None:
-        self.flagoption_list_typer: List[Tuple[WhichClassForArg, Optional[AccessKind]]] = flagoption_list_typer
-        self.operand_list_typer: List[Tuple[WhichClassForArg, AccessKind]] = [(WhichClassForArg.FILESTD, AccessKind.make_stream_input())] * number_of_operands
+        self.flagoption_list_typer: List[Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
+                                               Tuple[Literal[WhichClassForArg.ARGSTRING], None],
+                                               Tuple[Literal[WhichClassForArg.PLAINSTRING], None]]] = flagoption_list_typer
+        self.operand_list_typer: List[Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
+                                            Tuple[Literal[WhichClassForArg.ARGSTRING], None]]] = \
+                                [(WhichClassForArg.FILESTD, AccessKind.make_stream_input())] * number_of_operands
         self.implicit_use_of_streaming_input : Optional[FileNameOrStdDescriptorWithIOInfo] = implicit_use_of_streaming_input
         self.implicit_use_of_streaming_output : Optional[FileNameOrStdDescriptorWithIOInfo] = implicit_use_of_streaming_output
 
@@ -74,7 +80,7 @@ class InputOutputInfo:
     def all_but_first_operand_is_other_input(self) -> None:
         original_first_entry = self.operand_list_typer[0]
         number_of_operands = len(self.operand_list_typer)
-        self.operand_list_typer = [(WhichClassForArg.ARGSTRING, AccessKind.make_other_input())] * number_of_operands
+        self.operand_list_typer = [(WhichClassForArg.FILESTD, AccessKind.make_other_input())] * number_of_operands
         self.operand_list_typer[0] = original_first_entry
 
     def only_last_operand_is_stream_output(self) -> None:
@@ -85,14 +91,13 @@ class InputOutputInfo:
 
     def set_all_operands_as_positional_config_arg_type_string(self) -> None:
         number_of_operands = len(self.operand_list_typer)
-        self.operand_list_typer = [(WhichClassForArg.ARGSTRING, AccessKind.make_config_input())] * number_of_operands
+        self.operand_list_typer = [(WhichClassForArg.ARGSTRING, None)] * number_of_operands
 
     def set_first_operand_as_positional_config_arg_type_string(self) -> None:
-        self.operand_list_typer[0] = (WhichClassForArg.ARGSTRING, AccessKind.make_config_input())
+        self.operand_list_typer[0] = (WhichClassForArg.ARGSTRING, None)
 
     def set_first_operand_as_positional_config_arg_type_filename_or_std_descriptor(self) -> None:
         self.operand_list_typer[0] = (WhichClassForArg.FILESTD, AccessKind.make_config_input())
-
 
     # TODO: adapt use in PaSh
     # def unpack_info(self) \
@@ -100,12 +105,14 @@ class InputOutputInfo:
     #     return self.positional_config_list, self.positional_input_list, self.positional_output_list, \
     #              self.implicit_use_of_stdin, self.implicit_use_of_stdout, self.multiple_inputs_possible
 
+    # methods to apply the input output info to a command invocation
+
     def apply_input_output_info_to_command_invocation(self, cmd_inv: CommandInvocationInitial) \
         -> CommandInvocationWithIO:
         # 1) transform flagoption list
         flagoption_list_original: List[FlagOption] = cmd_inv.flag_option_list
         flagoption_list_with_io: List[Union[Flag, OptionWithIO]] = \
-            [InputOutputInfo.apply_typer_to_flagoption(flagoption, typer) for (flagoption, typer) in zip(flagoption_list_original, self.operand_list_typer)]
+            [InputOutputInfo.apply_typer_to_flagoption(flagoption, typer) for (flagoption, typer) in zip(flagoption_list_original, self.flagoption_list_typer)]
         # 2) transform operand list
         operand_list_original: List[Operand] = cmd_inv.operand_list
         operand_list_with_io_full: List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]] = \
@@ -121,11 +128,12 @@ class InputOutputInfo:
         return cmd_inv_io_full
 
     @staticmethod
-    def apply_typer_to_arg(arg: str, typer: Tuple[WhichClassForArg, AccessKind]) \
-        -> Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]:
-        which_arg: WhichClassForArg = typer[0]
-        access: AccessKind = typer[1]
-        if which_arg == WhichClassForArg.FILESTD:
+    def apply_typer_to_arg(arg: str,
+                           typer: Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
+                                        Tuple[Literal[WhichClassForArg.ARGSTRING], None]]) \
+                           -> Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]:
+        if typer[0] == WhichClassForArg.FILESTD:
+            access: AccessKind = typer[1]
             if access.is_any_input():
                 filename_or_stddescriptor: FileNameOrStdDescriptor = compute_actual_el_for_input(arg)
             elif access.is_any_output():
@@ -136,21 +144,23 @@ class InputOutputInfo:
                 return FileNameWithIOInfo.get_from_original(filename_or_stddescriptor, access)
             elif isinstance(filename_or_stddescriptor, StdDescriptor):
                 return StdDescriptorWithIOInfo.get_from_original(filename_or_stddescriptor, access)
-        elif which_arg == WhichClassForArg.ARGSTRING:
+        elif typer[0] == WhichClassForArg.ARGSTRING:
             return ArgStringType(arg)
-        elif which_arg == WhichClassForArg.PLAINSTRING:
-            raise Exception("WhichClassForArg as PlainString for option or operand")
         else:
-            raise Exception("no valid option for argument type WhichClassForArg: " + str(which_arg))
+            raise Exception("no valid option for argument type WhichClassForArg: " + str(typer[0]))
 
     @staticmethod
-    def apply_typer_to_flagoption(flagoption: FlagOption, typer: Tuple[WhichClassForArg, AccessKind]) \
-            -> Union[Flag, OptionWithIO]:
+    def apply_typer_to_flagoption(flagoption: FlagOption,
+                                  typer: Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
+                                               Tuple[Literal[WhichClassForArg.ARGSTRING], None],
+                                               Tuple[Literal[WhichClassForArg.PLAINSTRING], None]]) \
+                                  -> Union[Flag, OptionWithIO]:
         if isinstance(flagoption, Flag):
             return flagoption
         elif isinstance(flagoption, Option):
+            assert (typer[0] == WhichClassForArg.FILESTD) or (typer[0] == WhichClassForArg.ARGSTRING) # PLAINSTRING only for flags
             option_arg = flagoption.get_arg()
-            option_arg_new = InputOutputInfo.apply_typer_to_arg(option_arg, typer)
+            option_arg_new: Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo] = InputOutputInfo.apply_typer_to_arg(option_arg, typer)
             return OptionWithIO(flagoption.get_name(), option_arg_new)
         else:
             raise Exception("neither flag nor option")

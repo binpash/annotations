@@ -7,9 +7,8 @@ from parser_new.parser import parse
 def test_grep_1():
     parser_result = parse(r"grep -e '^\s*def' -m 3 -n test.py")
 
-    args = [make_arg_simple(["-e", ArgStringType(r"^\s*def")]),
-            make_arg_simple(["-m", ArgStringType("3")]),
-            # make_arg_simple(["-m", "3"]),
+    args = [make_arg_simple(["-e", r"^\s*def"]),
+            make_arg_simple(["-m", "3"]),
             make_arg_simple(["-n"])]
     operands = [Operand("test.py")]
     expected_result = CommandInvocationInitial("grep", args, operands)

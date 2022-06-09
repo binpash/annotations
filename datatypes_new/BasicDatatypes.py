@@ -116,6 +116,7 @@ class Operand(BaseClassForBasicDatatypes):
     def to_arg_string_type(self):
         return ArgStringType(self.name)
 
+
 class WhichClassForArg(Enum):
     FILESTD = 'filestd'
     ARGSTRING = 'argstring'

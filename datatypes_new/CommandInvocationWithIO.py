@@ -47,3 +47,9 @@ class CommandInvocationWithIO:
     def get_operands_with_other_output(self) -> List[FileNameOrStdDescriptorWithIOInfo]:
         return [x for x in self.operand_list if (isinstance(x, FileNameWithIOInfo) or isinstance(x, StdDescriptorWithIOInfo))
                 and x.access.is_other_output()]
+
+    def get_options_with_other_output(self) -> List[OptionWithIO]:
+        only_options: List[OptionWithIO] = [x for x in self.flag_option_list if isinstance(x, OptionWithIO)]
+        return [x for x in only_options if
+                ((isinstance(x.option_arg, FileNameWithIOInfo) or isinstance(x.option_arg, StdDescriptorWithIOInfo)))
+                and x.option_arg.access.is_other_output()]

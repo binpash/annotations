@@ -1,10 +1,10 @@
 from __future__ import annotations
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Union, Literal
 
-from enum import Enum
+from config_new.definitions import INDICATORS_FOR_FILENAMES
+
+from datatypes_new.BasicDatatypes import Flag, Option, WhichClassForArg
 from datatypes_new.AccessKind import AccessKind
-
-from datatypes_new.BasicDatatypes import Flag, Option, FlagOption, WhichClassForArg
 from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
 
@@ -21,7 +21,10 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
 
     def __init__(self, cmd_invocation: CommandInvocationInitial) -> None:
         super().__init__(cmd_invocation=cmd_invocation)
-        flagoption_list_typer: List[Tuple[WhichClassForArg, Optional[AccessKind]]] = self.get_flagoption_list_typer_for_specific_list()
+        flagoption_list_typer: List[Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
+                                                    Tuple[Literal[WhichClassForArg.ARGSTRING], None],
+                                                    Tuple[Literal[WhichClassForArg.PLAINSTRING], None]]] \
+                                = self.get_flagoption_list_typer_for_specific_list()
         self.input_output_info: InputOutputInfo = InputOutputInfo(
                                                     flagoption_list_typer=flagoption_list_typer,
                                                     number_of_operands=len(cmd_invocation.operand_list)
@@ -37,8 +40,12 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
     def get_cmd_inv_with_io(self, cmd_inv: CommandInvocationInitial) -> CommandInvocationWithIO:
         return self.input_output_info.apply_input_output_info_to_command_invocation(cmd_inv)
 
-    def get_flagoption_list_typer_for_specific_list(self) -> List[Tuple[WhichClassForArg, Optional[AccessKind]]]:
-        dict_option_to_class_for_arg: dict[str, Tuple[WhichClassForArg, AccessKind]] = self.get_dict_option_to_class_for_arg()
+    def get_flagoption_list_typer_for_specific_list(self) -> \
+            List[Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
+                       Tuple[Literal[WhichClassForArg.ARGSTRING], None],
+                       Tuple[Literal[WhichClassForArg.PLAINSTRING], None]]]:
+        dict_option_to_class_for_arg: dict[str, Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
+                                                      Tuple[Literal[WhichClassForArg.ARGSTRING], None]]] = self.get_dict_option_to_class_for_arg()
         flagoption_list_typer = []
         for flagoption in self.cmd_inv.flag_option_list:
             if isinstance(flagoption, Flag):
@@ -49,20 +56,29 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
                 raise Exception("neither Flag nor Option")
         return flagoption_list_typer
 
-    def get_dict_option_to_class_for_arg(self) -> dict[str, Tuple[WhichClassForArg, AccessKind]]:
-        dict_option_to_class_for_arg: dict[str, Tuple[WhichClassForArg, AccessKind]] = dict()
+    def get_dict_option_to_class_for_arg(self) -> dict[str, Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
+                                                                  Tuple[Literal[WhichClassForArg.ARGSTRING], None]]]:
+        dict_option_to_class_for_arg: dict[str, Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
+                                                      Tuple[Literal[WhichClassForArg.ARGSTRING], None]]] = dict()
         json_data = get_json_data(self.cmd_inv.cmd_name)
         for option_data in json_data["option"]:
             option_name = option_data[0]
-            # TODO: add access in json
-            option_arg_type, option_arg_access_str = option_data[-1]
-            access = AccessKind.get_access_from_string(option_arg_access_str)
-            indicators_for_filenames = ["FILE", "GLOB", "DIR"]
-            if option_arg_type in indicators_for_filenames:
-                # for now, we do not allow to have '-' for stdin in option arguments
-                dict_option_to_class_for_arg[option_name] = (WhichClassForArg.FILESTD, access)
+            option_arg_info = option_data[-1]
+            # CA whether access info is given
+            if isinstance(option_arg_info, list):
+                option_arg_type: str = option_arg_info[0]
+                option_arg_access_str: str = option_arg_info[1]
+                access: AccessKind = AccessKind.get_access_from_string(option_arg_access_str)
+                if option_arg_type in INDICATORS_FOR_FILENAMES:
+                    # for now, we do not allow to have '-' for stdin in option arguments
+                    dict_option_to_class_for_arg[option_name] = (WhichClassForArg.FILESTD, access)
+                else:
+                    dict_option_to_class_for_arg[option_name] = (WhichClassForArg.ARGSTRING, None)
             else:
-                dict_option_to_class_for_arg[option_name] = (WhichClassForArg.ARGSTRING, access)
+                option_arg_type: str = option_arg_info
+                assert(not option_arg_type in INDICATORS_FOR_FILENAMES) # filenames need to declare access pattern, no default
+                # access: AccessKind = AccessKind.make_config_input()
+                dict_option_to_class_for_arg[option_name] = (WhichClassForArg.ARGSTRING, None)
         return dict_option_to_class_for_arg
 
     ## Library functions

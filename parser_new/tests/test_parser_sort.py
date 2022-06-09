@@ -18,7 +18,7 @@ def test_sort_1():
 def test_sort_2():
     parser_result = parse("sort -b -o result.txt in1.txt in2.txt")
 
-    args = [make_arg_simple(["-b"]), make_arg_simple(["-o", FileName("result.txt")])]
+    args = [make_arg_simple(["-b"]), make_arg_simple(["-o", "result.txt"])]
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
     expected_result = CommandInvocationInitial("sort", args, operands)
@@ -29,7 +29,7 @@ def test_sort_3():
     # this tests whether options will be mapped to their primary representation
     parser_result = parse("sort -b --output result.txt in1.txt in2.txt")
 
-    args = [make_arg_simple(["-b"]), make_arg_simple(["-o", FileName("result.txt")])]
+    args = [make_arg_simple(["-b"]), make_arg_simple(["-o", "result.txt"])]
     operands = [Operand("in1.txt"),
                 Operand("in2.txt")]
     expected_result = CommandInvocationInitial("sort", args, operands)

@@ -1,0 +1,55 @@
+{
+    "flag": [
+        [
+            "-c",
+            "--bytes"
+        ],
+        [
+            "-f",
+            "--follow"
+        ],
+        [
+            "-n",
+            "--lines"
+        ],
+        [
+            "-q",
+            "--quiet",
+            "--silent"
+        ],
+        [
+            "--retry"
+        ],
+        [
+            "-s"
+        ],
+        [
+            "-v",
+            "--verbose"
+        ],
+        [
+            "-z",
+            "--zero-terminated"
+        ],
+        [
+            "--help"
+        ],
+        [
+            "--version"
+        ]
+    ],
+    "option": [
+        [
+            "--max-unchanged-stats",
+            "N"
+        ],
+        [
+            "--pid",
+            "PID"
+        ],
+        [
+            "--sleep-interval",
+            "N"
+        ]
+    ]
+}

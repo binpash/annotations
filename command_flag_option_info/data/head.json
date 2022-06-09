@@ -1,0 +1,32 @@
+{
+    "flag": [
+        [
+            "-c",
+            "--bytes"
+        ],
+        [
+            "-n",
+            "--lines"
+        ],
+        [
+            "-q",
+            "--quiet",
+            "--silent"
+        ],
+        [
+            "-v",
+            "--verbose"
+        ],
+        [
+            "-z",
+            "--zero-terminated"
+        ],
+        [
+            "--help"
+        ],
+        [
+            "--version"
+        ]
+    ],
+    "option": []
+}

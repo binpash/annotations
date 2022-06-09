@@ -1,0 +1,29 @@
+{
+    "flag": [
+        [
+            "--check-order"
+        ],
+        [
+            "--nocheck-order"
+        ],
+        [
+            "--total"
+        ],
+        [
+            "-z",
+            "--zero-terminated"
+        ],
+        [
+            "--help"
+        ],
+        [
+            "--version"
+        ]
+    ],
+    "option": [
+        [
+            "--output-delimiter",
+            "STR"
+        ]
+    ]
+}

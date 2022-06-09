@@ -80,7 +80,7 @@
     "option": [
         [
             "--random-source",
-            "FILE"
+            ["FILE", "CONFIG_INPUT"]
         ],
         [
             "--sort",
@@ -96,7 +96,7 @@
         ],
         [
             "--files0-from",
-            "FILE"
+            ["FILE", "OTHER_INPUT"]
         ],
         [
             "-k",
@@ -106,7 +106,7 @@
         [
             "-o",
             "--output",
-            "FILE"
+            ["FILE", "STREAM_OUTPUT"]
         ],
         [
             "-S",
@@ -121,7 +121,7 @@
         [
             "-T",
             "--temporary-directory",
-            "DIR"
+            ["DIR", "OTHER_OUTPUT"]
         ],
         [
             "--parallel",

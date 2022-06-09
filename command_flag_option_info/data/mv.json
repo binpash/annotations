@@ -1,0 +1,61 @@
+{
+    "flag": [
+        [
+            "-b",
+            "--backup"
+        ],
+        [
+            "-f",
+            "--force"
+        ],
+        [
+            "-i",
+            "--interactive"
+        ],
+        [
+            "-n",
+            "--no-clobber"
+        ],
+        [
+            "--strip-trailing-slashes"
+        ],
+        [
+            "-T",
+            "--no-target-directory"
+        ],
+        [
+            "-u",
+            "--update"
+        ],
+        [
+            "-v",
+            "--verbose"
+        ],
+        [
+            "-Z",
+            "--context"
+        ],
+        [
+            "--help"
+        ],
+        [
+            "--version"
+        ]
+    ],
+    "option": [
+        [
+            "--backup",
+            "CONTROL"
+        ],
+        [
+            "-S",
+            "--suffix",
+            "SUFFIX"
+        ],
+        [
+            "-t",
+            "--target-directory",
+            ["DIRECTORY", "OTHER_OUTPUT"]
+        ]
+    ]
+}
