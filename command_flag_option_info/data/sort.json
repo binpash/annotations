@@ -96,7 +96,7 @@
         ],
         [
             "--files0-from",
-            ["FILE", "OTHER_INPUT"]
+            ["FILE", "CONTAINER_FOR_INPUT"]
         ],
         [
             "-k",

@@ -28,6 +28,20 @@ class AccessKind:
         return self.kind == AccessKindEnum.STREAM_INPUT
 
     @staticmethod
+    def make_container_for_input() -> AccessKind:
+        return AccessKind(AccessKindEnum.CONTAINER_FOR_INPUT)
+
+    def is_container_for_input(self) -> bool:
+        return self.kind == AccessKindEnum.CONTAINER_FOR_INPUT
+
+    @staticmethod
+    def make_excludes_from_input() -> AccessKind:
+        return AccessKind(AccessKindEnum.EXCLUDES_FROM_INPUT)
+
+    def is_excludes_from_input(self) -> bool:
+        return self.kind == AccessKindEnum.EXCLUDES_FROM_INPUT
+
+    @staticmethod
     def make_other_input() -> AccessKind:
         return AccessKind(AccessKindEnum.OTHER_INPUT)
 
@@ -35,7 +49,8 @@ class AccessKind:
         return self.kind == AccessKindEnum.OTHER_INPUT
 
     def is_any_input(self):
-        return self.is_config_input() or self.is_stream_input() or self.is_other_input()
+        return self.is_config_input() or self.is_stream_input() or self.is_other_input() \
+               or self.is_container_for_input() or self.is_excludes_from_input()
 
     @staticmethod
     def make_stream_output() -> AccessKind:
@@ -60,13 +75,15 @@ class AccessKind:
             return AccessKind.make_config_input()
         elif value == "STREAM_INPUT":
             return AccessKind.make_stream_input()
+        elif value == "CONTAINER_FOR_INPUT":
+            return AccessKind.make_container_for_input()
+        elif value == "EXCLUDES_FROM_INPUT":
+            return AccessKind.make_excludes_from_input()
         elif value == "OTHER_INPUT":
-            print("reach input")
             return AccessKind.make_other_input()
         elif value == "STREAM_OUTPUT":
             return AccessKind.make_stream_output()
         elif value == "OTHER_OUTPUT":
-            print("reach output")
             return AccessKind.make_other_output()
         else:
             raise Exception("unknown option for access kind")
@@ -75,7 +92,8 @@ class AccessKind:
 class AccessKindEnum(Enum):
     CONFIG_INPUT = 0
     STREAM_INPUT = 1
-    # TODO: for task parallelization, both make a difference
-    OTHER_INPUT = 2     # e.g. grep with exclude, and sort with --files0-from
-    STREAM_OUTPUT = 3
-    OTHER_OUTPUT = 4
+    CONTAINER_FOR_INPUT = 2     # e.g. sort with --files0-from -> does not work easily for task parallelization
+    EXCLUDES_FROM_INPUT = 3     # e.g. grep with exclude -> does not affect task parallelization
+    OTHER_INPUT = 4
+    STREAM_OUTPUT = 5
+    OTHER_OUTPUT = 6

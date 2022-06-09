@@ -210,19 +210,19 @@
         ],
         [
             "--exclude",
-            ["GLOB", "OTHER_INPUT"]
+            "GLOB"
         ],
         [
             "--exclude-from",
-            ["FILE", "OTHER_INPUT"]
+            ["FILE", "EXCLUDES_FROM_INPUT"]
         ],
         [
             "--exclude-dir",
-            ["GLOB", "OTHER_INPUT"]
+            "GLOB"
         ],
         [
             "--include",
-            ["GLOB", "OTHER_INPUT"]
+            "GLOB"
         ]
     ]
 }

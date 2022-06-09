@@ -142,4 +142,4 @@ def test_sort_6() -> None:
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 0 # because of stable sort
+    assert len(para_info.parallelizer_list) == 0 # because of files0-from
