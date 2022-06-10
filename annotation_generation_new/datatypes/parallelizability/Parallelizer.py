@@ -1,17 +1,27 @@
 from __future__ import annotations
 from typing import Optional
 
-from enum import Enum
 from util_standard import standard_eq
+from util_new import return_default_if_none_else_itself
 
-from datatypes_new.CommandInvocationPrefix import CommandInvocationPrefix
+from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
+from datatypes_new.BasicDatatypes import FileNameOrStdDescriptor
 from annotation_generation_new.datatypes.parallelizability.Splitter import Splitter
 from annotation_generation_new.datatypes.parallelizability.MapperSpec import MapperSpec
 from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import AggregatorSpec
 from annotation_generation_new.datatypes.parallelizability.Mapper import Mapper
 from annotation_generation_new.datatypes.parallelizability.Aggregator import Aggregator
 
-class AdditionalInfoMapperSpecToAggregator(Enum):
+from enum import Enum
+
+# this will probably become its own class with more information later
+class AdditionalInfoSplitterToMapper(Enum):
+    NO_ADD_INPUT = 'no_add_input'
+    LINE_NUM_OFFSET = 'line_num_offset'
+    BYTE_OFFSET = 'byte_offset'
+    LINE_NUM_AND_BYTE_OFFSET = 'line_num_and_byte_offset'
+
+class AdditionalInfoMapperToAggregator(Enum):
     NO_ADD_INPUT = 'no_add_input'
 
 class Parallelizer:
@@ -21,12 +31,14 @@ class Parallelizer:
                  # , we only store MapperSpec and AggregatorSpec, actual ones to be retrieved with CMDInvPref in Pash
                  core_mapper_spec: MapperSpec,
                  core_aggregator_spec: AggregatorSpec,
-                 info_mapper_aggregator: AdditionalInfoMapperSpecToAggregator = AdditionalInfoMapperSpecToAggregator.NO_ADD_INPUT
+                 info_splitter_mapper: Optional[AdditionalInfoSplitterToMapper],
+                 info_mapper_aggregator: Optional[AdditionalInfoMapperToAggregator]
                  ) -> None:
         self.splitter: Splitter = splitter
         self.core_mapper_spec: MapperSpec = core_mapper_spec
         self.core_aggregator_spec: AggregatorSpec = core_aggregator_spec
-        self.info_mapper_aggregator = info_mapper_aggregator
+        self.info_splitter_mapper: AdditionalInfoSplitterToMapper = return_default_if_none_else_itself(info_splitter_mapper, AdditionalInfoSplitterToMapper.NO_ADD_INPUT)
+        self.info_mapper_aggregator = return_default_if_none_else_itself(info_mapper_aggregator, AdditionalInfoMapperToAggregator.NO_ADD_INPUT)
 
     def __eq__(self, other: Parallelizer) -> bool:
         return standard_eq(self, other)
@@ -43,39 +55,53 @@ class Parallelizer:
     def get_mapper_spec(self) -> MapperSpec:
         return self.core_mapper_spec
 
-    def get_actual_mapper(self, cmd_invocation_prefix: CommandInvocationPrefix) -> Optional[Mapper]:
-        return self.core_mapper_spec.get_mapper(cmd_invocation_prefix)
+    def get_actual_mapper(self,
+                          cmd_invocation: CommandInvocationWithIO,
+                          input_from: FileNameOrStdDescriptor,
+                          output_to: FileNameOrStdDescriptor) \
+            -> Optional[Mapper]:
+        return self.core_mapper_spec.get_mapper(cmd_invocation, input_from, output_to)
 
     def get_aggregator_spec(self) -> AggregatorSpec:
         return self.core_aggregator_spec
 
-    def get_actual_aggregator(self, cmd_invocation_prefix: CommandInvocationPrefix) -> Optional[Aggregator]:
-        return self.core_aggregator_spec.get_aggregator(cmd_invocation_prefix)
+    def get_actual_aggregator(self,
+                              cmd_invocation: CommandInvocationWithIO,
+                              input_from: FileNameOrStdDescriptor,
+                              output_to: FileNameOrStdDescriptor) \
+             -> Optional[Aggregator]:
+        return self.core_aggregator_spec.get_aggregator(cmd_invocation, input_from, output_to)
 
-    def get_info_mapper_aggregator(self) -> AdditionalInfoMapperSpecToAggregator:
+    def get_info_mapper_aggregator(self) -> AdditionalInfoMapperToAggregator:
         return self.info_mapper_aggregator
 
     @staticmethod
     def make_parallelizer_indiv_files(mapper_spec: Optional[MapperSpec]=None,
-                                      aggregator_spec: Optional[AggregatorSpec]=None
+                                      aggregator_spec: Optional[AggregatorSpec]=None,
+                                      info_splitter_mapper: Optional[AdditionalInfoSplitterToMapper]=None,
+                                      info_mapper_aggregator: Optional[AdditionalInfoMapperToAggregator]=None
                                       ) -> Parallelizer:
         mapper_spec = MapperSpec.return_mapper_spec_seq_if_none_else_itself(mapper_spec)
         aggregator_spec = AggregatorSpec.return_aggregator_conc_if_none_else_itself(aggregator_spec)
-        return Parallelizer(Splitter.make_splitter_indiv_files(), mapper_spec, aggregator_spec)
+        return Parallelizer(Splitter.make_splitter_indiv_files(), mapper_spec, aggregator_spec, info_splitter_mapper, info_mapper_aggregator)
 
     @staticmethod
     def make_parallelizer_round_robin(mapper_spec: Optional[MapperSpec]=None,
-                                      aggregator_spec: Optional[AggregatorSpec]=None
+                                      aggregator_spec: Optional[AggregatorSpec]=None,
+                                      info_splitter_mapper: Optional[AdditionalInfoSplitterToMapper]=None,
+                                      info_mapper_aggregator: Optional[AdditionalInfoMapperToAggregator]=None
                                       ) -> Parallelizer:
         mapper_spec = MapperSpec.return_mapper_spec_seq_if_none_else_itself(mapper_spec)
         aggregator_spec = AggregatorSpec.return_aggregator_conc_if_none_else_itself(aggregator_spec)
-        return Parallelizer(Splitter.make_splitter_round_robin(), mapper_spec, aggregator_spec)
+        return Parallelizer(Splitter.make_splitter_round_robin(), mapper_spec, aggregator_spec, info_splitter_mapper, info_mapper_aggregator)
 
     @staticmethod
     # TODO: rename
     def make_parallelizer_consec_junks(mapper_spec: Optional[MapperSpec]=None,
-                                       aggregator_spec: Optional[AggregatorSpec]=None
+                                       aggregator_spec: Optional[AggregatorSpec]=None,
+                                       info_splitter_mapper: Optional[AdditionalInfoSplitterToMapper] = None,
+                                       info_mapper_aggregator: Optional[AdditionalInfoMapperToAggregator] = None
                                        ) -> Parallelizer:
         mapper_spec = MapperSpec.return_mapper_spec_seq_if_none_else_itself(mapper_spec)
         aggregator_spec = AggregatorSpec.return_aggregator_conc_if_none_else_itself(aggregator_spec)
-        return Parallelizer(Splitter.make_splitter_consec_chunks(), mapper_spec, aggregator_spec)
+        return Parallelizer(Splitter.make_splitter_consec_chunks(), mapper_spec, aggregator_spec, info_splitter_mapper, info_mapper_aggregator)

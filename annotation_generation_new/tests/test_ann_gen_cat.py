@@ -8,10 +8,9 @@ from datatypes_new.CommandInvocationPrefix import CommandInvocationPrefix
 from annotation_generation_new.datatypes.InputOutputInfo import InputOutputInfo
 from annotation_generation_new.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
 
-from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer
+from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer, AdditionalInfoSplitterToMapper
 from annotation_generation_new.datatypes.parallelizability.Mapper import Mapper
 from annotation_generation_new.datatypes.parallelizability.MapperSpec import MapperSpec
-from annotation_generation_new.datatypes.parallelizability.AdditionalInfoFromSplitter import AdditionalInfoFromSplitter
 from annotation_generation_new.datatypes.parallelizability.Aggregator import Aggregator
 from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import AggregatorSpec
 
@@ -95,7 +94,7 @@ def test_cat_3() -> None:
     parallelizer2: Parallelizer = para_info.parallelizer_list[1]
     # check that specs for mapper and aggregator are fine
     mapper_spec = MapperSpec.make_mapper_spec_custom(spec_mapper_cmd_name='cat_offset_n_add_input',
-                                                     add_info_from_splitter=AdditionalInfoFromSplitter.LINE_NUM_OFFSET,
+                                                     add_info_from_splitter=AdditionalInfoSplitterToMapper.LINE_NUM_OFFSET,
                                                      is_implemented=False)
     parallelizer_if_cus_conc = Parallelizer.make_parallelizer_indiv_files(mapper_spec=mapper_spec)
     parallelizer_rr_cus_conc = Parallelizer.make_parallelizer_round_robin(mapper_spec=mapper_spec)

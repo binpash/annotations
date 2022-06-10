@@ -1,7 +1,6 @@
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGenerator_Interface import ParallelizabilityInfoGeneratorInterface
-from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer
+from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer, AdditionalInfoSplitterToMapper
 from annotation_generation_new.datatypes.parallelizability.MapperSpec import MapperSpec
-from annotation_generation_new.datatypes.parallelizability.AdditionalInfoFromSplitter import AdditionalInfoFromSplitter
 from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import AggregatorSpec
 
 
@@ -28,6 +27,7 @@ class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface
             # rest for round-robin
             mapper_spec = None
             aggregator_spec = None
+            add_info_from_splitter = None
             # CA to decide which mapper or aggregator, parallelizer added after CA
             if not self.does_flag_option_list_contain_at_least_one_of(["-A", "-B", "-C", "-m"]):
                 if self.does_flag_option_list_contain_at_least_one_of(["-L", "-l"]):
@@ -42,18 +42,20 @@ class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface
                                                                                        is_implemented=False)
                 elif self.does_flag_option_list_contain_at_least_one_of(["-n"]) and self.does_flag_option_list_contain_at_least_one_of(["-b"]):
                     mapper_spec = MapperSpec.make_mapper_spec_custom('grep_add_line_number_and_byte_offset',
-                                                                     add_info_from_splitter=AdditionalInfoFromSplitter.LINE_NUM_AND_BYTE_OFFSET,
                                                                      is_implemented=False)
+                    add_info_from_splitter=AdditionalInfoSplitterToMapper.LINE_NUM_AND_BYTE_OFFSET
                 elif self.does_flag_option_list_contain_at_least_one_of(["-n"]):
                     mapper_spec = MapperSpec.make_mapper_spec_custom('grep_add_line_number_offset',
-                                                                     add_info_from_splitter=AdditionalInfoFromSplitter.LINE_NUM_OFFSET,
                                                                      is_implemented=False)
+                    add_info_from_splitter=AdditionalInfoSplitterToMapper.LINE_NUM_OFFSET
                 elif self.does_flag_option_list_contain_at_least_one_of(["-b"]):
                     mapper_spec = MapperSpec.make_mapper_spec_custom('grep_add_byte_offset',
-                                                                     add_info_from_splitter=AdditionalInfoFromSplitter.BYTE_OFFSET,
                                                                      is_implemented=False)
+                    add_info_from_splitter = AdditionalInfoSplitterToMapper.BYTE_OFFSET
                 else:   # none of the above affecting flags
                     pass    #just keep mapper and aggregator None and thus add RR_SEQ_CONC
             # we exploit that mapper_spec becomes seq and aggregator_spec becomes conc if given None
-            parallelizer_rr = Parallelizer.make_parallelizer_round_robin(mapper_spec=mapper_spec, aggregator_spec=aggregator_spec)
+            parallelizer_rr = Parallelizer.make_parallelizer_round_robin(mapper_spec=mapper_spec,
+                                                                         aggregator_spec=aggregator_spec,
+                                                                         info_splitter_mapper=add_info_from_splitter)
             self.append_to_parallelizer_list(parallelizer_rr)

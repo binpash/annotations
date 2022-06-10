@@ -99,13 +99,7 @@ class InputOutputInfo:
     def set_first_operand_as_positional_config_arg_type_filename_or_std_descriptor(self) -> None:
         self.operand_list_typer[0] = (WhichClassForArg.FILESTD, AccessKind.make_config_input())
 
-    # TODO: adapt use in PaSh
-    # def unpack_info(self) \
-    #     -> Tuple[List[OptionArgPosConfigType], List[FileNameOrStdDescriptor], List[FileNameOrStdDescriptor], bool, bool, bool]:
-    #     return self.positional_config_list, self.positional_input_list, self.positional_output_list, \
-    #              self.implicit_use_of_stdin, self.implicit_use_of_stdout, self.multiple_inputs_possible
-
-    # methods to apply the input output info to a command invocation
+    # methods to apply the InputOutputInfo to a command invocation
 
     def apply_input_output_info_to_command_invocation(self, cmd_inv: CommandInvocationInitial) \
         -> CommandInvocationWithIO:

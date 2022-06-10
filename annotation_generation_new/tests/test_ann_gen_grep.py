@@ -8,10 +8,9 @@ from datatypes_new.CommandInvocationPrefix import CommandInvocationPrefix
 from annotation_generation_new.datatypes.InputOutputInfo import InputOutputInfo
 from annotation_generation_new.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
 
-from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer
+from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer, AdditionalInfoSplitterToMapper
 from annotation_generation_new.datatypes.parallelizability.Mapper import Mapper
 from annotation_generation_new.datatypes.parallelizability.MapperSpec import MapperSpec
-from annotation_generation_new.datatypes.parallelizability.AdditionalInfoFromSplitter import AdditionalInfoFromSplitter
 from annotation_generation_new.datatypes.parallelizability.Aggregator import Aggregator
 from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import AggregatorSpec
 
@@ -82,7 +81,7 @@ def test_grep_2() -> None:
     # check that specs for mapper and aggregator are fine
     assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
     mapper_spec = MapperSpec.make_mapper_spec_custom('grep_add_byte_offset',
-                                                     add_info_from_splitter=AdditionalInfoFromSplitter.BYTE_OFFSET,
+                                                     add_info_from_splitter=AdditionalInfoSplitterToMapper.BYTE_OFFSET,
                                                      is_implemented=False)
     assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(mapper_spec=mapper_spec)
     # check that results of getting mapper and aggregator are fine
@@ -159,7 +158,7 @@ def test_grep_4() -> None:
     # check that specs for mapper and aggregator are fine
     assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
     mapper_spec = MapperSpec.make_mapper_spec_custom('grep_add_line_number_and_byte_offset',
-                                                     add_info_from_splitter=AdditionalInfoFromSplitter.LINE_NUM_AND_BYTE_OFFSET,
+                                                     add_info_from_splitter=AdditionalInfoSplitterToMapper.LINE_NUM_AND_BYTE_OFFSET,
                                                      is_implemented=False)
     assert parallelizer2 == Parallelizer.make_parallelizer_round_robin(mapper_spec=mapper_spec)
     # check that results of getting mapper and aggregator are fine

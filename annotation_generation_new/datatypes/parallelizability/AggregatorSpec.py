@@ -16,10 +16,11 @@ from util_new import return_default_if_none_else_itself
 
 class AggregatorSpec:
 
+    # TODO: also convert to CommandInvocationWithIO like Mapper
+
     def __init__(self,
                  kind: AggregatorKindEnum,
                  spec_agg_cmd_name: str,
-                 # if info_mapper_to_aggregator, needs to be defined here so develop a way to use it
                  flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,  # None translates to empty list
                  pos_config_list_transformer: Optional[TransformerPosConfigList] = None,  # None translates to empty list
                  is_implemented: bool = False
@@ -42,8 +43,8 @@ class AggregatorSpec:
     # Spec shall be hold by PaSh and once needed, gets actual mapper from this function
     # return value None if it is not yet implemented
     def get_aggregator(self, original_cmd_invocation_prefix: CommandInvocationPrefix) -> Optional[Aggregator]:
-        # this is a handle to specify future aggregators without the need to implement them
         if not self.is_implemented:
+            # this is a handle to specify future aggregators without the need to implement them
             return None
         if self.kind == AggregatorKindEnum.ADJ_LINES_SEQ:
             self.spec_agg_cmd_name = original_cmd_invocation_prefix.cmd_name

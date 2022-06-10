@@ -7,7 +7,8 @@ from util_standard import standard_repr, standard_eq
 
 class CommandInvocationWithIO:
 
-    def __init__(self, cmd_name: str,
+    def __init__(self,
+                 cmd_name: str,
                  flag_option_list: List[Union[Flag, OptionWithIO]],
                  operand_list: List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]],
                  implicit_use_of_streaming_input: Optional[FileNameOrStdDescriptorWithIOInfo],

@@ -7,10 +7,10 @@ from abc import ABC, abstractmethod
 
 class BaseClassForBasicDatatypesWithIOInfo(ABC):
 
-    def __init__(self, access):
+    def __init__(self, access: AccessKind):
         self.access = access
 
-    def get_access(self) -> str:
+    def get_access(self) -> AccessKind:
         return self.access
 
     @staticmethod
@@ -27,7 +27,7 @@ class FileNameWithIOInfo(FileName, BaseClassForBasicDatatypesWithIOInfo):
         BaseClassForBasicDatatypesWithIOInfo.__init__(self, access=access)
 
     @staticmethod
-    def get_from_original(original, access):
+    def get_from_original(original: FileName, access: AccessKind) -> FileNameWithIOInfo:
         return FileNameWithIOInfo(original.get_name(), access)
 
 
@@ -38,8 +38,8 @@ class StdDescriptorWithIOInfo(StdDescriptor, BaseClassForBasicDatatypesWithIOInf
         BaseClassForBasicDatatypesWithIOInfo.__init__(self, access=access)
 
     @staticmethod
-    def get_from_original(original, access):
-        return StdDescriptorWithIOInfo(original.get_name(), access)
+    def get_from_original(original: StdDescriptor, access: AccessKind) -> StdDescriptorWithIOInfo:
+        return StdDescriptorWithIOInfo(original.name, access)
 
     @staticmethod
     def make_stdin_with_access_stream_input() -> StdDescriptorWithIOInfo:

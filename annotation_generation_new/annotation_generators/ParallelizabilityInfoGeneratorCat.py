@@ -1,6 +1,6 @@
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGenerator_Interface import ParallelizabilityInfoGeneratorInterface
-from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer
-from annotation_generation_new.datatypes.parallelizability.MapperSpec import MapperSpec, AdditionalInfoFromSplitter
+from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer, AdditionalInfoSplitterToMapper
+from annotation_generation_new.datatypes.parallelizability.MapperSpec import MapperSpec
 from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import AggregatorSpec
 
 
@@ -25,11 +25,10 @@ class ParallelizabilityInfoGeneratorCat(ParallelizabilityInfoGeneratorInterface)
             elif not self.does_squeeze_repeated_empty_output_lines() and self.does_number_all_output_lines():
                 # we can have mappers that take offset as argument and without -s, this is stable
                 mapper_spec = MapperSpec.make_mapper_spec_custom(spec_mapper_cmd_name='cat_offset_n_add_input',
-                                                                 add_info_from_splitter=AdditionalInfoFromSplitter.LINE_NUM_OFFSET,
                                                                  is_implemented=False)
-                parallelizer_if_cus_conc = Parallelizer.make_parallelizer_indiv_files(mapper_spec=mapper_spec)
+                parallelizer_if_cus_conc = Parallelizer.make_parallelizer_indiv_files(mapper_spec=mapper_spec, info_splitter_mapper=AdditionalInfoSplitterToMapper.LINE_NUM_OFFSET)
                 self.append_to_parallelizer_list(parallelizer_if_cus_conc)
-                parallelizer_rr_cus_conc = Parallelizer.make_parallelizer_round_robin(mapper_spec=mapper_spec)
+                parallelizer_rr_cus_conc = Parallelizer.make_parallelizer_round_robin(mapper_spec=mapper_spec, info_splitter_mapper=AdditionalInfoSplitterToMapper.LINE_NUM_OFFSET)
                 self.append_to_parallelizer_list(parallelizer_rr_cus_conc)
             elif self.does_squeeze_repeated_empty_output_lines() and not self.does_number_all_output_lines():
                 # not numbered (in any way) but need to compare adjacent lines and possibly remove one blank line
