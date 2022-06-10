@@ -24,19 +24,13 @@ class MapperSpec:
                  kind: MapperSpecKindEnum = MapperSpecKindEnum.SAME_AS_SEQ,
                  spec_mapper_cmd_name: Optional[str] = None,  # None translates to original command name
                  flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,  # None translates to same as seq transformer
-                 # deprecated until actually needed
-                 # pos_config_list_transformer: Optional[TransformerPosConfigList] = None,  # None translates to same as seq transformer
                  # for now, we keep everything in operand list as it is but substitute streaming input and output
-                 # num_outputs: int = 1,
                  is_implemented: bool = False
                  ) -> None:
         self.kind: MapperSpecKindEnum = kind
         self.spec_mapper_cmd_name: Optional[str] = spec_mapper_cmd_name
         self.flag_option_list_transformer: TransformerFlagOptionList = \
             TransformerFlagOptionList.return_transformer_same_as_seq_if_none_else_itself(flag_option_list_transformer)
-        # self.pos_config_list_transformer: TransformerPosConfigList = \
-        #     TransformerPosConfigList.return_transformer_same_as_seq_if_none_else_itself(pos_config_list_transformer)
-        # self.num_outputs : int = num_outputs
         self.is_implemented = is_implemented
         # sanity check
         if kind == MapperSpecKindEnum.SAME_AS_SEQ:
@@ -79,7 +73,7 @@ class MapperSpec:
                             implicit_use_of_streaming_output = original_cmd_invocation.implicit_use_of_streaming_output)
         else:
             raise Exception("MapperSpec with unknown kind!")
-        mapper.swap_input_and_output_in_mapper(input_from, output_to)
+        mapper.substitute_inputs_and_outputs_in_cmd_invocation([input_from], [output_to])
         return mapper
 
     ## factory methods

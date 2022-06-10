@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional
+from typing import Optional, List
 
 from util_standard import standard_eq
 from util_new import return_default_if_none_else_itself
@@ -67,10 +67,10 @@ class Parallelizer:
 
     def get_actual_aggregator(self,
                               cmd_invocation: CommandInvocationWithIO,
-                              input_from: FileNameOrStdDescriptor,
+                              inputs_from: List[FileNameOrStdDescriptor],
                               output_to: FileNameOrStdDescriptor) \
              -> Optional[Aggregator]:
-        return self.core_aggregator_spec.get_aggregator(cmd_invocation, input_from, output_to)
+        return self.core_aggregator_spec.get_aggregator(cmd_invocation, inputs_from, output_to)
 
     def get_info_mapper_aggregator(self) -> AdditionalInfoMapperToAggregator:
         return self.info_mapper_aggregator

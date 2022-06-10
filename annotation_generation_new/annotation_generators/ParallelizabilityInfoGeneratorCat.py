@@ -32,8 +32,8 @@ class ParallelizabilityInfoGeneratorCat(ParallelizabilityInfoGeneratorInterface)
                 self.append_to_parallelizer_list(parallelizer_rr_cus_conc)
             elif self.does_squeeze_repeated_empty_output_lines() and not self.does_number_all_output_lines():
                 # not numbered (in any way) but need to compare adjacent lines and possibly remove one blank line
-                aggregator_spec = AggregatorSpec.make_aggregator_spec_adj_lines_func(spec_agg_cmd_name='merge_2_blank_lines_to_1',
-                                                                                     is_implemented=False)
+                aggregator_spec = AggregatorSpec.make_aggregator_spec_adj_lines_func_from_string_representation(cmd_inv_as_str='PLACEHOLDER:merge_2_blank_lines_to_1',
+                                                                                                 is_implemented=False)
                 parallelizer_if_seq_adjf = Parallelizer.make_parallelizer_indiv_files(aggregator_spec=aggregator_spec)
                 self.append_to_parallelizer_list(parallelizer_if_seq_adjf)
                 parallelizer_rr_seq_adjf = Parallelizer.make_parallelizer_round_robin(aggregator_spec=aggregator_spec)

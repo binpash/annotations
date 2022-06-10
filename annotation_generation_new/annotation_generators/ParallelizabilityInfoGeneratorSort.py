@@ -23,7 +23,7 @@ class ParallelizabilityInfoGeneratorSort(ParallelizabilityInfoGeneratorInterface
             transformer_flag_option_list_add: TransformerFlagOptionListAdd = TransformerFlagOptionListAdd([Flag("-m")])
             chain_transformer_flag_option_list: ChainTransformerFlagOptionList = \
                 ChainTransformerFlagOptionList([transformer_flag_option_list_filter, transformer_flag_option_list_add])
-            aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary(spec_agg_cmd_name='sort',
+            aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary_from_cmd_inv_with_transformers(
                                                                                flag_option_list_transformer=chain_transformer_flag_option_list,
                                                                                is_implemented=True)
             # Build parallelizers and append

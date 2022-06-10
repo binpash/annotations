@@ -34,11 +34,11 @@ class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface
                     # the output for both options is either empty or the filename (same for both if so)
                     # for "-l": if there was a match in one part, the filename will propagate; if not, not
                     # for "-L": if there was no match in one part, the filename will propagate; it not, not
-                    aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary('merge_keeping_longer_output',
+                    aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary_from_string_representation(cmd_inv_as_str='PLACEHOLDER:merge_keeping_longer_output',
                                                                                        is_implemented=False)
                     # TODO
                 elif self.does_flag_option_list_contain_at_least_one_of(["-c"]):
-                    aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary('sum_indiv_results_up',
+                    aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary_from_string_representation(cmd_inv_as_str='PLACEHOLDER:sum_indiv_results_up',
                                                                                        is_implemented=False)
                 elif self.does_flag_option_list_contain_at_least_one_of(["-n"]) and self.does_flag_option_list_contain_at_least_one_of(["-b"]):
                     mapper_spec = MapperSpec.make_mapper_spec_custom('grep_add_line_number_and_byte_offset',

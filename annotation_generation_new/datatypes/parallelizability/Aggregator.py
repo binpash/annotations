@@ -1,26 +1,29 @@
 from __future__ import annotations
-from typing import Optional, List
+from typing import Optional, List, Union
+
+from datatypes_new.BasicDatatypesWithIO import OptionWithIO, FileNameOrStdDescriptorWithIOInfo
+from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
 from util_standard import standard_repr, standard_eq
 from util_new import return_empty_flag_option_list_if_none_else_itself, return_empty_pos_config_list_if_none_else_itself
 
 from annotation_generation_new.datatypes.parallelizability.AggregatorKind import AggregatorKindEnum
 
-from datatypes_new.BasicDatatypes import FlagOption, OptionArgPosConfigType
+from datatypes_new.BasicDatatypes import FlagOption, OptionArgPosConfigType, Flag, ArgStringType
 
 
-class Aggregator:
+class Aggregator(CommandInvocationWithIO):
 
     def __init__(self,
                  # depending on kind, the aggregator function will be applied to different inputs, e.g. lines
                  kind: AggregatorKindEnum,
                  cmd_name: str,
-                 flag_option_list : Optional[List[FlagOption]] = None,  # None translates to empty list
-                 positional_config_list : Optional[List[OptionArgPosConfigType]] = None,  # None translates to empty list
+                 flag_option_list: List[Union[Flag, OptionWithIO]],
+                 operand_list: List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]],
+                 implicit_use_of_streaming_input: Optional[FileNameOrStdDescriptorWithIOInfo],
+                 implicit_use_of_streaming_output: Optional[FileNameOrStdDescriptorWithIOInfo],
                  ) -> None:
         self.kind = kind
-        self.cmd_name: str = cmd_name
-        self.flag_option_list: List[FlagOption] = return_empty_flag_option_list_if_none_else_itself(flag_option_list)
-        self.positional_config_list: List[OptionArgPosConfigType] = return_empty_pos_config_list_if_none_else_itself(positional_config_list)
+        CommandInvocationWithIO.__init__(self, cmd_name, flag_option_list, operand_list, implicit_use_of_streaming_input, implicit_use_of_streaming_output)
 
     def __eq__(self, other: Aggregator) -> bool:
         return standard_eq(self, other)
@@ -29,22 +32,27 @@ class Aggregator:
         return standard_repr(self)
 
     @classmethod
-    def make_aggregator_concatenate(cls) -> Aggregator:
-        return cls(AggregatorKindEnum.CONCATENATE,
-                   cmd_name='cat')
+    def make_aggregator_from_cmd_inv_with_io(cls, cmd_inv: CommandInvocationWithIO, kind: AggregatorKindEnum):
+        cls(kind, cmd_inv.cmd_name, cmd_inv.flag_option_list, cmd_inv.operand_list,
+            cmd_inv.implicit_use_of_streaming_input, cmd_inv.implicit_use_of_streaming_output)
 
-    @classmethod
-    def make_aggregator_adj_lines_merge(cls) -> Aggregator:
-        return cls(AggregatorKindEnum.ADJ_LINES_MERGE,
-                   cmd_name='adj_lines_merge')
-
-    @classmethod
-    def make_aggregator_custom_2_ary(cls,
-                                     cmd_name: str,
-                                     flag_option_list: List[FlagOption],
-                                     positional_config_list: Optional[List[OptionArgPosConfigType]] = None,
-                                     ) -> Aggregator:
-        return cls(AggregatorKindEnum.CUSTOM_2_ARY,
-                   cmd_name=cmd_name,
-                   flag_option_list=flag_option_list,
-                   positional_config_list=positional_config_list)
+    # @classmethod
+    # def make_aggregator_concatenate(cls) -> Aggregator:
+    #     return cls(AggregatorKindEnum.CONCATENATE,
+    #                cmd_name='cat')
+    #
+    # @classmethod
+    # def make_aggregator_adj_lines_merge(cls) -> Aggregator:
+    #     return cls(AggregatorKindEnum.ADJ_LINES_MERGE,
+    #                cmd_name='adj_lines_merge')
+    #
+    # @classmethod
+    # def make_aggregator_custom_2_ary(cls,
+    #                                  cmd_name: str,
+    #                                  flag_option_list: List[FlagOption],
+    #                                  positional_config_list: Optional[List[OptionArgPosConfigType]] = None,
+    #                                  ) -> Aggregator:
+    #     return cls(AggregatorKindEnum.CUSTOM_2_ARY,
+    #                cmd_name=cmd_name,
+    #                flag_option_list=flag_option_list,
+    #                positional_config_list=positional_config_list)
