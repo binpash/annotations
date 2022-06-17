@@ -24,7 +24,7 @@ class ParallelizabilityInfoGeneratorCat(ParallelizabilityInfoGeneratorInterface)
                 self.append_to_parallelizer_list_rr_seq_conc()
             elif not self.does_squeeze_repeated_empty_output_lines() and self.does_number_all_output_lines():
                 # we can have mappers that take offset as argument and without -s, this is stable
-                mapper_spec = MapperSpec.make_mapper_spec_custom(spec_mapper_cmd_name='cat_offset_n_add_input',
+                mapper_spec = MapperSpec.make_mapper_spec_custom(spec_mapper_cmd_name='PLACEHOLDER:cat_offset_n_add_input',
                                                                  is_implemented=False)
                 parallelizer_if_cus_conc = Parallelizer.make_parallelizer_indiv_files(mapper_spec=mapper_spec, info_splitter_mapper=AdditionalInfoSplitterToMapper.LINE_NUM_OFFSET)
                 self.append_to_parallelizer_list(parallelizer_if_cus_conc)

@@ -4,7 +4,7 @@ from typing import List, Union, Optional, Tuple
 from datatypes_new.BasicDatatypes import Flag, ArgStringType, FileName, StdDescriptor, FileNameOrStdDescriptor
 from datatypes_new.BasicDatatypesWithIO import OptionWithIO, FileNameOrStdDescriptorWithIOInfo, FileNameWithIOInfo, StdDescriptorWithIOInfo, \
         add_access_to_stream_input, add_access_to_stream_output
-from AccessKind import AccessKind, AccessKindEnum
+from datatypes_new.AccessKind import AccessKind, AccessKindEnum
 from util_standard import standard_repr, standard_eq
 
 class CommandInvocationWithIO:

@@ -9,8 +9,9 @@ from datatypes_new.CommandInvocationPrefix import CommandInvocationPrefix
 from annotation_generation_new.datatypes.InputOutputInfo import InputOutputInfo
 from annotation_generation_new.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
 from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer
-from annotation_generation_new.datatypes.parallelizability.Mapper import Mapper
-from annotation_generation_new.datatypes.parallelizability.Aggregator import Aggregator
+from annotation_generation_new.datatypes.parallelizability.Splitter import Splitter
+from annotation_generation_new.datatypes.parallelizability.MapperSpec import MapperSpec
+from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import AggregatorSpec
 
 
 import annotation_generation_new.AnnotationGeneration as AnnotationGeneration
@@ -42,15 +43,14 @@ def test_cut_1() -> None:
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
     parallelizer2: Parallelizer = para_info.parallelizer_list[1]
     # check that specs for mapper and aggregator are fine
-    assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
-    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
-    # check that results of getting mapper and aggregator are fine
-    goal_mapper = Mapper.make_same_as_seq_mapper_from_command_invocation_prefix(cmd_inv_pref)
-    assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
-    assert parallelizer2.get_actual_mapper(cmd_inv_pref) == goal_mapper
-    goal_aggregator = Aggregator.make_aggregator_concatenate()
-    assert parallelizer1.get_actual_aggregator(cmd_inv_pref) == goal_aggregator
-    assert parallelizer2.get_actual_aggregator(cmd_inv_pref) == goal_aggregator
+    goal_mapper_spec = MapperSpec.make_mapper_spec_seq()
+    goal_aggregator_spec: AggregatorSpec = AggregatorSpec.make_aggregator_spec_concatenate()
+    assert parallelizer1.get_splitter() == Splitter.make_splitter_indiv_files()
+    assert parallelizer1.get_mapper_spec() == goal_mapper_spec
+    assert parallelizer1.get_aggregator_spec() == goal_aggregator_spec
+    assert parallelizer2.get_splitter() == Splitter.make_splitter_round_robin()
+    assert parallelizer2.get_mapper_spec() == goal_mapper_spec
+    assert parallelizer2.get_aggregator_spec() == goal_aggregator_spec
 
 
 def test_cut_2() -> None:
@@ -74,12 +74,11 @@ def test_cut_2() -> None:
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
     parallelizer2: Parallelizer = para_info.parallelizer_list[1]
     # check that specs for mapper and aggregator are fine
-    assert parallelizer1 == Parallelizer.make_parallelizer_indiv_files()
-    assert parallelizer2 == Parallelizer.make_parallelizer_round_robin()
-    # check that results of getting mapper and aggregator are fine
-    goal_mapper = Mapper.make_same_as_seq_mapper_from_command_invocation_prefix(cmd_inv_pref)
-    assert parallelizer1.get_actual_mapper(cmd_inv_pref) == goal_mapper
-    assert parallelizer2.get_actual_mapper(cmd_inv_pref) == goal_mapper
-    goal_aggregator = Aggregator.make_aggregator_concatenate()
-    assert parallelizer1.get_actual_aggregator(cmd_inv_pref) == goal_aggregator
-    assert parallelizer2.get_actual_aggregator(cmd_inv_pref) == goal_aggregator
+    goal_mapper_spec = MapperSpec.make_mapper_spec_seq()
+    goal_aggregator_spec: AggregatorSpec = AggregatorSpec.make_aggregator_spec_concatenate()
+    assert parallelizer1.get_splitter() == Splitter.make_splitter_indiv_files()
+    assert parallelizer1.get_mapper_spec() == goal_mapper_spec
+    assert parallelizer1.get_aggregator_spec() == goal_aggregator_spec
+    assert parallelizer2.get_splitter() == Splitter.make_splitter_round_robin()
+    assert parallelizer2.get_mapper_spec() == goal_mapper_spec
+    assert parallelizer2.get_aggregator_spec() == goal_aggregator_spec

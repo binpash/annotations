@@ -34,6 +34,7 @@ class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface
                     # the output for both options is either empty or the filename (same for both if so)
                     # for "-l": if there was a match in one part, the filename will propagate; if not, not
                     # for "-L": if there was no match in one part, the filename will propagate; it not, not
+                    print("reach here")
                     aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary_from_string_representation(cmd_inv_as_str='PLACEHOLDER:merge_keeping_longer_output',
                                                                                        is_implemented=False)
                     # TODO
@@ -41,15 +42,15 @@ class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface
                     aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary_from_string_representation(cmd_inv_as_str='PLACEHOLDER:sum_indiv_results_up',
                                                                                        is_implemented=False)
                 elif self.does_flag_option_list_contain_at_least_one_of(["-n"]) and self.does_flag_option_list_contain_at_least_one_of(["-b"]):
-                    mapper_spec = MapperSpec.make_mapper_spec_custom('grep_add_line_number_and_byte_offset',
+                    mapper_spec = MapperSpec.make_mapper_spec_custom('PLACEHOLDER:grep_add_line_number_and_byte_offset',
                                                                      is_implemented=False)
                     add_info_from_splitter=AdditionalInfoSplitterToMapper.LINE_NUM_AND_BYTE_OFFSET
                 elif self.does_flag_option_list_contain_at_least_one_of(["-n"]):
-                    mapper_spec = MapperSpec.make_mapper_spec_custom('grep_add_line_number_offset',
+                    mapper_spec = MapperSpec.make_mapper_spec_custom('PLACEHOLDER:grep_add_line_number_offset',
                                                                      is_implemented=False)
                     add_info_from_splitter=AdditionalInfoSplitterToMapper.LINE_NUM_OFFSET
                 elif self.does_flag_option_list_contain_at_least_one_of(["-b"]):
-                    mapper_spec = MapperSpec.make_mapper_spec_custom('grep_add_byte_offset',
+                    mapper_spec = MapperSpec.make_mapper_spec_custom('PLACEHOLDER:grep_add_byte_offset',
                                                                      is_implemented=False)
                     add_info_from_splitter = AdditionalInfoSplitterToMapper.BYTE_OFFSET
                 else:   # none of the above affecting flags
