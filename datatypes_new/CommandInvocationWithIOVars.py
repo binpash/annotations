@@ -8,21 +8,26 @@ from datatypes_new.AccessKind import AccessKind, AccessKindEnum
 from annotation_generation_new.datatypes.Inputs import Inputs, InputsEnum
 from util_standard import standard_repr, standard_eq
 
-class CommandInvocationWithIO:
-    # TODO: fully substitute by ...Vars and delete this one
+
+class CommandInvocationWithIOVars:
+
+    # TODO: get_access() will not work here anymore, use access_map
 
     def __init__(self,
+                 # types to be updated
                  cmd_name: str,
                  flag_option_list: List[Union[Flag, OptionWithIO]],
                  operand_list: List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]],
                  implicit_use_of_streaming_input: Optional[FileNameOrStdDescriptorWithIOInfo],
                  implicit_use_of_streaming_output: Optional[FileNameOrStdDescriptorWithIOInfo],
+                 access_map
                  ) -> None:
         self.cmd_name: str = cmd_name
         self.flag_option_list: List[Union[Flag, OptionWithIO]] = flag_option_list
         self.operand_list: List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]] = operand_list
         self.implicit_use_of_streaming_input: Optional[FileNameOrStdDescriptorWithIOInfo] = implicit_use_of_streaming_input
         self.implicit_use_of_streaming_output: Optional[FileNameOrStdDescriptorWithIOInfo] = implicit_use_of_streaming_output
+        self.access_map = access_map
         # map from variables to filenames
 
     def __repr__(self):
@@ -30,6 +35,15 @@ class CommandInvocationWithIO:
 
     def __eq__(self, other: CommandInvocationWithIO):
         return standard_eq(self, other)
+
+    @staticmethod
+    def get_from_without_vars(cmd_inv_with_io: CommandInvocationWithIO, access_map):
+        return CommandInvocationWithIOVars(cmd_name=cmd_inv_with_io.cmd_name,
+                                    flag_option_list=cmd_inv_with_io.flag_option_list,
+                                    operand_list=cmd_inv_with_io.operand_list,
+                                    implicit_use_of_streaming_input=cmd_inv_with_io.implicit_use_of_streaming_input,
+                                    implicit_use_of_streaming_output=cmd_inv_with_io.implicit_use_of_streaming_output,
+                                    access_map=access_map)
 
 
     def substitute_inputs_and_outputs_in_cmd_invocation(self,
@@ -155,23 +169,49 @@ class CommandInvocationWithIO:
         else:
             return (implicit_use_of_streaming_output, 0)
 
-    # def generate_inputs(self):
-    #     # ASSUMPTION: no configuration inputs, no fallback, and option list, stdin
-    #     streaming_inputs = []
-    #     for operand in self.operand_list:
-    #         access = operand.get_access()
-    #         if access.is_stream_input():
-    #             streaming_inputs.append(operand.get_name())
-    #     return Inputs(InputsEnum.STREAMING, ([], streaming_inputs))
-    #
-    # def generate_outputs(self):
-    #     # ASSUMPTION: only operands
-    #     outputs = []
-    #     for operand in self.operand_list:
-    #         access = operand.get_access()
-    #         if access.is_any_output():
-    #             outputs.append(operand.get_name())
-    #     return outputs
+    def generate_inputs(self):
+        # ASSUMPTION: no configuration inputs, no fallback, and option list, stdin
+        streaming_inputs = []
+        for operand in [self.implicit_use_of_streaming_input] + self.operand_list:
+            try:
+                access = self.access_map.get(operand)
+                if access is not None and access.is_stream_input():
+                    streaming_inputs.append(operand)
+            except:
+                pass
+        return Inputs(InputsEnum.STREAMING, ([], streaming_inputs))
+
+    def generate_outputs(self):
+        # ASSUMPTION: only operands, no stdout
+        outputs = []
+        for operand in [self.implicit_use_of_streaming_output] + self.operand_list:
+            try:
+                access = self.access_map.get(operand)
+                if access is not None and access.is_any_output():
+                    outputs.append(operand)
+            except:
+                pass
+        return outputs
+
+    ## TODO: Q: Is there a way to abstract both mapping and traversing
+    def replace_var(self, from_var, to_var):
+        ## TODO: Change in all locations
+        changed = False
+        for i in range(len(self.operand_list)):
+            operand = self.operand_list[i]
+            if operand == from_var:
+                self.operand_list[i] = to_var
+                changed = True
+                break
+        if self.implicit_use_of_streaming_input == from_var:
+            self.implicit_use_of_streaming_input = to_var
+            changed = True
+        if self.implicit_use_of_streaming_output == from_var:
+            self.implicit_use_of_streaming_output = to_var
+            changed = True
+        if changed:
+            self.access_map[to_var] = self.access_map.pop(from_var)
+        assert(not from_var in self.access_map)
 
     # for test cases:
     def get_operands_with_config_input(self) -> List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]]:

@@ -38,6 +38,9 @@ class StdDescriptor(BaseClassForBasicDatatypes):
     def get_name(self) -> str:
         return str(self.name)
 
+    def get_type(self) -> str:
+        return self.name
+
     @staticmethod
     def get_stdin_fd() -> StdDescriptor:
         return StdDescriptor(StdDescriptorEnum.STDIN)
