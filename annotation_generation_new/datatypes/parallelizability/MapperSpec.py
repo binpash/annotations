@@ -5,7 +5,7 @@ from enum import Enum
 
 from util_standard import standard_repr, standard_eq
 
-from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
+from datatypes_new.CommandInvocationWithIOVars import CommandInvocationWithIOVars
 from datatypes_new.BasicDatatypes import FileNameOrStdDescriptor
 from annotation_generation_new.datatypes.parallelizability.TransformerFlagOptionList import TransformerFlagOptionList
 # from annotation_generation_new.datatypes.parallelizability.TransformerPosConfigList import TransformerPosConfigList
@@ -53,7 +53,7 @@ class MapperSpec:
     # Spec shall be hold by PaSh and once needed, gets actual mapper from this function
     # return value None if it is not yet implemented
     def get_mapper(self,
-                   original_cmd_invocation: CommandInvocationWithIO,
+                   original_cmd_invocation: CommandInvocationWithIOVars,
                    input_from: FileNameOrStdDescriptor,
                    output_to: FileNameOrStdDescriptor
                    ) -> Optional[Mapper]:
@@ -70,7 +70,8 @@ class MapperSpec:
                             flag_option_list= flag_option_list,
                             operand_list=original_cmd_invocation.operand_list,
                             implicit_use_of_streaming_input = original_cmd_invocation.implicit_use_of_streaming_input,
-                            implicit_use_of_streaming_output = original_cmd_invocation.implicit_use_of_streaming_output)
+                            implicit_use_of_streaming_output = original_cmd_invocation.implicit_use_of_streaming_output,
+                            access_map = original_cmd_invocation.access_map)
         else:
             raise Exception("MapperSpec with unknown kind!")
         mapper.substitute_inputs_and_outputs_in_cmd_invocation([input_from], [output_to])

@@ -56,7 +56,7 @@ class Parallelizer:
         return self.core_mapper_spec
 
     def get_actual_mapper(self,
-                          cmd_invocation: CommandInvocationWithIO,
+                          cmd_invocation: CommandInvocationWithIOVars,
                           input_from: FileNameOrStdDescriptor,
                           output_to: FileNameOrStdDescriptor) \
             -> Optional[Mapper]:

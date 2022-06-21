@@ -33,11 +33,11 @@ class CommandInvocationWithIOVars:
     def __repr__(self):
         return standard_repr(self)
 
-    def __eq__(self, other: CommandInvocationWithIO):
+    def __eq__(self, other: CommandInvocationWithIOVars):
         return standard_eq(self, other)
 
     @staticmethod
-    def get_from_without_vars(cmd_inv_with_io: CommandInvocationWithIO, access_map):
+    def get_from_without_vars(cmd_inv_with_io: CommandInvocationWithIOVars, access_map):
         return CommandInvocationWithIOVars(cmd_name=cmd_inv_with_io.cmd_name,
                                     flag_option_list=cmd_inv_with_io.flag_option_list,
                                     operand_list=cmd_inv_with_io.operand_list,
@@ -53,29 +53,33 @@ class CommandInvocationWithIOVars:
         self.substitute_outputs_in_cmd_invocation(outputs_to)
 
     def substitute_inputs_in_cmd_invocation(self, inputs_from):
-        remaining_inputs: List[FileNameOrStdDescriptorWithIOInfo] = [add_access_to_stream_input(input_from) for
-                                                                     input_from in inputs_from]
-        self.implicit_use_of_streaming_input, consumed = CommandInvocationWithIO.replace_stream_input_in_implicit_use_if_applicable(
+        # remaining_inputs: List[FileNameOrStdDescriptorWithIOInfo] = [add_access_to_stream_input(input_from) for
+        #                                                              input_from in inputs_from]
+        remaining_inputs = inputs_from
+        self.implicit_use_of_streaming_input, consumed = CommandInvocationWithIOVars.replace_stream_input_in_implicit_use_if_applicable(
             self.implicit_use_of_streaming_input, remaining_inputs)
         remaining_inputs = remaining_inputs[consumed:]
-        self.flag_option_list, consumed = CommandInvocationWithIO.find_stream_input_in_flag_option_list_and_replace(
+        self.flag_option_list, consumed = CommandInvocationWithIOVars.find_stream_input_in_flag_option_list_and_replace(
             self.flag_option_list, remaining_inputs)
         remaining_inputs = remaining_inputs[consumed:]
-        self.operand_list, consumed = CommandInvocationWithIO.find_stream_input_in_operand_list_and_replace(
+        self.operand_list, consumed = CommandInvocationWithIOVars.find_stream_input_in_operand_list_and_replace(
             self.operand_list, remaining_inputs)
         remaining_inputs = remaining_inputs[consumed:]
         assert len(remaining_inputs) == 0
 
-    def substitute_outputs_in_cmd_invocation(self, outputs_to):
-        remaining_outputs: List[FileNameOrStdDescriptorWithIOInfo] = [add_access_to_stream_output(output_to) for
-                                                                      output_to in outputs_to]
-        self.implicit_use_of_streaming_output, consumed = CommandInvocationWithIO.replace_stream_output_in_implicit_use_if_applicable(
+    def substitute_outputs_in_cmd_invocation(self, outputs_to, function):
+        # TODO: refactor all of these function into a map like this:
+        # self.map(lambda el: outputs_to.pop() if self.get_access(el) else el)
+        # remaining_outputs: List[FileNameOrStdDescriptorWithIOInfo] = [add_access_to_stream_output(output_to) for
+        #                                                               output_to in outputs_to]
+        remaining_inputs = outputs_to
+        self.implicit_use_of_streaming_output, consumed = CommandInvocationWithIOVars.replace_stream_output_in_implicit_use_if_applicable(
             self.implicit_use_of_streaming_output, remaining_outputs)
         remaining_outputs = remaining_outputs[consumed:]
-        self.flag_option_list, consumed = CommandInvocationWithIO.find_stream_output_in_flag_option_list_and_replace(
+        self.flag_option_list, consumed = CommandInvocationWithIOVars.find_stream_output_in_flag_option_list_and_replace(
             self.flag_option_list, remaining_outputs)
         remaining_outputs = remaining_outputs[consumed:]
-        self.operand_list, consumed = CommandInvocationWithIO.find_stream_output_in_operand_list_and_replace(
+        self.operand_list, consumed = CommandInvocationWithIOVars.find_stream_output_in_operand_list_and_replace(
             self.operand_list, remaining_outputs)
         remaining_outputs = remaining_outputs[consumed:]
         assert len(remaining_outputs) == 0
@@ -85,13 +89,13 @@ class CommandInvocationWithIOVars:
     def find_stream_input_in_flag_option_list_and_replace(flag_option_list: List[Union[Flag, OptionWithIO]],
                                                           inputs_from: List[FileNameOrStdDescriptorWithIOInfo]) \
             -> Tuple[List[Union[Flag, OptionWithIO]], int]:
-        return CommandInvocationWithIO.find_stream_something_in_flag_option_list_and_replace(flag_option_list, inputs_from, AccessKindEnum.STREAM_INPUT)
+        return CommandInvocationWithIOVars.find_stream_something_in_flag_option_list_and_replace(flag_option_list, inputs_from, AccessKindEnum.STREAM_INPUT)
 
     @staticmethod
     def find_stream_output_in_flag_option_list_and_replace(flag_option_list: List[Union[Flag, OptionWithIO]],
                                                            outputs_to: List[FileNameOrStdDescriptorWithIOInfo]) \
             -> Tuple[List[Union[Flag, OptionWithIO]], int]:
-        return CommandInvocationWithIO.find_stream_something_in_flag_option_list_and_replace(flag_option_list, outputs_to, AccessKindEnum.STREAM_OUTPUT)
+        return CommandInvocationWithIOVars.find_stream_something_in_flag_option_list_and_replace(flag_option_list, outputs_to, AccessKindEnum.STREAM_OUTPUT)
 
     @staticmethod
     def find_stream_something_in_flag_option_list_and_replace(flag_option_list: List[Union[Flag, OptionWithIO]],
@@ -123,13 +127,13 @@ class CommandInvocationWithIOVars:
     def find_stream_input_in_operand_list_and_replace(operand_list: List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]],
                                                       inputs_from: List[FileNameOrStdDescriptorWithIOInfo]) \
             -> Tuple[List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]], int]:
-        return CommandInvocationWithIO.find_stream_something_in_operand_list_and_replace(operand_list, inputs_from, AccessKindEnum.STREAM_INPUT)
+        return CommandInvocationWithIOVars.find_stream_something_in_operand_list_and_replace(operand_list, inputs_from, AccessKindEnum.STREAM_INPUT)
 
     @staticmethod
     def find_stream_output_in_operand_list_and_replace(operand_list: List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]],
                                                        outputs_to: List[FileNameOrStdDescriptorWithIOInfo]) \
             -> Tuple[List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]], int]:
-        return CommandInvocationWithIO.find_stream_something_in_operand_list_and_replace(operand_list, outputs_to, AccessKindEnum.STREAM_INPUT)
+        return CommandInvocationWithIOVars.find_stream_something_in_operand_list_and_replace(operand_list, outputs_to, AccessKindEnum.STREAM_INPUT)
 
     @staticmethod
     def find_stream_something_in_operand_list_and_replace(operand_list: List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]],
@@ -155,7 +159,7 @@ class CommandInvocationWithIOVars:
     def replace_stream_input_in_implicit_use_if_applicable(implicit_use_of_streaming_input: Optional[FileNameOrStdDescriptorWithIOInfo],
                                                            inputs_from: List[FileNameOrStdDescriptorWithIOInfo]) \
             -> Tuple[Optional[FileNameOrStdDescriptorWithIOInfo], int]:
-        if implicit_use_of_streaming_input is not None and implicit_use_of_streaming_input.access.is_stream_input():
+        if implicit_use_of_streaming_input is not None and access_map[implicit_use_of_streaming_input].is_stream_input():
             return (inputs_from[0], 1)
         else:
             return (implicit_use_of_streaming_input, 0)

@@ -53,21 +53,25 @@ FileNameOrStdDescriptorWithIOInfo = Union[FileNameWithIOInfo, StdDescriptorWithI
 
 def add_access_to_stream_output(output_to):
     if isinstance(output_to, FileName):
+        assert(False)
         output_to_with_access: FileNameOrStdDescriptorWithIOInfo = FileNameWithIOInfo.get_from_original(output_to,
                                                                                                         AccessKind.make_stream_output())
     elif isinstance(output_to, StdDescriptor):
+        assert(False)
         output_to_with_access: FileNameOrStdDescriptorWithIOInfo = StdDescriptorWithIOInfo.get_from_original(
             output_to,
             AccessKind.make_stream_output())
-    else:
-        raise Exception("neither FileName nor StdDescriptor")
+    # else:
+        # raise Exception("neither FileName nor StdDescriptor")
     return output_to_with_access
 
 def add_access_to_stream_input(input_from):
     if isinstance(input_from, FileName):
+        assert(False)
         input_from_with_access: FileNameOrStdDescriptorWithIOInfo = FileNameWithIOInfo.get_from_original(input_from,
                                                                                                          AccessKind.make_stream_input())
     elif isinstance(input_from, StdDescriptor):
+        assert(False)
         input_from_with_access: FileNameOrStdDescriptorWithIOInfo = StdDescriptorWithIOInfo.get_from_original(
             input_from,
             AccessKind.make_stream_input())
@@ -85,6 +89,9 @@ class OptionWithIO(BaseClassForBasicDatatypes):
 
     def get_name(self) -> str:
         return self.option_name
+
+    def get_arg(self) -> Union[FileNameOrStdDescriptorWithIOInfo, ArgStringType]:
+        return self.option_arg
 
     def get_arg_with_ioinfo(self) -> Union[FileNameOrStdDescriptorWithIOInfo, ArgStringType]:
         return self.option_arg

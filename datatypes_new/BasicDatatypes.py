@@ -114,7 +114,9 @@ class Operand(BaseClassForBasicDatatypes):
         return self.name
 
     def contains(self, arg):
-        return self.name.__contains__(arg)
+        # return self.name.__contains__(arg)
+        name_as_string = str(self.name)
+        return name_as_string.__contains__(arg)
 
     def to_arg_string_type(self):
         return ArgStringType(self.name)
@@ -124,3 +126,46 @@ class WhichClassForArg(Enum):
     FILESTD = 'filestd'
     ARGSTRING = 'argstring'
     PLAINSTRING = 'str'
+
+# copied from ir_utils
+def format_arg_chars(arg_chars):
+    chars = [format_arg_char(arg_char) for arg_char in arg_chars]
+    return "".join(chars)
+
+##
+## BIG TODO: Fix the formating of arg_chars bask to shell scripts and string.
+##           We need to do this the proper way using the parser.
+##
+def format_arg_char(arg_char):
+    key, val = get_kv(arg_char)
+    if (key == 'C'):
+        return str(chr(val))
+    elif (key == 'B'):
+        # The $() is just for illustration. This is backticks
+        return '$({})'.format(val)
+    elif (key == 'Q'):
+        formated_val = format_arg_chars(val)
+        return '"{}"'.format(formated_val)
+    elif (key == 'V'):
+        return '${{{}}}'.format(val[2])
+    elif (key == 'E'):
+        ## TODO: This is not right. I think the main reason for the
+        ## problems is the differences between bash and the posix
+        ## standard.
+        # log(" -- escape-debug -- ", val, chr(val))
+        non_escape_chars = [92, # \
+                            61, # =
+                            91, # [
+                            93, # ]
+                            45, # -
+                            58, # :
+                            126,# ~
+                            42] # *
+        if(val in non_escape_chars):
+            return '{}'.format(chr(val))
+        else:
+            return '\{}'.format(chr(val))
+    else:
+        log("Cannot format arg_char:", arg_char)
+        ## TODO: Make this correct
+        raise NotImplementedError

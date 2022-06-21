@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Optional, List, Union
 
 from datatypes_new.BasicDatatypesWithIO import OptionWithIO, FileNameOrStdDescriptorWithIOInfo
-from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
+from datatypes_new.CommandInvocationWithIOVars import CommandInvocationWithIOVars
 from util_standard import standard_repr, standard_eq
 from util_new import return_empty_flag_option_list_if_none_else_itself, return_empty_pos_config_list_if_none_else_itself
 
@@ -11,7 +11,7 @@ from annotation_generation_new.datatypes.parallelizability.AggregatorKind import
 from datatypes_new.BasicDatatypes import FlagOption, OptionArgPosConfigType, Flag, ArgStringType
 
 
-class Aggregator(CommandInvocationWithIO):
+class Aggregator(CommandInvocationWithIOVars):
 
     def __init__(self,
                  # depending on kind, the aggregator function will be applied to different inputs, e.g. lines
@@ -23,7 +23,7 @@ class Aggregator(CommandInvocationWithIO):
                  implicit_use_of_streaming_output: Optional[FileNameOrStdDescriptorWithIOInfo],
                  ) -> None:
         self.kind = kind
-        CommandInvocationWithIO.__init__(self, cmd_name, flag_option_list, operand_list, implicit_use_of_streaming_input, implicit_use_of_streaming_output)
+        CommandInvocationWithIOVars.__init__(self, cmd_name, flag_option_list, operand_list, implicit_use_of_streaming_input, implicit_use_of_streaming_output)
 
     def __eq__(self, other: Aggregator) -> bool:
         return standard_eq(self, other)
@@ -32,7 +32,7 @@ class Aggregator(CommandInvocationWithIO):
         return standard_repr(self)
 
     @classmethod
-    def make_aggregator_from_cmd_inv_with_io(cls, cmd_inv: CommandInvocationWithIO, kind: AggregatorKindEnum):
+    def make_aggregator_from_cmd_inv_with_io(cls, cmd_inv: CommandInvocationWithIOVars, kind: AggregatorKindEnum):
         cls(kind, cmd_inv.cmd_name, cmd_inv.flag_option_list, cmd_inv.operand_list,
             cmd_inv.implicit_use_of_streaming_input, cmd_inv.implicit_use_of_streaming_output)
 
