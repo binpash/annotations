@@ -21,9 +21,10 @@ class Aggregator(CommandInvocationWithIOVars):
                  operand_list: List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]],
                  implicit_use_of_streaming_input: Optional[FileNameOrStdDescriptorWithIOInfo],
                  implicit_use_of_streaming_output: Optional[FileNameOrStdDescriptorWithIOInfo],
+                 access_map
                  ) -> None:
         self.kind = kind
-        CommandInvocationWithIOVars.__init__(self, cmd_name, flag_option_list, operand_list, implicit_use_of_streaming_input, implicit_use_of_streaming_output)
+        CommandInvocationWithIOVars.__init__(self, cmd_name, flag_option_list, operand_list, implicit_use_of_streaming_input, implicit_use_of_streaming_output, access_map)
 
     def __eq__(self, other: Aggregator) -> bool:
         return standard_eq(self, other)
@@ -33,8 +34,8 @@ class Aggregator(CommandInvocationWithIOVars):
 
     @classmethod
     def make_aggregator_from_cmd_inv_with_io(cls, cmd_inv: CommandInvocationWithIOVars, kind: AggregatorKindEnum):
-        cls(kind, cmd_inv.cmd_name, cmd_inv.flag_option_list, cmd_inv.operand_list,
-            cmd_inv.implicit_use_of_streaming_input, cmd_inv.implicit_use_of_streaming_output)
+        return cls(kind, cmd_inv.cmd_name, cmd_inv.flag_option_list, cmd_inv.operand_list,
+            cmd_inv.implicit_use_of_streaming_input, cmd_inv.implicit_use_of_streaming_output, cmd_inv.access_map)
 
     # @classmethod
     # def make_aggregator_concatenate(cls) -> Aggregator:

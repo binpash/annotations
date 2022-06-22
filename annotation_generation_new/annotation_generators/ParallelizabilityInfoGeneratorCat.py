@@ -17,6 +17,7 @@ class ParallelizabilityInfoGeneratorCat(ParallelizabilityInfoGeneratorInterface)
     # for -n and -s, we could only do with a 2nd pass so we omit this for now
 
     def generate_info(self) -> None:
+        return []
         if not self.does_number_non_empty_output_lines():
             # Case analysis on combinations of squeeze and numbering all output lines
             if not self.does_squeeze_repeated_empty_output_lines() and not self.does_number_all_output_lines():

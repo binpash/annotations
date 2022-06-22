@@ -1,12 +1,14 @@
 from __future__ import annotations
+from copy import deepcopy
 from typing import Optional, List, Literal
 
 from abc import ABC, abstractmethod
 
 from util_standard import standard_repr, standard_eq
 
-from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
+from datatypes_new.CommandInvocationWithIOVars import CommandInvocationWithIOVars
 from datatypes_new.BasicDatatypes import FileNameOrStdDescriptor
+from datatypes_new.AccessKind import AccessKind
 from annotation_generation_new.datatypes.parallelizability.TransformerFlagOptionList import TransformerFlagOptionList
 # from annotation_generation_new.datatypes.parallelizability.TransformerPosConfigList import TransformerPosConfigList
 from annotation_generation_new.datatypes.parallelizability.AggregatorKind import AggregatorKindEnum
@@ -147,15 +149,16 @@ class AggregatorSpecNonFunc(AggregatorSpec):
         if not self.is_implemented:
             return None
         if self.kind == AggregatorKindEnum.CONCATENATE:
-            # TODO
-            return None
+            return CommandInvocationWithIOVars.make_cat_command_invocation_with_io_vars(inputs_from, output_to)
         elif self.kind == AggregatorKindEnum.ADJ_LINES_MERGE:
             assert(len(inputs_from) == 1)
+            assert(False)
             # TODO
             # tr -d '\n' | sed '$a\' seems to do the job -> @KK: Can we join this in one command so no sequence of commands?
             return None
         elif self.kind == AggregatorKindEnum.ADJ_LINES_SEQ:
             assert(len(inputs_from) == 1)
+            assert(False)
             # TODO
             return None
 
@@ -185,9 +188,17 @@ class AggregatorSpecFuncTransformer(AggregatorSpec):
             assert(len(inputs_from) == 1)
         elif self.kind == AggregatorKindEnum.CUSTOM_2_ARY:
             assert(len(inputs_from) == 2)
-        original_cmd_invocation.flag_option_list = self.flag_option_list_transformer.get_flag_option_list_after_transformer_application(original_cmd_invocation.flag_option_list)
-        original_cmd_invocation.substitute_inputs_and_outputs_in_cmd_invocation(inputs_from, [output_to])
-        return Aggregator.make_aggregator_from_cmd_inv_with_io(original_cmd_invocation, self.kind)
+        aggregator_cmd_inv = deepcopy(original_cmd_invocation)
+        aggregator_cmd_inv.flag_option_list = self.flag_option_list_transformer.get_flag_option_list_after_transformer_application(original_cmd_invocation.flag_option_list)
+        # access map modifications
+        # Hard-coded how to provide input and get output -> TODO: move to spec
+        aggregator_cmd_inv.remove_streaming_inputs()
+        aggregator_cmd_inv.operand_list = inputs_from
+        for input_id in inputs_from:
+            assert not input_id in aggregator_cmd_inv.access_map
+            aggregator_cmd_inv.access_map[input_id] = AccessKind.make_stream_input()
+        aggregator_cmd_inv.replace_var(aggregator_cmd_inv.implicit_use_of_streaming_output, output_to)
+        return Aggregator.make_aggregator_from_cmd_inv_with_io(aggregator_cmd_inv, self.kind)
 
 
 class AggregatorSpecFuncStringRepresentation(AggregatorSpec):
