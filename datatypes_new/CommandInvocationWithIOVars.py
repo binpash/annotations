@@ -105,11 +105,13 @@ class CommandInvocationWithIOVars:
         new_flag_option_list = []
         for i in range(len(self.flag_option_list)):
             new_flag_option_list += function_to_apply(self.flag_option_list[i])
+        self.flag_option_list = new_flag_option_list
 
     def flat_map_aux_operand_list(self, function_to_apply):
         new_operand_list = []
         for i in range(len(self.operand_list)):
-            new_operand_list = function_to_apply(self.operand_list[i])
+            new_operand_list += function_to_apply(self.operand_list[i])
+        self.operand_list = new_operand_list
 
     def flat_map_aux_implicit_streaming_input(self, function_to_apply):
         result = function_to_apply(self.implicit_use_of_streaming_input)

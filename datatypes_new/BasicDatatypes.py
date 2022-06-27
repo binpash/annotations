@@ -113,10 +113,11 @@ class Operand(BaseClassForBasicDatatypes):
     def get_name(self) -> str:
         return self.name
 
-    def contains(self, arg):
-        # return self.name.__contains__(arg)
+    def contains_new_line(self):
         name_as_string = str(self.name)
-        return name_as_string.__contains__(arg)
+        result = name_as_string.find(r"\n") > 0
+        print("result: ", result)
+        return result
 
     def to_arg_string_type(self):
         return ArgStringType(self.name)

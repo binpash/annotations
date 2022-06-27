@@ -37,7 +37,9 @@ class ParallelizabilityInfoGeneratorTr(ParallelizabilityInfoGeneratorInterface):
         # TODO: refactor
         last_operand: Operand = self.cmd_inv.operand_list[-1]
         # is contained if (a) no -c and in set, or (b) -c and not in set
-        last_operand_contains_newline: bool = last_operand.contains("\n")
+        print("cmd_inv", str(self.cmd_inv))
+        last_operand_contains_newline: bool = last_operand.contains_new_line()
+        print("last_operand_contains_newline", last_operand_contains_newline)
         if len(self.cmd_inv.operand_list) == 1 and self.does_flag_option_list_contain_at_least_one_of(["-c"]):
             return not last_operand_contains_newline
         else:  # '-c' (if existent) does not refer to the given set
