@@ -115,9 +115,7 @@ class Operand(BaseClassForBasicDatatypes):
 
     def contains_new_line(self):
         name_as_string = str(self.name)
-        result = name_as_string.find(r"\n") > 0
-        print("result: ", result)
-        return result
+        return name_as_string.find(r"\n") > 0
 
     def to_arg_string_type(self):
         return ArgStringType(self.name)
