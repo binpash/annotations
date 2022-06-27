@@ -62,6 +62,9 @@ class AggregatorSpec(ABC):
                        ) -> Optional[Aggregator]:
         pass
 
+    def get_kind(self):
+        return self.kind
+
     @staticmethod
     def make_aggregator_spec_concatenate() -> AggregatorSpec:
         return AggregatorSpecNonFunc(AggregatorKindEnum.CONCATENATE, is_implemented=True)
