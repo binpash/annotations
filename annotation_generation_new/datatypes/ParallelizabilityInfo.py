@@ -9,6 +9,7 @@ class ParallelizabilityInfo:
 
     def __init__(self,
                  parallelizer_list: Optional[List[Parallelizer]] = None,    # None translates to empty list
+                 # TODO: change these flags to dict using CommandProperties
                  round_robin_compatible_with_cat: bool  = False,
                  is_commutative: bool = False
                  ) -> None:
@@ -21,6 +22,9 @@ class ParallelizabilityInfo:
 
     def append_to_parallelizer_list(self, parallelizer: Parallelizer) -> None:
         self.parallelizer_list.append(parallelizer)
+
+    def set_commutative(self) -> None:
+        self.is_commutative = True
 
     def unpack_info(self) -> Tuple[List[Parallelizer], bool, bool]:
         return self.parallelizer_list, self.round_robin_compatible_with_cat, self.is_commutative

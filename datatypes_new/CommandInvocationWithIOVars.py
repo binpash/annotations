@@ -164,6 +164,16 @@ class CommandInvocationWithIOVars:
                return [el]
         self.flat_map_anything(function_to_apply)
 
+    def remove_streaming_outputs(self):
+        # TODO: check whether this removes options with streaming output
+        def function_to_apply(el):
+            if isinstance(el, int) and self.access_map[el].is_stream_output():
+                self.access_map.pop(el)
+                return []
+            else:
+                return [el]
+        self.flat_map_anything(function_to_apply)
+
 
     # for test cases:
     def get_operands_with_config_input(self) -> List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]]:
