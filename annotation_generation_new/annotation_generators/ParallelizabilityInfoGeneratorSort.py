@@ -30,6 +30,6 @@ class ParallelizabilityInfoGeneratorSort(ParallelizabilityInfoGeneratorInterface
                                                                                is_implemented=True)
             # Build parallelizers and append
             parallelizer_if_seq_cus = Parallelizer.make_parallelizer_indiv_files(aggregator_spec=aggregator_spec)
-            parallelizer_rr_seq_cus = Parallelizer.make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
+            parallelizer_cc_seq_cus = Parallelizer.make_parallelizer_consec_chunks(aggregator_spec=aggregator_spec)
             self.append_to_parallelizer_list(parallelizer_if_seq_cus)
-            self.append_to_parallelizer_list(parallelizer_rr_seq_cus)
+            self.append_to_parallelizer_list(parallelizer_cc_seq_cus)

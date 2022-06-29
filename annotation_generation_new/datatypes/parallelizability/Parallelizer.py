@@ -39,6 +39,12 @@ class Parallelizer:
         self.core_aggregator_spec: AggregatorSpec = core_aggregator_spec
         self.info_splitter_mapper: AdditionalInfoSplitterToMapper = return_default_if_none_else_itself(info_splitter_mapper, AdditionalInfoSplitterToMapper.NO_ADD_INPUT)
         self.info_mapper_aggregator = return_default_if_none_else_itself(info_mapper_aggregator, AdditionalInfoMapperToAggregator.NO_ADD_INPUT)
+        # sanity check that round robin is only applied with following aggregators:
+        if self.splitter.is_splitter_round_robin():
+            assert(self.core_aggregator_spec.is_aggregator_spec_concatenate() or
+                   self.core_aggregator_spec.is_aggregator_spec_adj_lines_merge() or
+                   self.core_aggregator_spec.is_aggregator_spec_adj_lines_seq() or
+                   self.core_aggregator_spec.is_aggregator_spec_adj_lines_func())
 
     def __eq__(self, other: Parallelizer) -> bool:
         return standard_eq(self, other)
@@ -96,12 +102,14 @@ class Parallelizer:
         return Parallelizer(Splitter.make_splitter_round_robin(), mapper_spec, aggregator_spec, info_splitter_mapper, info_mapper_aggregator)
 
     @staticmethod
-    # TODO: rename
-    def make_parallelizer_consec_junks(mapper_spec: Optional[MapperSpec]=None,
-                                       aggregator_spec: Optional[AggregatorSpec]=None,
-                                       info_splitter_mapper: Optional[AdditionalInfoSplitterToMapper] = None,
-                                       info_mapper_aggregator: Optional[AdditionalInfoMapperToAggregator] = None
-                                       ) -> Parallelizer:
+    def make_parallelizer_consec_chunks(mapper_spec: Optional[MapperSpec]=None,
+                                        aggregator_spec: Optional[AggregatorSpec]=None,
+                                        info_splitter_mapper: Optional[AdditionalInfoSplitterToMapper] = None,
+                                        info_mapper_aggregator: Optional[AdditionalInfoMapperToAggregator] = None
+                                        ) -> Parallelizer:
         mapper_spec = MapperSpec.return_mapper_spec_seq_if_none_else_itself(mapper_spec)
         aggregator_spec = AggregatorSpec.return_aggregator_conc_if_none_else_itself(aggregator_spec)
         return Parallelizer(Splitter.make_splitter_consec_chunks(), mapper_spec, aggregator_spec, info_splitter_mapper, info_mapper_aggregator)
+
+    def are_all_parts_implemented(self):
+        return self.core_mapper_spec.is_implemented and self.core_aggregator_spec.is_implemented

@@ -50,6 +50,24 @@ class AggregatorSpec(ABC):
     def __repr__(self) -> str:
         return standard_repr(self)
 
+    def is_aggregator_spec_concatenate(self):
+        return self.kind == AggregatorKindEnum.CONCATENATE
+
+    def is_aggregator_spec_adj_lines_merge(self):
+        return self.kind == AggregatorKindEnum.ADJ_LINES_MERGE
+
+    def is_aggregator_spec_adj_lines_seq(self):
+        return self.kind == AggregatorKindEnum.ADJ_LINES_SEQ
+
+    def is_aggregator_spec_adj_lines_func(self):
+        return self.kind == AggregatorKindEnum.ADJ_LINES_FUNC
+
+    def is_aggregator_spec_custom_2_ary(self):
+        return self.kind == AggregatorKindEnum.CUSTOM_2_ARY
+
+    def is_aggregator_spec_custom_n_ary(self):
+        return self.kind == AggregatorKindEnum.CUSTOM_N_ARY
+
     # Spec shall be hold by PaSh and once needed, gets actual aggregator from this function
     # return value None if it is not yet implemented
     # PaSh ought to provide the correct input based on the kind of aggregator, e.g., line

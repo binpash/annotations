@@ -17,6 +17,9 @@ class Splitter:
     def is_splitter_round_robin(self) -> bool:
         return self.kind == SplitterKindEnum.ROUND_ROBIN
 
+    def is_splitter_consec_chunks(self) -> bool:
+        return self.kind == SplitterKindEnum.CONSEC_CHUNKS
+
     @staticmethod
     def make_splitter_indiv_files() -> Splitter:
         return Splitter(SplitterKindEnum.INDIV_FILES)
