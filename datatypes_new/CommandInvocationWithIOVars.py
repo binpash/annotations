@@ -101,19 +101,24 @@ class CommandInvocationWithIOVars:
         function_to_apply_to_var = lambda el: self.replace_var_consistently(from_var, to_var) if el == from_var else el
         self.map_var(function_to_apply_to_var)
 
-    def flat_map_aux_flag_option_list(self, function_to_apply):
+    def flat_map_non_names_aux_flag_option_list(self, function_to_apply):
         new_flag_option_list = []
         for i in range(len(self.flag_option_list)):
-            new_flag_option_list += function_to_apply(self.flag_option_list[i])
+            flagoption = self.flag_option_list[i]
+            if isinstance(flagoption, OptionWithIO):
+                [new_option_arg] = function_to_apply(flagoption.option_arg)
+                new_flag_option_list.append(OptionWithIO(flagoption.option_name, new_option_arg))
+            else:
+                new_flag_option_list.append(flagoption)
         self.flag_option_list = new_flag_option_list
 
-    def flat_map_aux_operand_list(self, function_to_apply):
+    def flat_map_non_names_aux_operand_list(self, function_to_apply):
         new_operand_list = []
         for i in range(len(self.operand_list)):
             new_operand_list += function_to_apply(self.operand_list[i])
         self.operand_list = new_operand_list
 
-    def flat_map_aux_implicit_streaming_input(self, function_to_apply):
+    def flat_map_non_names_aux_implicit_streaming_input(self, function_to_apply):
         result = function_to_apply(self.implicit_use_of_streaming_input)
         if result == []:
             self.implicit_use_of_streaming_input = None
@@ -121,7 +126,7 @@ class CommandInvocationWithIOVars:
             assert len(result) == 1
             self.implicit_use_of_streaming_input = result[0]
 
-    def flat_map_aux_implicit_streaming_output(self, function_to_apply):
+    def flat_map_non_names_aux_implicit_streaming_output(self, function_to_apply):
         result = function_to_apply(self.implicit_use_of_streaming_output)
         if result == []:
             self.implicit_use_of_streaming_output = None
@@ -130,15 +135,16 @@ class CommandInvocationWithIOVars:
             self.implicit_use_of_streaming_output = result[0]
 
     # this determines the order in which CMDInvocations are traversed
-    def flat_map_anything(self, function_to_apply):
-        self.flat_map_aux_flag_option_list(function_to_apply)
-        self.flat_map_aux_operand_list(function_to_apply)
-        self.flat_map_aux_implicit_streaming_input(function_to_apply)
-        self.flat_map_aux_implicit_streaming_output(function_to_apply)
+    # _non_names as we descend into option arguments and leave option and flag names unchanged/unchecked
+    def flat_map_anything_non_names(self, function_to_apply):
+        self.flat_map_non_names_aux_flag_option_list(function_to_apply)
+        self.flat_map_non_names_aux_operand_list(function_to_apply)
+        self.flat_map_non_names_aux_implicit_streaming_input(function_to_apply)
+        self.flat_map_non_names_aux_implicit_streaming_output(function_to_apply)
 
     def map_var(self, function_to_apply_to_vars):
         function_to_apply_to_anything = lambda el: [function_to_apply_to_vars(el)] if isinstance(el, int) else [el]
-        self.flat_map_anything(function_to_apply_to_anything)
+        self.flat_map_anything_non_names(function_to_apply_to_anything)
 
     # TODO: move to util-file command-invocation helpers
     @staticmethod
@@ -162,7 +168,7 @@ class CommandInvocationWithIOVars:
                return []
            else:
                return [el]
-        self.flat_map_anything(function_to_apply)
+        self.flat_map_anything_non_names(function_to_apply)
 
     def remove_streaming_outputs(self):
         # TODO: check whether this removes options with streaming output
@@ -172,7 +178,7 @@ class CommandInvocationWithIOVars:
                 return []
             else:
                 return [el]
-        self.flat_map_anything(function_to_apply)
+        self.flat_map_anything_non_names(function_to_apply)
 
 
     # for test cases:
