@@ -27,10 +27,12 @@ class ParallelizabilityInfoGeneratorTr(ParallelizabilityInfoGeneratorInterface):
                                       self.does_last_set_effectively_contain_newline()
         if does_delete_newlines or does_squeeze_newlines:
             # for RR, we need an adjacent aggregator
+            self.append_to_parallelizer_list_cc_seq_adjm()
             self.append_to_parallelizer_list_rr_seq_adjm()
             # TO CHECK: at the end, it should be a single line; this should work if we fold over results
         else:
             # for RR, we can just use concatenation
+            self.append_to_parallelizer_list_cc_seq_conc()
             self.append_to_parallelizer_list_rr_seq_conc()
 
     def does_last_set_effectively_contain_newline(self) -> bool:

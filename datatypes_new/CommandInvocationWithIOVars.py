@@ -37,6 +37,9 @@ class CommandInvocationWithIOVars:
     def __eq__(self, other: CommandInvocationWithIOVars):
         return standard_eq(self, other)
 
+    def is_aggregator_concatenate(self): # needed since isinstance(_, Aggregator) does not work
+        return False
+
     @staticmethod
     def get_from_without_vars(cmd_inv_with_io: CommandInvocationWithIOVars, access_map):
         return CommandInvocationWithIOVars(cmd_name=cmd_inv_with_io.cmd_name,

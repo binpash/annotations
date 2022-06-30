@@ -47,6 +47,15 @@ class ParallelizabilityInfoGeneratorInterface(Generator_Interface, ABC):
         parallelizer_rr_seq_adjm = Parallelizer.make_parallelizer_indiv_files(aggregator_spec=aggregator_spec)
         self.append_to_parallelizer_list(parallelizer_rr_seq_adjm)
 
+    def append_to_parallelizer_list_cc_seq_conc(self) -> None:
+        parallelizer_cc_seq_conc: Parallelizer = Parallelizer.make_parallelizer_consec_chunks()
+        self.append_to_parallelizer_list(parallelizer_cc_seq_conc)
+
+    def append_to_parallelizer_list_cc_seq_adjm(self) -> None:
+        aggregator_spec = AggregatorSpec.make_aggregator_spec_adj_lines_merge()
+        parallelizer_cc_seq_adjm = Parallelizer.make_parallelizer_consec_chunks(aggregator_spec=aggregator_spec)
+        self.append_to_parallelizer_list(parallelizer_cc_seq_adjm)
+
     def append_to_parallelizer_list_rr_seq_conc(self) -> None:
         parallelizer_rr_seq_conc: Parallelizer = Parallelizer.make_parallelizer_round_robin()
         self.append_to_parallelizer_list(parallelizer_rr_seq_conc)

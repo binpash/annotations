@@ -170,7 +170,8 @@ class AggregatorSpecNonFunc(AggregatorSpec):
         if not self.is_implemented:
             return None
         if self.kind == AggregatorKindEnum.CONCATENATE:
-            return CommandInvocationWithIOVars.make_cat_command_invocation_with_io_vars(inputs_from, output_to)
+            cmd_inv_cat = CommandInvocationWithIOVars.make_cat_command_invocation_with_io_vars(inputs_from, output_to)
+            return Aggregator.make_aggregator_from_cmd_inv_with_io(cmd_inv_cat, self.kind)
         elif self.kind == AggregatorKindEnum.ADJ_LINES_MERGE:
             assert(len(inputs_from) == 1)
             assert(False)

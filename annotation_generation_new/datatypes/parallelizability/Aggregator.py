@@ -32,6 +32,9 @@ class Aggregator(CommandInvocationWithIOVars):
     def __repr__(self) -> str:
         return standard_repr(self)
 
+    def is_aggregator_concatenate(self):
+        return self.kind == AggregatorKindEnum.CONCATENATE
+
     @classmethod
     def make_aggregator_from_cmd_inv_with_io(cls, cmd_inv: CommandInvocationWithIOVars, kind: AggregatorKindEnum):
         return cls(kind, cmd_inv.cmd_name, cmd_inv.flag_option_list, cmd_inv.operand_list,
