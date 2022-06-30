@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+from copy import deepcopy
 from typing import Optional, List
 
 from util_standard import standard_eq
@@ -100,6 +102,12 @@ class Parallelizer:
         mapper_spec = MapperSpec.return_mapper_spec_seq_if_none_else_itself(mapper_spec)
         aggregator_spec = AggregatorSpec.return_aggregator_conc_if_none_else_itself(aggregator_spec)
         return Parallelizer(Splitter.make_splitter_round_robin(), mapper_spec, aggregator_spec, info_splitter_mapper, info_mapper_aggregator)
+
+    @staticmethod
+    def make_parallelizer_round_robin_with_unwrap_from_other(parallelizer):
+        new_parallelizer = deepcopy(parallelizer)
+        new_parallelizer.splitter = Splitter.make_splitter_round_robin_with_unwrap()
+        return new_parallelizer
 
     @staticmethod
     def make_parallelizer_consec_chunks(mapper_spec: Optional[MapperSpec]=None,
