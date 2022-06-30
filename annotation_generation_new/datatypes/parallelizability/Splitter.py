@@ -15,7 +15,10 @@ class Splitter:
         return f'{self.kind}'
 
     def is_splitter_round_robin(self) -> bool:
-        return self.kind == SplitterKindEnum.ROUND_ROBIN
+        return self.kind == SplitterKindEnum.ROUND_ROBIN_PLAIN
+
+    def is_splitter_round_robin_with_unwrap_flag(self) -> bool:
+        return self.kind == SplitterKindEnum.ROUND_ROBIN_UNWRAP_FLAG
 
     def is_splitter_consec_chunks(self) -> bool:
         return self.kind == SplitterKindEnum.CONSEC_CHUNKS
@@ -26,7 +29,11 @@ class Splitter:
 
     @staticmethod
     def make_splitter_round_robin() -> Splitter:
-        return Splitter(SplitterKindEnum.ROUND_ROBIN)
+        return Splitter(SplitterKindEnum.ROUND_ROBIN_PLAIN)
+
+    @staticmethod
+    def make_splitter_round_robin_with_unwrap() -> Splitter:
+        return Splitter(SplitterKindEnum.ROUND_ROBIN_UNWRAP_FLAG)
 
     @staticmethod
     def make_splitter_consec_chunks() -> Splitter:
@@ -35,6 +42,7 @@ class Splitter:
 
 class SplitterKindEnum(Enum):
     INDIV_FILES = 1
-    ROUND_ROBIN = 2
-    CONSEC_CHUNKS = 3
+    ROUND_ROBIN_PLAIN = 2
+    ROUND_ROBIN_UNWRAP_FLAG = 3
+    CONSEC_CHUNKS = 4
 
