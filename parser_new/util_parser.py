@@ -10,7 +10,6 @@ def get_json_data(cmd_name):
         with open(command_json_fn_absolute) as f:
             json_data = json.load(f)
     except FileNotFoundError:
-        print(f'Error: File {command_json_fn_absolute} not found.')
         raise Exception(f'File {command_json_fn_absolute} not found.')
     return json_data
 
