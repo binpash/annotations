@@ -21,5 +21,8 @@ setup(name='annotations',
     #   packages=find_packages(),
     #   package_data={'': ['command_flag_option_info/data/*.json']},
     #   data_files=[('', ['command_flag_option_info/data/*.json'])],
-      include_package_data=True
+      include_package_data=True,
+      install_requires=[
+        "future-annotations ; python_version<'3.7'",
+      ]
       )
