@@ -1,4 +1,4 @@
-from __future__ import annotations
+#from __future__ import annotations
 from util_new import standard_eq, standard_repr
 from enum import Enum
 

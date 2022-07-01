@@ -1,4 +1,4 @@
-from __future__ import annotations
+#from __future__ import annotations
 from util_standard import standard_repr
 from typing import List, Optional, Tuple
 from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer

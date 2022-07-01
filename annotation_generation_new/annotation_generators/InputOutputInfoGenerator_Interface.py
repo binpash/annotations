@@ -1,4 +1,4 @@
-from __future__ import annotations
+#from __future__ import annotations
 from typing import List, Tuple, Optional, Union, Literal
 
 from config_new.definitions import INDICATORS_FOR_FILENAMES
