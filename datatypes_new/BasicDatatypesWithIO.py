@@ -1,4 +1,4 @@
-#from __future__ import annotations
+from __future__ import annotations
 from typing import Union
 from datatypes_new.BasicDatatypes import FileName, StdDescriptor, StdDescriptorEnum, Operand, BaseClassForBasicDatatypes, ArgStringType
 from datatypes_new.AccessKind import AccessKind

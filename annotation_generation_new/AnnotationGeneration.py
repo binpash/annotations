@@ -1,5 +1,5 @@
 # imports for typing
-# from __future__ import annotations
+from __future__ import annotations
 from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from annotation_generation_new.datatypes.InputOutputInfo import InputOutputInfo
 from annotation_generation_new.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
