@@ -74,7 +74,7 @@ class AggregatorSpec(ABC):
     # for CONCATENATE and CUSTOM_N_ARY, we need to provide the number of inputs to give back
     @abstractmethod
     def get_aggregator(self,
-                       original_cmd_invocation: CommandInvocationWithIO,
+                       original_cmd_invocation: CommandInvocationWithIOVars,
                        inputs_from: List[FileNameOrStdDescriptor],
                        output_to: FileNameOrStdDescriptor
                        ) -> Optional[Aggregator]:
@@ -163,7 +163,7 @@ class AggregatorSpecNonFunc(AggregatorSpec):
         AggregatorSpec.__init__(self, kind, is_implemented)
 
     def get_aggregator(self,
-                       original_cmd_invocation: CommandInvocationWithIO,
+                       original_cmd_invocation: CommandInvocationWithIOVars,
                        inputs_from: List[FileNameOrStdDescriptor],
                        output_to: FileNameOrStdDescriptor
                        ) -> Optional[Aggregator]:
@@ -199,7 +199,7 @@ class AggregatorSpecFuncTransformer(AggregatorSpec):
 
     # note that this changes the parameter original_cmd_invocation
     def get_aggregator(self,
-                       original_cmd_invocation: CommandInvocationWithIO,
+                       original_cmd_invocation: CommandInvocationWithIOVars,
                        inputs_from: List[FileNameOrStdDescriptor],
                        output_to: FileNameOrStdDescriptor
                        ) -> Optional[Aggregator]:
@@ -215,7 +215,7 @@ class AggregatorSpecFuncTransformer(AggregatorSpec):
         # access map modifications
         # Hard-coded how to provide input and get output -> TODO: move to spec
         aggregator_cmd_inv.remove_streaming_inputs()
-        aggregator_cmd_inv.operand_list = inputs_from
+        aggregator_cmd_inv.operand_list = inputs_from # TODO: fix typing
         for input_id in inputs_from:
             assert not input_id in aggregator_cmd_inv.access_map
             aggregator_cmd_inv.access_map[input_id] = AccessKind.make_stream_input()
@@ -234,7 +234,7 @@ class AggregatorSpecFuncStringRepresentation(AggregatorSpec):
         self.cmd_inv_as_str = cmd_inv_as_str
 
     def get_aggregator(self,
-                       original_cmd_invocation: CommandInvocationWithIO,
+                       original_cmd_invocation: CommandInvocationWithIOVars,
                        inputs_from: List[FileNameOrStdDescriptor],
                        output_to: FileNameOrStdDescriptor
                        ) -> Optional[Aggregator]:

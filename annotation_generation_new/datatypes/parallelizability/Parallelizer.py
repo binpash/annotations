@@ -3,6 +3,7 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Optional, List
 
+from datatypes_new.CommandInvocationWithIOVars import CommandInvocationWithIOVars
 from util_standard import standard_eq
 from util_new import return_default_if_none_else_itself
 
@@ -74,7 +75,7 @@ class Parallelizer:
         return self.core_aggregator_spec
 
     def get_actual_aggregator(self,
-                              cmd_invocation: CommandInvocationWithIO,
+                              cmd_invocation: CommandInvocationWithIOVars,
                               inputs_from: List[FileNameOrStdDescriptor],
                               output_to: FileNameOrStdDescriptor) \
              -> Optional[Aggregator]:

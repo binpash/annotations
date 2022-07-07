@@ -61,8 +61,8 @@ def add_access_to_stream_output(output_to):
         output_to_with_access: FileNameOrStdDescriptorWithIOInfo = StdDescriptorWithIOInfo.get_from_original(
             output_to,
             AccessKind.make_stream_output())
-    # else:
-        # raise Exception("neither FileName nor StdDescriptor")
+    else:
+        raise Exception("neither FileName nor StdDescriptor")
     return output_to_with_access
 
 def add_access_to_stream_input(input_from):
