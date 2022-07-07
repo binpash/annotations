@@ -38,7 +38,7 @@ class StdDescriptor(BaseClassForBasicDatatypes):
     def get_name(self) -> str:
         return str(self.name)
 
-    def get_type(self) -> str:
+    def get_type(self) -> StdDescriptorEnum:
         return self.name
 
     @staticmethod
@@ -165,6 +165,10 @@ def format_arg_char(arg_char):
         else:
             return '\{}'.format(chr(val))
     else:
-        log("Cannot format arg_char:", arg_char)
+        # log("Cannot format arg_char:", arg_char)
         ## TODO: Make this correct
         raise NotImplementedError
+
+## This function gets a key and a value from the ast json format
+def get_kv(dic):
+    return (dic[0], dic[1])
