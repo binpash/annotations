@@ -1,7 +1,7 @@
-from __future__ import annotations
 from util_standard import standard_repr
 from typing import List, Optional, Tuple
-from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer
+from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer, \
+    make_parallelizer_round_robin_with_unwrap_from_other
 
 from util_new import return_empty_list_if_none_else_itself
 
@@ -32,7 +32,7 @@ class ParallelizabilityInfo:
         parallelizer_list = self.parallelizer_list
         for parallelizer in self.parallelizer_list:
             if self.is_commutative and parallelizer.splitter.is_splitter_consec_chunks():
-                parallelizer_list.append(Parallelizer.make_parallelizer_round_robin_with_unwrap_from_other(parallelizer))
+                parallelizer_list.append(make_parallelizer_round_robin_with_unwrap_from_other(parallelizer))
         return parallelizer_list
 
     def unpack_info(self) -> Tuple[List[Parallelizer], bool, bool]:

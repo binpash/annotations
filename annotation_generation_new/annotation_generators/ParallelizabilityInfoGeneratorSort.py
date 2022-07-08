@@ -1,6 +1,8 @@
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGenerator_Interface import ParallelizabilityInfoGeneratorInterface
-from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import AggregatorSpec
-from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer
+from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import \
+    make_aggregator_spec_custom_2_ary_from_cmd_inv_with_transformers
+from annotation_generation_new.datatypes.parallelizability.Parallelizer import \
+    make_parallelizer_indiv_files, make_parallelizer_consec_chunks
 from annotation_generation_new.datatypes.parallelizability.TransformerFlagOptionList import TransformerFlagOptionListFilter, \
     TransformerFlagOptionListAdd, ChainTransformerFlagOptionList
 from datatypes_new.BasicDatatypes import Flag, Option, ArgStringType
@@ -25,11 +27,11 @@ class ParallelizabilityInfoGeneratorSort(ParallelizabilityInfoGeneratorInterface
             chain_transformer_flag_option_list: ChainTransformerFlagOptionList = \
                 ChainTransformerFlagOptionList([transformer_flag_option_list_filter, transformer_flag_option_list_add])
             # TODO: change this to n instead of 2 but we keep this for testing aggregator trees for now
-            aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary_from_cmd_inv_with_transformers(
+            aggregator_spec = make_aggregator_spec_custom_2_ary_from_cmd_inv_with_transformers(
                                                                                flag_option_list_transformer=chain_transformer_flag_option_list,
                                                                                is_implemented=True)
             # Build parallelizers and append
-            parallelizer_if_seq_cus = Parallelizer.make_parallelizer_indiv_files(aggregator_spec=aggregator_spec)
-            parallelizer_cc_seq_cus = Parallelizer.make_parallelizer_consec_chunks(aggregator_spec=aggregator_spec)
+            parallelizer_if_seq_cus = make_parallelizer_indiv_files(aggregator_spec=aggregator_spec)
+            parallelizer_cc_seq_cus = make_parallelizer_consec_chunks(aggregator_spec=aggregator_spec)
             self.append_to_parallelizer_list(parallelizer_if_seq_cus)
             self.append_to_parallelizer_list(parallelizer_cc_seq_cus)

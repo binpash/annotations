@@ -1,17 +1,13 @@
-from __future__ import annotations
-from typing import List, Union
-
 from abc import ABC, abstractmethod
 
 from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
-from datatypes_new.BasicDatatypes import FlagOption
 
 from annotation_generation_new.annotation_generators.Generator_Interface import Generator_Interface
 
-from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer
-from annotation_generation_new.datatypes.parallelizability.Splitter import Splitter
-from annotation_generation_new.datatypes.parallelizability.MapperSpec import MapperSpec
-from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import AggregatorSpec
+from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer, \
+    make_parallelizer_indiv_files, make_parallelizer_consec_chunks, make_parallelizer_round_robin
+from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import AggregatorSpec, \
+    make_aggregator_spec_adj_lines_merge, make_aggregator_spec_adj_lines_seq
 from annotation_generation_new.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
 
 
@@ -39,35 +35,35 @@ class ParallelizabilityInfoGeneratorInterface(Generator_Interface, ABC):
         self.parallelizability_info.append_to_parallelizer_list(parallelizer)
 
     def append_to_parallelizer_list_if_seq_conc(self) -> None:
-        parallelizer_if_seq_conc: Parallelizer = Parallelizer.make_parallelizer_indiv_files()
+        parallelizer_if_seq_conc: Parallelizer = make_parallelizer_indiv_files()
         self.append_to_parallelizer_list(parallelizer_if_seq_conc)
 
     def append_to_parallelizer_list_if_seq_adjm(self) -> None:
-        aggregator_spec = AggregatorSpec.make_aggregator_spec_adj_lines_merge()
-        parallelizer_rr_seq_adjm = Parallelizer.make_parallelizer_indiv_files(aggregator_spec=aggregator_spec)
+        aggregator_spec = make_aggregator_spec_adj_lines_merge()
+        parallelizer_rr_seq_adjm = make_parallelizer_indiv_files(aggregator_spec=aggregator_spec)
         self.append_to_parallelizer_list(parallelizer_rr_seq_adjm)
 
     def append_to_parallelizer_list_cc_seq_conc(self) -> None:
-        parallelizer_cc_seq_conc: Parallelizer = Parallelizer.make_parallelizer_consec_chunks()
+        parallelizer_cc_seq_conc: Parallelizer = make_parallelizer_consec_chunks()
         self.append_to_parallelizer_list(parallelizer_cc_seq_conc)
 
     def append_to_parallelizer_list_cc_seq_adjm(self) -> None:
-        aggregator_spec = AggregatorSpec.make_aggregator_spec_adj_lines_merge()
-        parallelizer_cc_seq_adjm = Parallelizer.make_parallelizer_consec_chunks(aggregator_spec=aggregator_spec)
+        aggregator_spec = make_aggregator_spec_adj_lines_merge()
+        parallelizer_cc_seq_adjm = make_parallelizer_consec_chunks(aggregator_spec=aggregator_spec)
         self.append_to_parallelizer_list(parallelizer_cc_seq_adjm)
 
     def append_to_parallelizer_list_rr_seq_conc(self) -> None:
-        parallelizer_rr_seq_conc: Parallelizer = Parallelizer.make_parallelizer_round_robin()
+        parallelizer_rr_seq_conc: Parallelizer = make_parallelizer_round_robin()
         self.append_to_parallelizer_list(parallelizer_rr_seq_conc)
 
     def append_to_parallelizer_list_rr_seq_adjm(self) -> None:
-        aggregator_spec = AggregatorSpec.make_aggregator_spec_adj_lines_merge()
-        parallelizer_rr_seq_adjm = Parallelizer.make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
+        aggregator_spec = make_aggregator_spec_adj_lines_merge()
+        parallelizer_rr_seq_adjm = make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
         self.append_to_parallelizer_list(parallelizer_rr_seq_adjm)
 
     def append_to_parallelizer_list_rr_seq_adjs(self) -> None:
-        aggregator_spec = AggregatorSpec.make_aggregator_spec_adj_lines_seq()
-        parallelizer_rr_seq_adjs = Parallelizer.make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
+        aggregator_spec = make_aggregator_spec_adj_lines_seq()
+        parallelizer_rr_seq_adjs = make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
         self.append_to_parallelizer_list(parallelizer_rr_seq_adjs)
 
     def set_commutative(self) -> None:

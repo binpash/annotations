@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import Optional, List, Union
 
 from util_standard import standard_repr, standard_eq
@@ -27,7 +26,7 @@ class Mapper(CommandInvocationWithIOVars):
                                          implicit_use_of_streaming_output,
                                          access_map)
 
-    def __eq__(self, other: Mapper) -> bool:
+    def __eq__(self, other) -> bool:
         return standard_eq(self, other)
 
     def __repr__(self) -> str:

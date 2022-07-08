@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import List
 
 from datatypes_new.BasicDatatypes import FlagOption, Operand
@@ -14,5 +13,5 @@ class CommandInvocationInitial:
     def __repr__(self):
         return standard_repr(self)
 
-    def __eq__(self, other: CommandInvocationInitial):
+    def __eq__(self, other):
         return standard_eq(self, other)

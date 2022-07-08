@@ -1,10 +1,9 @@
-from __future__ import annotations
-from typing import List, Tuple, Optional, Union, Literal
+from typing import List, Tuple, Union, Literal
 
 from config_new.definitions import INDICATORS_FOR_FILENAMES
 
 from datatypes_new.BasicDatatypes import Flag, Option, WhichClassForArg
-from datatypes_new.AccessKind import AccessKind
+from datatypes_new.AccessKind import AccessKind, get_access_from_string
 from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
 
@@ -68,7 +67,7 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
             if isinstance(option_arg_info, list):
                 option_arg_type: str = option_arg_info[0]
                 option_arg_access_str: str = option_arg_info[1]
-                access: AccessKind = AccessKind.get_access_from_string(option_arg_access_str)
+                access: AccessKind = get_access_from_string(option_arg_access_str)
                 if option_arg_type in INDICATORS_FOR_FILENAMES:
                     # for now, we do not allow to have '-' for stdin in option arguments
                     dict_option_to_class_for_arg[option_name] = (WhichClassForArg.FILESTD, access)

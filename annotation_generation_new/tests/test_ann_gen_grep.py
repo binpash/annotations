@@ -1,7 +1,7 @@
 from util_flag_option import make_arg_simple
 from typing import List
 from datatypes_new.BasicDatatypes import FlagOption, ArgStringType, Operand, FileName
-from datatypes_new.BasicDatatypesWithIO import StdDescriptorWithIOInfo
+from datatypes_new.BasicDatatypesWithIO import make_stdout_with_access_output
 from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
 from datatypes_new.CommandInvocationPrefix import CommandInvocationPrefix
@@ -9,9 +9,12 @@ from annotation_generation_new.datatypes.InputOutputInfo import InputOutputInfo
 from annotation_generation_new.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
 
 from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer, AdditionalInfoSplitterToMapper
-from annotation_generation_new.datatypes.parallelizability.Splitter import Splitter
-from annotation_generation_new.datatypes.parallelizability.MapperSpec import MapperSpec
-from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import AggregatorSpec
+from annotation_generation_new.datatypes.parallelizability.Splitter import \
+    make_splitter_round_robin, make_splitter_indiv_files
+from annotation_generation_new.datatypes.parallelizability.MapperSpec import \
+    make_mapper_spec_custom, make_mapper_spec_seq
+from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import \
+    make_aggregator_spec_concatenate, make_aggregator_spec_custom_2_ary_from_string_representation
 
 import annotation_generation_new.AnnotationGeneration as AnnotationGeneration
 
@@ -32,7 +35,7 @@ def test_grep_1() -> None:
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 2
     assert len(cmd_inv_with_io.get_operands_with_stream_output()) == 0
     assert cmd_inv_with_io.implicit_use_of_streaming_input is None
-    assert cmd_inv_with_io.implicit_use_of_streaming_output == StdDescriptorWithIOInfo.make_stdout_with_access_output()
+    assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
@@ -40,14 +43,14 @@ def test_grep_1() -> None:
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
     parallelizer2: Parallelizer = para_info.parallelizer_list[1]
     # check that specs for mapper and aggregator are fine
-    goal_mapper_spec = MapperSpec.make_mapper_spec_seq()
-    assert parallelizer1.get_splitter() == Splitter.make_splitter_indiv_files()
+    goal_mapper_spec = make_mapper_spec_seq()
+    assert parallelizer1.get_splitter() == make_splitter_indiv_files()
     assert parallelizer1.get_mapper_spec() == goal_mapper_spec
-    assert parallelizer1.get_aggregator_spec() == AggregatorSpec.make_aggregator_spec_concatenate()
-    goal_aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary_from_string_representation(
+    assert parallelizer1.get_aggregator_spec() == make_aggregator_spec_concatenate()
+    goal_aggregator_spec = make_aggregator_spec_custom_2_ary_from_string_representation(
         cmd_inv_as_str='PLACEHOLDER:merge_keeping_longer_output',
         is_implemented=False)
-    assert parallelizer2.get_splitter() == Splitter.make_splitter_round_robin()
+    assert parallelizer2.get_splitter() == make_splitter_round_robin()
     assert parallelizer2.get_mapper_spec() == goal_mapper_spec
     assert parallelizer2.get_aggregator_spec() == goal_aggregator_spec
 
@@ -68,7 +71,7 @@ def test_grep_2() -> None:
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 2
     assert len(cmd_inv_with_io.get_operands_with_stream_output()) == 0
     assert cmd_inv_with_io.implicit_use_of_streaming_input is None
-    assert cmd_inv_with_io.implicit_use_of_streaming_output == StdDescriptorWithIOInfo.make_stdout_with_access_output()
+    assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
@@ -76,16 +79,16 @@ def test_grep_2() -> None:
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
     parallelizer2: Parallelizer = para_info.parallelizer_list[1]
     # check that specs for mapper and aggregator are fine
-    assert parallelizer1.get_splitter() == Splitter.make_splitter_indiv_files()
-    assert parallelizer1.get_mapper_spec() == MapperSpec.make_mapper_spec_seq()
-    assert parallelizer1.get_aggregator_spec() == AggregatorSpec.make_aggregator_spec_concatenate()
-    goal_mapper_spec = MapperSpec.make_mapper_spec_custom(
+    assert parallelizer1.get_splitter() == make_splitter_indiv_files()
+    assert parallelizer1.get_mapper_spec() == make_mapper_spec_seq()
+    assert parallelizer1.get_aggregator_spec() == make_aggregator_spec_concatenate()
+    goal_mapper_spec = make_mapper_spec_custom(
         spec_mapper_cmd_name='PLACEHOLDER:grep_add_byte_offset',
         is_implemented=False)
-    assert parallelizer2.get_splitter() == Splitter.make_splitter_round_robin()
+    assert parallelizer2.get_splitter() == make_splitter_round_robin()
     assert parallelizer2.info_splitter_mapper == AdditionalInfoSplitterToMapper.BYTE_OFFSET
     assert parallelizer2.get_mapper_spec() == goal_mapper_spec
-    assert parallelizer2.get_aggregator_spec() == AggregatorSpec.make_aggregator_spec_concatenate()
+    assert parallelizer2.get_aggregator_spec() == make_aggregator_spec_concatenate()
 
 
 def test_grep_3() -> None:
@@ -104,7 +107,7 @@ def test_grep_3() -> None:
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 2
     assert len(cmd_inv_with_io.get_operands_with_stream_output()) == 0
     assert cmd_inv_with_io.implicit_use_of_streaming_input is None
-    assert cmd_inv_with_io.implicit_use_of_streaming_output == StdDescriptorWithIOInfo.make_stdout_with_access_output()
+    assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
@@ -112,12 +115,12 @@ def test_grep_3() -> None:
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
     parallelizer2: Parallelizer = para_info.parallelizer_list[1]
     # check that specs for mapper and aggregator are fine
-    assert parallelizer1.get_splitter() == Splitter.make_splitter_indiv_files()
-    assert parallelizer1.get_mapper_spec() == MapperSpec.make_mapper_spec_seq()
-    assert parallelizer1.get_aggregator_spec() == AggregatorSpec.make_aggregator_spec_concatenate()
-    assert parallelizer2.get_splitter() == Splitter.make_splitter_round_robin()
-    assert parallelizer2.get_mapper_spec() == MapperSpec.make_mapper_spec_seq()
-    assert parallelizer2.get_aggregator_spec() == AggregatorSpec.make_aggregator_spec_concatenate()
+    assert parallelizer1.get_splitter() == make_splitter_indiv_files()
+    assert parallelizer1.get_mapper_spec() == make_mapper_spec_seq()
+    assert parallelizer1.get_aggregator_spec() == make_aggregator_spec_concatenate()
+    assert parallelizer2.get_splitter() == make_splitter_round_robin()
+    assert parallelizer2.get_mapper_spec() == make_mapper_spec_seq()
+    assert parallelizer2.get_aggregator_spec() == make_aggregator_spec_concatenate()
 
 
 def test_grep_4() -> None:
@@ -139,7 +142,7 @@ def test_grep_4() -> None:
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 3
     assert len(cmd_inv_with_io.get_operands_with_stream_output()) == 0
     assert cmd_inv_with_io.implicit_use_of_streaming_input is None
-    assert cmd_inv_with_io.implicit_use_of_streaming_output == StdDescriptorWithIOInfo.make_stdout_with_access_output()
+    assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
@@ -147,15 +150,15 @@ def test_grep_4() -> None:
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
     parallelizer2: Parallelizer = para_info.parallelizer_list[1]
     # check that specs for mapper and aggregator are fine
-    assert parallelizer1.get_splitter() == Splitter.make_splitter_indiv_files()
-    assert parallelizer1.get_mapper_spec() == MapperSpec.make_mapper_spec_seq()
-    assert parallelizer1.get_aggregator_spec() == AggregatorSpec.make_aggregator_spec_concatenate()
-    assert parallelizer2.get_splitter() == Splitter.make_splitter_round_robin()
-    mapper_spec = MapperSpec.make_mapper_spec_custom('PLACEHOLDER:grep_add_line_number_and_byte_offset',
+    assert parallelizer1.get_splitter() == make_splitter_indiv_files()
+    assert parallelizer1.get_mapper_spec() == make_mapper_spec_seq()
+    assert parallelizer1.get_aggregator_spec() == make_aggregator_spec_concatenate()
+    assert parallelizer2.get_splitter() == make_splitter_round_robin()
+    mapper_spec = make_mapper_spec_custom('PLACEHOLDER:grep_add_line_number_and_byte_offset',
                                                      is_implemented=False)
     assert parallelizer2.info_splitter_mapper == AdditionalInfoSplitterToMapper.LINE_NUM_AND_BYTE_OFFSET
     assert parallelizer2.get_mapper_spec() == mapper_spec
-    assert parallelizer2.get_aggregator_spec() == AggregatorSpec.make_aggregator_spec_concatenate()
+    assert parallelizer2.get_aggregator_spec() == make_aggregator_spec_concatenate()
 
 
 def test_grep_5() -> None:
@@ -193,8 +196,8 @@ def test_grep_5() -> None:
 #     assert len(cmd_inv_with_io.get_operands_with_config_input()) == 1
 #     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 0
 #     assert len(cmd_inv_with_io.get_operands_with_stream_output()) == 0
-#     assert cmd_inv_with_io.implicit_use_of_streaming_input == StdDescriptorWithIOInfo.make_stdin_with_access_stream_input()
-#     assert cmd_inv_with_io.implicit_use_of_streaming_output == StdDescriptorWithIOInfo.make_stdout_with_access_output()
+#     assert cmd_inv_with_io.implicit_use_of_streaming_input == make_stdin_with_access_stream_input()
+#     assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 #
 #     # Parallelizability Info
 #     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)

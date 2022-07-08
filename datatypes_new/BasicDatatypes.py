@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import Union
 
 from util_standard import standard_eq, standard_repr
@@ -29,6 +28,11 @@ class FileName(BaseClassForBasicDatatypes):
     def get_name(self) -> str:
         return self.name
 
+class StdDescriptorEnum(Enum):
+    STDIN = 0
+    STDOUT = 1
+    STDERR = 2
+
 class StdDescriptor(BaseClassForBasicDatatypes):
 
     def __init__(self, name: StdDescriptorEnum) -> None:
@@ -41,22 +45,14 @@ class StdDescriptor(BaseClassForBasicDatatypes):
     def get_type(self) -> StdDescriptorEnum:
         return self.name
 
-    @staticmethod
-    def get_stdin_fd() -> StdDescriptor:
-        return StdDescriptor(StdDescriptorEnum.STDIN)
+def get_stdin_fd() -> StdDescriptor:
+    return StdDescriptor(StdDescriptorEnum.STDIN)
 
-    @staticmethod
-    def get_stdout_fd() -> StdDescriptor:
-        return StdDescriptor(StdDescriptorEnum.STDOUT)
+def get_stdout_fd() -> StdDescriptor:
+    return StdDescriptor(StdDescriptorEnum.STDOUT)
 
-    @staticmethod
-    def get_stderr_fd() -> StdDescriptor:
-        return StdDescriptor(StdDescriptorEnum.STDERR)
-
-class StdDescriptorEnum(Enum):
-    STDIN = 0
-    STDOUT = 1
-    STDERR = 2
+def get_stderr_fd() -> StdDescriptor:
+    return StdDescriptor(StdDescriptorEnum.STDERR)
 
 FileNameOrStdDescriptor = Union[FileName, StdDescriptor]
 

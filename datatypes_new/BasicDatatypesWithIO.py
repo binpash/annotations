@@ -1,7 +1,7 @@
-from __future__ import annotations
 from typing import Union
-from datatypes_new.BasicDatatypes import FileName, StdDescriptor, StdDescriptorEnum, Operand, BaseClassForBasicDatatypes, ArgStringType
-from datatypes_new.AccessKind import AccessKind
+from datatypes_new.BasicDatatypes import FileName, StdDescriptor, StdDescriptorEnum, Operand, \
+    BaseClassForBasicDatatypes, ArgStringType, get_stdout_fd, get_stdin_fd
+from datatypes_new.AccessKind import AccessKind, make_stream_output, make_stream_input
 
 from abc import ABC, abstractmethod
 
@@ -13,11 +13,11 @@ class BaseClassForBasicDatatypesWithIOInfo(ABC):
     def get_access(self) -> AccessKind:
         return self.access
 
-    @staticmethod
-    @abstractmethod
-    def get_from_original(original, access):
-        pass
-        # return DERIVED_CLASS(original.get_name(), access)
+    # @staticmethod
+    # @abstractmethod
+    # def get_from_original(original, access):
+    #     pass
+    #     # return DERIVED_CLASS(original.get_name(), access)
 
 
 class FileNameWithIOInfo(FileName, BaseClassForBasicDatatypesWithIOInfo):
@@ -26,9 +26,8 @@ class FileNameWithIOInfo(FileName, BaseClassForBasicDatatypesWithIOInfo):
         FileName.__init__(self, name=name)
         BaseClassForBasicDatatypesWithIOInfo.__init__(self, access=access)
 
-    @staticmethod
-    def get_from_original(original: FileName, access: AccessKind) -> FileNameWithIOInfo:
-        return FileNameWithIOInfo(original.get_name(), access)
+def get_from_original_filename_with_ioinfo(original: FileName, access: AccessKind) -> FileNameWithIOInfo:
+    return FileNameWithIOInfo(original.get_name(), access)
 
 
 class StdDescriptorWithIOInfo(StdDescriptor, BaseClassForBasicDatatypesWithIOInfo):
@@ -37,30 +36,27 @@ class StdDescriptorWithIOInfo(StdDescriptor, BaseClassForBasicDatatypesWithIOInf
         StdDescriptor.__init__(self, name=name)
         BaseClassForBasicDatatypesWithIOInfo.__init__(self, access=access)
 
-    @staticmethod
-    def get_from_original(original: StdDescriptor, access: AccessKind) -> StdDescriptorWithIOInfo:
-        return StdDescriptorWithIOInfo(original.name, access)
+def get_from_original_stddescriptor_with_ioinfo(original: StdDescriptor, access: AccessKind) -> StdDescriptorWithIOInfo:
+    return StdDescriptorWithIOInfo(original.name, access)
 
-    @staticmethod
-    def make_stdin_with_access_stream_input() -> StdDescriptorWithIOInfo:
-        return StdDescriptorWithIOInfo.get_from_original(StdDescriptor.get_stdin_fd(), AccessKind.make_stream_input())
+def make_stdin_with_access_stream_input() -> StdDescriptorWithIOInfo:
+    return get_from_original_stddescriptor_with_ioinfo(get_stdin_fd(), make_stream_input())
 
-    @staticmethod
-    def make_stdout_with_access_output() -> StdDescriptorWithIOInfo:
-        return StdDescriptorWithIOInfo.get_from_original(StdDescriptor.get_stdout_fd(), AccessKind.make_stream_output())
+def make_stdout_with_access_output() -> StdDescriptorWithIOInfo:
+    return get_from_original_stddescriptor_with_ioinfo(get_stdout_fd(), make_stream_output())
 
 FileNameOrStdDescriptorWithIOInfo = Union[FileNameWithIOInfo, StdDescriptorWithIOInfo]
 
 def add_access_to_stream_output(output_to):
     if isinstance(output_to, FileName):
         assert(False)
-        output_to_with_access: FileNameOrStdDescriptorWithIOInfo = FileNameWithIOInfo.get_from_original(output_to,
-                                                                                                        AccessKind.make_stream_output())
+        output_to_with_access: FileNameOrStdDescriptorWithIOInfo = FileNameWithIOInfo.get_from_original_filename_with_ioinfo(output_to,
+                                                                                                                             make_stream_output())
     elif isinstance(output_to, StdDescriptor):
         assert(False)
-        output_to_with_access: FileNameOrStdDescriptorWithIOInfo = StdDescriptorWithIOInfo.get_from_original(
+        output_to_with_access: FileNameOrStdDescriptorWithIOInfo = StdDescriptorWithIOInfo.get_from_original_stddescriptor_with_ioinfo(
             output_to,
-            AccessKind.make_stream_output())
+            make_stream_output())
     else:
         raise Exception("neither FileName nor StdDescriptor")
     return output_to_with_access
@@ -68,13 +64,13 @@ def add_access_to_stream_output(output_to):
 def add_access_to_stream_input(input_from):
     if isinstance(input_from, FileName):
         assert(False)
-        input_from_with_access: FileNameOrStdDescriptorWithIOInfo = FileNameWithIOInfo.get_from_original(input_from,
-                                                                                                         AccessKind.make_stream_input())
+        input_from_with_access: FileNameOrStdDescriptorWithIOInfo = FileNameWithIOInfo.get_from_original_filename_with_ioinfo(input_from,
+                                                                                                                              make_stream_input())
     elif isinstance(input_from, StdDescriptor):
         assert(False)
-        input_from_with_access: FileNameOrStdDescriptorWithIOInfo = StdDescriptorWithIOInfo.get_from_original(
+        input_from_with_access: FileNameOrStdDescriptorWithIOInfo = StdDescriptorWithIOInfo.get_from_original_stddescriptor_with_ioinfo(
             input_from,
-            AccessKind.make_stream_input())
+            make_stream_input())
     else:
         raise Exception("neither FileName nor StdDescriptor")
     return input_from_with_access
@@ -119,7 +115,7 @@ class OperandWithIO:
 
     @staticmethod
     def make_operand_a_filename_with_access(original: Operand, access: AccessKind):
-        filename_with_ioinfo = FileNameWithIOInfo.get_from_original(FileName(original.get_name()), access)
+        filename_with_ioinfo = get_from_original_filename_with_ioinfo(FileName(original.get_name()), access)
         return OperandWithIO(filename_with_ioinfo)
 
     # TODO: how to get proper type?

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import List
 
 from util_standard import standard_repr, standard_eq
@@ -14,5 +13,5 @@ class CommandInvocationPrefix:
     def __repr__(self):
         return standard_repr(self)
 
-    def __eq__(self, other: CommandInvocationPrefix):
+    def __eq__(self, other):
         return standard_eq(self, other)

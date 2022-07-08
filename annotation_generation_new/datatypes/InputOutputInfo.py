@@ -1,14 +1,14 @@
-from __future__ import annotations
-
 from util_standard import standard_repr
 from typing import List, Tuple, Union, Optional, Literal
-from datatypes_new.AccessKind import AccessKind
+from datatypes_new.AccessKind import AccessKind, make_stream_input, make_other_input, make_stream_output, \
+    make_other_output, make_config_input
 from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
 from datatypes_new.BasicDatatypes import Operand, ArgStringType, FileNameOrStdDescriptor, FileName, StdDescriptor, \
-    Flag, Option, FlagOption, WhichClassForArg
-from datatypes_new.BasicDatatypesWithIO import FileNameOrStdDescriptorWithIOInfo, FileNameWithIOInfo, \
-    StdDescriptorWithIOInfo, OptionWithIO
+    Flag, Option, FlagOption, WhichClassForArg, get_stdout_fd, get_stdin_fd
+from datatypes_new.BasicDatatypesWithIO import FileNameOrStdDescriptorWithIOInfo, \
+    StdDescriptorWithIOInfo, OptionWithIO, get_from_original_stddescriptor_with_ioinfo, \
+    get_from_original_filename_with_ioinfo
 from util_new import compute_actual_el_for_input, compute_actual_el_for_output
 
 class InputOutputInfo:
@@ -26,7 +26,7 @@ class InputOutputInfo:
                                                Tuple[Literal[WhichClassForArg.PLAINSTRING], None]]] = flagoption_list_typer
         self.operand_list_typer: List[Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
                                             Tuple[Literal[WhichClassForArg.ARGSTRING], None]]] = \
-                                [(WhichClassForArg.FILESTD, AccessKind.make_stream_input())] * number_of_operands
+                                [(WhichClassForArg.FILESTD, make_stream_input())] * number_of_operands
         self.implicit_use_of_streaming_input : Optional[FileNameOrStdDescriptorWithIOInfo] = implicit_use_of_streaming_input
         self.implicit_use_of_streaming_output : Optional[FileNameOrStdDescriptorWithIOInfo] = implicit_use_of_streaming_output
 
@@ -41,7 +41,7 @@ class InputOutputInfo:
 
     def set_implicit_use_of_stdin(self, value: bool) -> None:
         if value:
-            stdin_with_io = StdDescriptorWithIOInfo.get_from_original(StdDescriptor.get_stdin_fd(), AccessKind.make_stream_input())
+            stdin_with_io = get_from_original_stddescriptor_with_ioinfo(get_stdin_fd(), make_stream_input())
             self.set_implicit_use_of_streaming_input(stdin_with_io)
         else:
             pass # since default value is None anyway
@@ -51,7 +51,7 @@ class InputOutputInfo:
 
     def set_implicit_use_of_stdout(self, value: bool) -> None:
         if value:
-            stdout_with_io = StdDescriptorWithIOInfo.get_from_original(StdDescriptor.get_stdout_fd(), AccessKind.make_stream_output())
+            stdout_with_io = get_from_original_stddescriptor_with_ioinfo(get_stdout_fd(), make_stream_output())
             self.set_implicit_use_of_streaming_output(stdout_with_io)
         else:
             pass # since default value is None anyway
@@ -64,7 +64,7 @@ class InputOutputInfo:
 
     def all_operands_are_other_inputs(self) -> None:
         number_of_operands = len(self.operand_list_typer)
-        self.operand_list_typer = [(WhichClassForArg.FILESTD, AccessKind.make_other_input())] * number_of_operands
+        self.operand_list_typer = [(WhichClassForArg.FILESTD, make_other_input())] * number_of_operands
 
     def all_but_last_operand_is_streaming_input(self) -> None:
         pass # since this is the default in the constructor, and we assume the last is assigned somewhere else
@@ -80,14 +80,14 @@ class InputOutputInfo:
     def all_but_first_operand_is_other_input(self) -> None:
         original_first_entry = self.operand_list_typer[0]
         number_of_operands = len(self.operand_list_typer)
-        self.operand_list_typer = [(WhichClassForArg.FILESTD, AccessKind.make_other_input())] * number_of_operands
+        self.operand_list_typer = [(WhichClassForArg.FILESTD, make_other_input())] * number_of_operands
         self.operand_list_typer[0] = original_first_entry
 
     def only_last_operand_is_stream_output(self) -> None:
-        self.operand_list_typer[-1] = (WhichClassForArg.FILESTD, AccessKind.make_stream_output())
+        self.operand_list_typer[-1] = (WhichClassForArg.FILESTD, make_stream_output())
 
     def only_last_operand_is_other_output(self) -> None:
-        self.operand_list_typer[-1] = (WhichClassForArg.FILESTD, AccessKind.make_other_output())
+        self.operand_list_typer[-1] = (WhichClassForArg.FILESTD, make_other_output())
 
     def set_all_operands_as_positional_config_arg_type_string(self) -> None:
         number_of_operands = len(self.operand_list_typer)
@@ -97,7 +97,7 @@ class InputOutputInfo:
         self.operand_list_typer[0] = (WhichClassForArg.ARGSTRING, None)
 
     def set_first_operand_as_positional_config_arg_type_filename_or_std_descriptor(self) -> None:
-        self.operand_list_typer[0] = (WhichClassForArg.FILESTD, AccessKind.make_config_input())
+        self.operand_list_typer[0] = (WhichClassForArg.FILESTD, make_config_input())
 
     # methods to apply the InputOutputInfo to a command invocation
 
@@ -135,9 +135,9 @@ class InputOutputInfo:
             else:
                 raise Exception("access which is neither any input nor output")
             if isinstance(filename_or_stddescriptor, FileName):
-                return FileNameWithIOInfo.get_from_original(filename_or_stddescriptor, access)
+                return get_from_original_filename_with_ioinfo(filename_or_stddescriptor, access)
             elif isinstance(filename_or_stddescriptor, StdDescriptor):
-                return StdDescriptorWithIOInfo.get_from_original(filename_or_stddescriptor, access)
+                return get_from_original_stddescriptor_with_ioinfo(filename_or_stddescriptor, access)
         elif typer[0] == WhichClassForArg.ARGSTRING:
             return ArgStringType(arg)
         else:
