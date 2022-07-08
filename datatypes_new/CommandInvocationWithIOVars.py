@@ -1,12 +1,11 @@
-from __future__ import annotations
 from copy import deepcopy
-from typing import List, Union, Optional, Tuple
+from typing import List, Union, Optional
 
-from datatypes_new.BasicDatatypes import Flag, ArgStringType, FileName, StdDescriptor, FileNameOrStdDescriptor
-from datatypes_new.BasicDatatypesWithIO import OptionWithIO, FileNameOrStdDescriptorWithIOInfo, FileNameWithIOInfo, StdDescriptorWithIOInfo, \
-        add_access_to_stream_input, add_access_to_stream_output
-from datatypes_new.AccessKind import AccessKind, AccessKindEnum
+from datatypes_new.BasicDatatypes import Flag, ArgStringType, FileNameOrStdDescriptor
+from datatypes_new.BasicDatatypesWithIO import OptionWithIO, FileNameOrStdDescriptorWithIOInfo, FileNameWithIOInfo, StdDescriptorWithIOInfo
+from datatypes_new.AccessKind import make_stream_input, make_stream_output
 from annotation_generation_new.datatypes.Inputs import Inputs, InputsEnum
+from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
 from util_standard import standard_repr, standard_eq
 
 
@@ -34,14 +33,14 @@ class CommandInvocationWithIOVars:
     def __repr__(self):
         return standard_repr(self)
 
-    def __eq__(self, other: CommandInvocationWithIOVars):
+    def __eq__(self, other):
         return standard_eq(self, other)
 
     def is_aggregator_concatenate(self): # needed since isinstance(_, Aggregator) does not work
         return False
 
     @staticmethod
-    def get_from_without_vars(cmd_inv_with_io: CommandInvocationWithIOVars, access_map):
+    def get_from_without_vars(cmd_inv_with_io: CommandInvocationWithIO, access_map):
         return CommandInvocationWithIOVars(cmd_name=cmd_inv_with_io.cmd_name,
                                     flag_option_list=cmd_inv_with_io.flag_option_list,
                                     operand_list=cmd_inv_with_io.operand_list,
@@ -152,8 +151,8 @@ class CommandInvocationWithIOVars:
     # TODO: move to util-file command-invocation helpers
     @staticmethod
     def make_cat_command_invocation_with_io_vars(input_ids, output_id):
-        access_map = {input_id: AccessKind.make_stream_input() for input_id in input_ids}
-        access_map[output_id] = AccessKind.make_stream_output()
+        access_map = {input_id: make_stream_input() for input_id in input_ids}
+        access_map[output_id] = make_stream_output()
         cmd_inv_with_io_vars = CommandInvocationWithIOVars(
             cmd_name="cat",
             flag_option_list=[],

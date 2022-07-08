@@ -1,5 +1,4 @@
-from __future__ import annotations
-from typing import Optional, List, Union
+from typing import Optional
 
 from enum import Enum
 
@@ -7,7 +6,8 @@ from util_standard import standard_repr, standard_eq
 
 from datatypes_new.CommandInvocationWithIOVars import CommandInvocationWithIOVars
 from datatypes_new.BasicDatatypes import FileNameOrStdDescriptor
-from annotation_generation_new.datatypes.parallelizability.TransformerFlagOptionList import TransformerFlagOptionList
+from annotation_generation_new.datatypes.parallelizability.TransformerFlagOptionList import TransformerFlagOptionList, \
+    return_transformer_flagoption_list_same_as_seq_if_none_else_itself
 # from annotation_generation_new.datatypes.parallelizability.TransformerPosConfigList import TransformerPosConfigList
 from annotation_generation_new.datatypes.parallelizability.Mapper import Mapper
 from util_new import return_default_if_none_else_itself
@@ -30,7 +30,7 @@ class MapperSpec:
         self.kind: MapperSpecKindEnum = kind
         self.spec_mapper_cmd_name: Optional[str] = spec_mapper_cmd_name
         self.flag_option_list_transformer: TransformerFlagOptionList = \
-            TransformerFlagOptionList.return_transformer_same_as_seq_if_none_else_itself(flag_option_list_transformer)
+            return_transformer_flagoption_list_same_as_seq_if_none_else_itself(flag_option_list_transformer)
         self.is_implemented = is_implemented
         # sanity check
         if kind == MapperSpecKindEnum.SAME_AS_SEQ:
@@ -44,7 +44,7 @@ class MapperSpec:
             raise Exception("unknown kind for MapperSpec")
 
 
-    def __eq__(self, other: MapperSpec) -> bool:
+    def __eq__(self, other) -> bool:
         return standard_eq(self, other)
 
     def __repr__(self) -> str:
@@ -77,28 +77,25 @@ class MapperSpec:
         mapper.substitute_inputs_and_outputs_in_cmd_invocation([input_from], [output_to])
         return mapper
 
-    ## factory methods
-    @staticmethod
-    def make_mapper_spec_seq() -> MapperSpec:
-        return MapperSpec(MapperSpecKindEnum.SAME_AS_SEQ, is_implemented=True)
+## factory methods
+def make_mapper_spec_seq() -> MapperSpec:
+    return MapperSpec(MapperSpecKindEnum.SAME_AS_SEQ, is_implemented=True)
 
-    @staticmethod
-    def return_mapper_spec_seq_if_none_else_itself(mapper_spec) -> MapperSpec:
-        return return_default_if_none_else_itself(mapper_spec, MapperSpec.make_mapper_spec_seq())
+def return_mapper_spec_seq_if_none_else_itself(mapper_spec) -> MapperSpec:
+    return return_default_if_none_else_itself(mapper_spec, make_mapper_spec_seq())
 
-    @staticmethod
-    def make_mapper_spec_custom(spec_mapper_cmd_name: str,
-                                flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,
-                                # pos_config_list_transformer: Optional[TransformerPosConfigList] = None,
-                                num_outputs: int = 1,
-                                is_implemented: bool = False
-                                ) -> MapperSpec:
-        actual_flag_option_list_transformer: TransformerFlagOptionList = \
-            TransformerFlagOptionList.return_transformer_same_as_seq_if_none_else_itself(flag_option_list_transformer)
-        # actual_pos_config_list_transformer: TransformerPosConfigList = \
-        #     TransformerPosConfigList.return_transformer_same_as_seq_if_none_else_itself(pos_config_list_transformer)
-        return MapperSpec(MapperSpecKindEnum.CUSTOM,
-                          spec_mapper_cmd_name,
-                          flag_option_list_transformer= actual_flag_option_list_transformer,
-                          # pos_config_list_transformer= actual_pos_config_list_transformer,
-                          is_implemented= is_implemented)
+def make_mapper_spec_custom(spec_mapper_cmd_name: str,
+                            flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,
+                            # pos_config_list_transformer: Optional[TransformerPosConfigList] = None,
+                            num_outputs: int = 1,
+                            is_implemented: bool = False
+                            ) -> MapperSpec:
+    actual_flag_option_list_transformer: TransformerFlagOptionList = \
+        return_transformer_flagoption_list_same_as_seq_if_none_else_itself(flag_option_list_transformer)
+    # actual_pos_config_list_transformer: TransformerPosConfigList = \
+    #     TransformerPosConfigList.return_transformer_same_as_seq_if_none_else_itself(pos_config_list_transformer)
+    return MapperSpec(MapperSpecKindEnum.CUSTOM,
+                      spec_mapper_cmd_name,
+                      flag_option_list_transformer= actual_flag_option_list_transformer,
+                      # pos_config_list_transformer= actual_pos_config_list_transformer,
+                      is_implemented= is_implemented)

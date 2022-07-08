@@ -1,5 +1,10 @@
-from __future__ import annotations
 from enum import Enum
+
+
+class InputsEnum(Enum):
+    DEFAULT = 0
+    STREAMING = 1
+
 
 class Inputs:
 
@@ -25,8 +30,3 @@ class Inputs:
             return conf_inputs + streaming_inputs
         else:
             assert(False)
-
-
-class InputsEnum(Enum):
-    DEFAULT = 0
-    STREAMING = 1

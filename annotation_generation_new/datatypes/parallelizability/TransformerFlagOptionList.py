@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import Optional, List, Union
 from datatypes_new.BasicDatatypes import Flag
 from datatypes_new.BasicDatatypesWithIO import OptionWithIO
@@ -21,7 +20,7 @@ from util_new import foldl
 
 class TransformerFlagOptionList(ABC):
 
-    def __eq__(self, other: TransformerFlagOptionList) -> bool:
+    def __eq__(self, other) -> bool:
         return standard_eq(self, other)
 
     def __repr__(self) -> str:
@@ -33,27 +32,24 @@ class TransformerFlagOptionList(ABC):
             -> List[Union[Flag, OptionWithIO]]:
         pass
 
-    @staticmethod
-    def return_transformer_empty_if_none_else_itself(arg: Optional[TransformerFlagOptionList]) \
-            -> TransformerFlagOptionList:
-        if arg is None:
-            return make_transformer_empty()
-        else:
-            return arg
+def return_transformer_flagoption_list_empty_if_none_else_itself(arg: Optional[TransformerFlagOptionList]) \
+        -> TransformerFlagOptionList:
+    if arg is None:
+        return make_transformer_empty()
+    else:
+        return arg
 
-    @staticmethod
-    def return_transformer_same_as_seq_if_none_else_itself(arg: Optional[TransformerFlagOptionList]) \
-            -> TransformerFlagOptionList:
-        if arg is None:
-            return make_transformer_same_as_seq()
-        else:
-            return arg
+def return_transformer_flagoption_list_same_as_seq_if_none_else_itself(arg: Optional[TransformerFlagOptionList]) \
+        -> TransformerFlagOptionList:
+    if arg is None:
+        return make_transformer_same_as_seq()
+    else:
+        return arg
 
-    @staticmethod
-    def apply_individual_transformer(transformer: TransformerFlagOptionList,
-                                     current_list: List[Union[Flag, OptionWithIO]]
-                                     ) -> List[Union[Flag, OptionWithIO]]:
-        return transformer.get_flag_option_list_after_transformer_application(current_list)
+def apply_individual_transformer_flagoption_list(transformer: TransformerFlagOptionList,
+                                                 current_list: List[Union[Flag, OptionWithIO]]
+                                                 ) -> List[Union[Flag, OptionWithIO]]:
+    return transformer.get_flag_option_list_after_transformer_application(current_list)
 
 # TODO: retrieve access info for option arguments from man-page-file
 
@@ -152,5 +148,5 @@ class ChainTransformerFlagOptionList(TransformerFlagOptionList):
     def get_flag_option_list_after_transformer_application(self,
                                                            original_flag_option_list: List[Union[Flag, OptionWithIO]]
                                                            ) -> List[Union[Flag, OptionWithIO]]:
-        return foldl(TransformerFlagOptionList.apply_individual_transformer, original_flag_option_list, self.list_transformers)
+        return foldl(apply_individual_transformer_flagoption_list, original_flag_option_list, self.list_transformers)
 

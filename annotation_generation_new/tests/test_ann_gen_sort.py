@@ -2,16 +2,18 @@ from typing import List
 
 from util_flag_option import make_arg_simple
 from datatypes_new.BasicDatatypes import Flag, Option, FlagOption, Operand, FileName, ArgStringType
-from datatypes_new.BasicDatatypesWithIO import StdDescriptorWithIOInfo
+from datatypes_new.BasicDatatypesWithIO import make_stdout_with_access_output, make_stdin_with_access_stream_input
 from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
 from datatypes_new.CommandInvocationPrefix import CommandInvocationPrefix
 from annotation_generation_new.datatypes.InputOutputInfo import InputOutputInfo
 from annotation_generation_new.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
 from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer
-from annotation_generation_new.datatypes.parallelizability.Splitter import Splitter
-from annotation_generation_new.datatypes.parallelizability.MapperSpec import MapperSpec
-from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import AggregatorSpec
+from annotation_generation_new.datatypes.parallelizability.Splitter import Splitter, make_splitter_indiv_files, \
+    make_splitter_round_robin
+from annotation_generation_new.datatypes.parallelizability.MapperSpec import make_mapper_spec_seq
+from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import \
+    make_aggregator_spec_custom_2_ary_from_cmd_inv_with_transformers
 from annotation_generation_new.datatypes.parallelizability.TransformerFlagOptionList import\
     TransformerFlagOptionListFilter, TransformerFlagOptionListAdd, ChainTransformerFlagOptionList
 
@@ -36,7 +38,7 @@ def test_sort_1() -> None:
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 2
     assert len(cmd_inv_with_io.get_operands_with_stream_output()) == 0
     assert cmd_inv_with_io.implicit_use_of_streaming_input is None
-    assert cmd_inv_with_io.implicit_use_of_streaming_output == StdDescriptorWithIOInfo.make_stdout_with_access_output()
+    assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
@@ -44,10 +46,10 @@ def test_sort_1() -> None:
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
     parallelizer2: Parallelizer = para_info.parallelizer_list[1]
     # only check splitter and actual mappers and aggregators
-    assert parallelizer1.get_splitter() == Splitter.make_splitter_indiv_files()
-    assert parallelizer2.get_splitter() == Splitter.make_splitter_round_robin()
+    assert parallelizer1.get_splitter() == make_splitter_indiv_files()
+    assert parallelizer2.get_splitter() == make_splitter_round_robin()
     # check that results of getting mapper and aggregator are fine
-    goal_mapper_spec = MapperSpec.make_mapper_spec_seq()
+    goal_mapper_spec = make_mapper_spec_seq()
     # TODO: change to actual check whether it does what is is supposed to do
     flag_option_list_to_keep = [Flag("-b"), Flag("-d"), Flag("-f"), Flag("-g"), Flag("-i"), Flag("-M"), \
                                 Flag("-h"), Flag("-n"), Flag("-r"), Option("--sort", ""), Flag("-V"), Flag("-k"),
@@ -57,7 +59,7 @@ def test_sort_1() -> None:
     transformer_flag_option_list_add: TransformerFlagOptionListAdd = TransformerFlagOptionListAdd([Flag("-m")])
     chain_transformer_flag_option_list: ChainTransformerFlagOptionList = \
         ChainTransformerFlagOptionList([transformer_flag_option_list_filter, transformer_flag_option_list_add])
-    goal_aggregator_spec = AggregatorSpec.make_aggregator_spec_custom_2_ary_from_cmd_inv_with_transformers(
+    goal_aggregator_spec = make_aggregator_spec_custom_2_ary_from_cmd_inv_with_transformers(
         flag_option_list_transformer=chain_transformer_flag_option_list, is_implemented=True)
     assert parallelizer1.get_mapper_spec() == goal_mapper_spec
     assert parallelizer1.get_aggregator_spec() == goal_aggregator_spec
@@ -77,8 +79,8 @@ def test_sort_2() -> None:
     assert len(cmd_inv_with_io.get_operands_with_config_input()) == 0
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 0
     assert len(cmd_inv_with_io.get_operands_with_stream_output()) == 0
-    assert cmd_inv_with_io.implicit_use_of_streaming_input == StdDescriptorWithIOInfo.make_stdin_with_access_stream_input()
-    assert cmd_inv_with_io.implicit_use_of_streaming_output == StdDescriptorWithIOInfo.make_stdout_with_access_output()
+    assert cmd_inv_with_io.implicit_use_of_streaming_input == make_stdin_with_access_stream_input()
+    assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
@@ -86,8 +88,8 @@ def test_sort_2() -> None:
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
     parallelizer2: Parallelizer = para_info.parallelizer_list[1]
     # only check splitter and actual mappers and aggregators
-    assert parallelizer1.get_splitter() == Splitter.make_splitter_indiv_files()
-    assert parallelizer2.get_splitter() == Splitter.make_splitter_round_robin()
+    assert parallelizer1.get_splitter() == make_splitter_indiv_files()
+    assert parallelizer2.get_splitter() == make_splitter_round_robin()
     # check that results of getting mapper and aggregator are fine
     # TODO: change to actual check whether it does what is is supposed to do: with flag option list
 
@@ -103,7 +105,7 @@ def test_sort_3() -> None:
     assert len(cmd_inv_with_io.get_operands_with_config_input()) == 0
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 0
     assert len(cmd_inv_with_io.get_operands_with_stream_output()) == 0
-    assert cmd_inv_with_io.implicit_use_of_streaming_input == StdDescriptorWithIOInfo.make_stdin_with_access_stream_input()
+    assert cmd_inv_with_io.implicit_use_of_streaming_input == make_stdin_with_access_stream_input()
     assert cmd_inv_with_io.implicit_use_of_streaming_output is None
 
     # Parallelizability Info
@@ -121,8 +123,8 @@ def test_sort_5() -> None:
     assert len(cmd_inv_with_io.get_operands_with_config_input()) == 0
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 0
     assert len(cmd_inv_with_io.get_operands_with_stream_output()) == 0
-    assert cmd_inv_with_io.implicit_use_of_streaming_input == StdDescriptorWithIOInfo.make_stdin_with_access_stream_input()
-    assert cmd_inv_with_io.implicit_use_of_streaming_output == StdDescriptorWithIOInfo.make_stdout_with_access_output()
+    assert cmd_inv_with_io.implicit_use_of_streaming_input == make_stdin_with_access_stream_input()
+    assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
@@ -141,7 +143,7 @@ def test_sort_6() -> None:
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 0
     assert len(cmd_inv_with_io.get_operands_with_stream_output()) == 0
     assert cmd_inv_with_io.implicit_use_of_streaming_input is None
-    assert cmd_inv_with_io.implicit_use_of_streaming_output == StdDescriptorWithIOInfo.make_stdout_with_access_output()
+    assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)

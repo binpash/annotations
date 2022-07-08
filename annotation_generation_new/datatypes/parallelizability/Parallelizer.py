@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from copy import deepcopy
 from typing import Optional, List
 
@@ -9,9 +7,12 @@ from util_new import return_default_if_none_else_itself
 
 from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
 from datatypes_new.BasicDatatypes import FileNameOrStdDescriptor
-from annotation_generation_new.datatypes.parallelizability.Splitter import Splitter
-from annotation_generation_new.datatypes.parallelizability.MapperSpec import MapperSpec
-from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import AggregatorSpec
+from annotation_generation_new.datatypes.parallelizability.Splitter import Splitter, make_splitter_consec_chunks, \
+    make_splitter_indiv_files, make_splitter_round_robin, make_splitter_round_robin_with_unwrap
+from annotation_generation_new.datatypes.parallelizability.MapperSpec import MapperSpec, \
+    return_mapper_spec_seq_if_none_else_itself
+from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import AggregatorSpec, \
+    return_aggregator_conc_if_none_else_itself
 from annotation_generation_new.datatypes.parallelizability.Mapper import Mapper
 from annotation_generation_new.datatypes.parallelizability.Aggregator import Aggregator
 
@@ -49,7 +50,7 @@ class Parallelizer:
                    self.core_aggregator_spec.is_aggregator_spec_adj_lines_seq() or
                    self.core_aggregator_spec.is_aggregator_spec_adj_lines_func())
 
-    def __eq__(self, other: Parallelizer) -> bool:
+    def __eq__(self, other) -> bool:
         return standard_eq(self, other)
 
     def __repr__(self) -> str:
@@ -84,41 +85,37 @@ class Parallelizer:
     def get_info_mapper_aggregator(self) -> AdditionalInfoMapperToAggregator:
         return self.info_mapper_aggregator
 
-    @staticmethod
-    def make_parallelizer_indiv_files(mapper_spec: Optional[MapperSpec]=None,
-                                      aggregator_spec: Optional[AggregatorSpec]=None,
-                                      info_splitter_mapper: Optional[AdditionalInfoSplitterToMapper]=None,
-                                      info_mapper_aggregator: Optional[AdditionalInfoMapperToAggregator]=None
-                                      ) -> Parallelizer:
-        mapper_spec = MapperSpec.return_mapper_spec_seq_if_none_else_itself(mapper_spec)
-        aggregator_spec = AggregatorSpec.return_aggregator_conc_if_none_else_itself(aggregator_spec)
-        return Parallelizer(Splitter.make_splitter_indiv_files(), mapper_spec, aggregator_spec, info_splitter_mapper, info_mapper_aggregator)
-
-    @staticmethod
-    def make_parallelizer_round_robin(mapper_spec: Optional[MapperSpec]=None,
-                                      aggregator_spec: Optional[AggregatorSpec]=None,
-                                      info_splitter_mapper: Optional[AdditionalInfoSplitterToMapper]=None,
-                                      info_mapper_aggregator: Optional[AdditionalInfoMapperToAggregator]=None
-                                      ) -> Parallelizer:
-        mapper_spec = MapperSpec.return_mapper_spec_seq_if_none_else_itself(mapper_spec)
-        aggregator_spec = AggregatorSpec.return_aggregator_conc_if_none_else_itself(aggregator_spec)
-        return Parallelizer(Splitter.make_splitter_round_robin(), mapper_spec, aggregator_spec, info_splitter_mapper, info_mapper_aggregator)
-
-    @staticmethod
-    def make_parallelizer_round_robin_with_unwrap_from_other(parallelizer):
-        new_parallelizer = deepcopy(parallelizer)
-        new_parallelizer.splitter = Splitter.make_splitter_round_robin_with_unwrap()
-        return new_parallelizer
-
-    @staticmethod
-    def make_parallelizer_consec_chunks(mapper_spec: Optional[MapperSpec]=None,
-                                        aggregator_spec: Optional[AggregatorSpec]=None,
-                                        info_splitter_mapper: Optional[AdditionalInfoSplitterToMapper] = None,
-                                        info_mapper_aggregator: Optional[AdditionalInfoMapperToAggregator] = None
-                                        ) -> Parallelizer:
-        mapper_spec = MapperSpec.return_mapper_spec_seq_if_none_else_itself(mapper_spec)
-        aggregator_spec = AggregatorSpec.return_aggregator_conc_if_none_else_itself(aggregator_spec)
-        return Parallelizer(Splitter.make_splitter_consec_chunks(), mapper_spec, aggregator_spec, info_splitter_mapper, info_mapper_aggregator)
-
     def are_all_parts_implemented(self):
         return self.core_mapper_spec.is_implemented and self.core_aggregator_spec.is_implemented
+
+def make_parallelizer_indiv_files(mapper_spec: Optional[MapperSpec]=None,
+                                  aggregator_spec: Optional[AggregatorSpec]=None,
+                                  info_splitter_mapper: Optional[AdditionalInfoSplitterToMapper]=None,
+                                  info_mapper_aggregator: Optional[AdditionalInfoMapperToAggregator]=None
+                                  ) -> Parallelizer:
+    mapper_spec = return_mapper_spec_seq_if_none_else_itself(mapper_spec)
+    aggregator_spec = return_aggregator_conc_if_none_else_itself(aggregator_spec)
+    return Parallelizer(make_splitter_indiv_files(), mapper_spec, aggregator_spec, info_splitter_mapper, info_mapper_aggregator)
+
+def make_parallelizer_round_robin(mapper_spec: Optional[MapperSpec]=None,
+                                  aggregator_spec: Optional[AggregatorSpec]=None,
+                                  info_splitter_mapper: Optional[AdditionalInfoSplitterToMapper]=None,
+                                  info_mapper_aggregator: Optional[AdditionalInfoMapperToAggregator]=None
+                                  ) -> Parallelizer:
+    mapper_spec = return_mapper_spec_seq_if_none_else_itself(mapper_spec)
+    aggregator_spec = return_aggregator_conc_if_none_else_itself(aggregator_spec)
+    return Parallelizer(make_splitter_round_robin(), mapper_spec, aggregator_spec, info_splitter_mapper, info_mapper_aggregator)
+
+def make_parallelizer_round_robin_with_unwrap_from_other(parallelizer):
+    new_parallelizer = deepcopy(parallelizer)
+    new_parallelizer.splitter = make_splitter_round_robin_with_unwrap()
+    return new_parallelizer
+
+def make_parallelizer_consec_chunks(mapper_spec: Optional[MapperSpec]=None,
+                                    aggregator_spec: Optional[AggregatorSpec]=None,
+                                    info_splitter_mapper: Optional[AdditionalInfoSplitterToMapper] = None,
+                                    info_mapper_aggregator: Optional[AdditionalInfoMapperToAggregator] = None
+                                    ) -> Parallelizer:
+    mapper_spec = return_mapper_spec_seq_if_none_else_itself(mapper_spec)
+    aggregator_spec = return_aggregator_conc_if_none_else_itself(aggregator_spec)
+    return Parallelizer(make_splitter_consec_chunks(), mapper_spec, aggregator_spec, info_splitter_mapper, info_mapper_aggregator)

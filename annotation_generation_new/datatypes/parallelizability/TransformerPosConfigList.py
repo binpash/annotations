@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import List, Tuple, Optional, Union
 from datatypes_new.BasicDatatypes import OptionArgPosConfigType
 
@@ -37,7 +36,7 @@ def compute_actual_index(index: GeneralIndex, current_list: List[OptionArgPosCon
 
 class TransformerPosConfigList(ABC):
 
-    def __eq__(self, other: TransformerPosConfigList) -> bool:
+    def __eq__(self, other) -> bool:
         return standard_eq(self, other)
 
     def __repr__(self) -> str:
@@ -48,21 +47,19 @@ class TransformerPosConfigList(ABC):
         -> List[OptionArgPosConfigType]:
         pass
 
-    @staticmethod
-    def return_transformer_empty_if_none_else_itself(arg: Optional[TransformerPosConfigList]) \
-            -> TransformerPosConfigList:
-        if arg is None:
-            return make_transformer_empty()
-        else:
-            return arg
+def return_transformer_posconfig_list_empty_if_none_else_itself(arg: Optional[TransformerPosConfigList]) \
+        -> TransformerPosConfigList:
+    if arg is None:
+        return make_transformer_empty()
+    else:
+        return arg
 
-    @staticmethod
-    def return_transformer_same_as_seq_if_none_else_itself(arg: Optional[TransformerPosConfigList]) \
-            -> TransformerPosConfigList:
-        if arg is None:
-            return make_transformer_same_as_seq()
-        else:
-            return arg
+def return_transformer_posconfig_same_as_seq_if_none_else_itself(arg: Optional[TransformerPosConfigList]) \
+        -> TransformerPosConfigList:
+    if arg is None:
+        return make_transformer_same_as_seq()
+    else:
+        return arg
 
 class TransformerPosConfigListSeq(TransformerPosConfigList):
 

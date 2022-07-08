@@ -1,4 +1,3 @@
-from __future__ import annotations
 from copy import deepcopy
 from typing import Optional, List, Literal
 
@@ -8,8 +7,9 @@ from util_standard import standard_repr, standard_eq
 
 from datatypes_new.CommandInvocationWithIOVars import CommandInvocationWithIOVars
 from datatypes_new.BasicDatatypes import FileNameOrStdDescriptor
-from datatypes_new.AccessKind import AccessKind
-from annotation_generation_new.datatypes.parallelizability.TransformerFlagOptionList import TransformerFlagOptionList
+from datatypes_new.AccessKind import AccessKind, make_stream_input
+from annotation_generation_new.datatypes.parallelizability.TransformerFlagOptionList import TransformerFlagOptionList, \
+    return_transformer_flagoption_list_same_as_seq_if_none_else_itself
 # from annotation_generation_new.datatypes.parallelizability.TransformerPosConfigList import TransformerPosConfigList
 from annotation_generation_new.datatypes.parallelizability.AggregatorKind import AggregatorKindEnum
 from annotation_generation_new.datatypes.parallelizability.Aggregator import Aggregator
@@ -44,7 +44,7 @@ class AggregatorSpec(ABC):
         self.is_implemented = is_implemented
 
 
-    def __eq__(self, other: AggregatorSpec) -> bool:
+    def __eq__(self, other) -> bool:
         return standard_eq(self, other)
 
     def __repr__(self) -> str:
@@ -83,75 +83,65 @@ class AggregatorSpec(ABC):
     def get_kind(self):
         return self.kind
 
-    @staticmethod
-    def make_aggregator_spec_concatenate() -> AggregatorSpec:
-        return AggregatorSpecNonFunc(AggregatorKindEnum.CONCATENATE, is_implemented=True)
+def make_aggregator_spec_concatenate() -> AggregatorSpec:
+    return AggregatorSpecNonFunc(AggregatorKindEnum.CONCATENATE, is_implemented=True)
 
-    @staticmethod
-    def make_aggregator_spec_adj_lines_merge() -> AggregatorSpec:
-        return AggregatorSpecNonFunc(AggregatorKindEnum.ADJ_LINES_MERGE, is_implemented=False)
+def make_aggregator_spec_adj_lines_merge() -> AggregatorSpec:
+    return AggregatorSpecNonFunc(AggregatorKindEnum.ADJ_LINES_MERGE, is_implemented=False)
 
-    @staticmethod
-    def make_aggregator_spec_adj_lines_seq() -> AggregatorSpec:
-        return AggregatorSpecNonFunc(AggregatorKindEnum.ADJ_LINES_SEQ, is_implemented=False)
+def make_aggregator_spec_adj_lines_seq() -> AggregatorSpec:
+    return AggregatorSpecNonFunc(AggregatorKindEnum.ADJ_LINES_SEQ, is_implemented=False)
 
-    @staticmethod
-    def make_aggregator_spec_adj_lines_func_from_cmd_inv_with_transformers(
-            flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,
-            # pos_config_list_transformer: Optional[TransformerPosConfigList] = None,
-            is_implemented: bool = False) -> AggregatorSpec:
-        return AggregatorSpecFuncTransformer(kind=AggregatorKindEnum.ADJ_LINES_FUNC,
-                                             flag_option_list_transformer=flag_option_list_transformer,
-                                             # pos_config_list_transformer=pos_config_list_transformer,
-                                             is_implemented=is_implemented)
+def make_aggregator_spec_adj_lines_func_from_cmd_inv_with_transformers(
+        flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,
+        # pos_config_list_transformer: Optional[TransformerPosConfigList] = None,
+        is_implemented: bool = False) -> AggregatorSpec:
+    return AggregatorSpecFuncTransformer(kind=AggregatorKindEnum.ADJ_LINES_FUNC,
+                                         flag_option_list_transformer=flag_option_list_transformer,
+                                         # pos_config_list_transformer=pos_config_list_transformer,
+                                         is_implemented=is_implemented)
 
-    @staticmethod
-    def make_aggregator_spec_adj_lines_func_from_string_representation(
-            cmd_inv_as_str: str,
-            is_implemented: bool= False) -> AggregatorSpec:
-        return AggregatorSpecFuncStringRepresentation(kind=AggregatorKindEnum.ADJ_LINES_FUNC,
-                                                      cmd_inv_as_str=cmd_inv_as_str,
-                                                      is_implemented=is_implemented)
+def make_aggregator_spec_adj_lines_func_from_string_representation(
+        cmd_inv_as_str: str,
+        is_implemented: bool= False) -> AggregatorSpec:
+    return AggregatorSpecFuncStringRepresentation(kind=AggregatorKindEnum.ADJ_LINES_FUNC,
+                                                  cmd_inv_as_str=cmd_inv_as_str,
+                                                  is_implemented=is_implemented)
 
-    @staticmethod
-    def make_aggregator_spec_custom_2_ary_from_cmd_inv_with_transformers(
-            flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,
-            # pos_config_list_transformer: Optional[TransformerPosConfigList] = None,
-            is_implemented: bool = False) -> AggregatorSpec:
-        return AggregatorSpecFuncTransformer(kind=AggregatorKindEnum.CUSTOM_2_ARY,
-                                             flag_option_list_transformer=flag_option_list_transformer,
-                                             # pos_config_list_transformer=pos_config_list_transformer,
-                                             is_implemented=is_implemented)
+def make_aggregator_spec_custom_2_ary_from_cmd_inv_with_transformers(
+        flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,
+        # pos_config_list_transformer: Optional[TransformerPosConfigList] = None,
+        is_implemented: bool = False) -> AggregatorSpec:
+    return AggregatorSpecFuncTransformer(kind=AggregatorKindEnum.CUSTOM_2_ARY,
+                                         flag_option_list_transformer=flag_option_list_transformer,
+                                         # pos_config_list_transformer=pos_config_list_transformer,
+                                         is_implemented=is_implemented)
 
-    @staticmethod
-    def make_aggregator_spec_custom_2_ary_from_string_representation(
-            cmd_inv_as_str: str,
-            is_implemented: bool = False) -> AggregatorSpec:
-        return AggregatorSpecFuncStringRepresentation(kind=AggregatorKindEnum.CUSTOM_2_ARY,
-                                                      cmd_inv_as_str=cmd_inv_as_str,
-                                                      is_implemented=is_implemented)
+def make_aggregator_spec_custom_2_ary_from_string_representation(
+        cmd_inv_as_str: str,
+        is_implemented: bool = False) -> AggregatorSpec:
+    return AggregatorSpecFuncStringRepresentation(kind=AggregatorKindEnum.CUSTOM_2_ARY,
+                                                  cmd_inv_as_str=cmd_inv_as_str,
+                                                  is_implemented=is_implemented)
 
-    @staticmethod
-    def make_aggregator_spec_custom_n_ary_from_cmd_inv_with_transformers(
-            flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,
-            # pos_config_list_transformer: Optional[TransformerPosConfigList] = None,
-            is_implemented: bool = False) -> AggregatorSpec:
-        return AggregatorSpecFuncTransformer(kind=AggregatorKindEnum.CUSTOM_N_ARY,
-                                             flag_option_list_transformer=flag_option_list_transformer,
-                                             # pos_config_list_transformer=pos_config_list_transformer,
-                                             is_implemented=is_implemented)
+def make_aggregator_spec_custom_n_ary_from_cmd_inv_with_transformers(
+        flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,
+        # pos_config_list_transformer: Optional[TransformerPosConfigList] = None,
+        is_implemented: bool = False) -> AggregatorSpec:
+    return AggregatorSpecFuncTransformer(kind=AggregatorKindEnum.CUSTOM_N_ARY,
+                                         flag_option_list_transformer=flag_option_list_transformer,
+                                         # pos_config_list_transformer=pos_config_list_transformer,
+                                         is_implemented=is_implemented)
 
-    @staticmethod
-    def make_aggregator_spec_custom_n_ary_from_string_representation(
-            cmd_inv_as_str: str,
-            is_implemented: bool = False) -> AggregatorSpec:
-        return AggregatorSpecFuncStringRepresentation(kind=AggregatorKindEnum.CUSTOM_N_ARY,
-                                                      cmd_inv_as_str=cmd_inv_as_str,
-                                                      is_implemented=is_implemented)
+def make_aggregator_spec_custom_n_ary_from_string_representation(
+        cmd_inv_as_str: str,
+        is_implemented: bool = False) -> AggregatorSpec:
+    return AggregatorSpecFuncStringRepresentation(kind=AggregatorKindEnum.CUSTOM_N_ARY,
+                                                  cmd_inv_as_str=cmd_inv_as_str,
+                                                  is_implemented=is_implemented)
 
-    @staticmethod
-    def return_aggregator_conc_if_none_else_itself(arg: Optional[AggregatorSpec]) -> AggregatorSpec:
-        return return_default_if_none_else_itself(arg, AggregatorSpec.make_aggregator_spec_concatenate())
+def return_aggregator_conc_if_none_else_itself(arg: Optional[AggregatorSpec]) -> AggregatorSpec:
+    return return_default_if_none_else_itself(arg, make_aggregator_spec_concatenate())
 
 
 
@@ -195,7 +185,7 @@ class AggregatorSpecFuncTransformer(AggregatorSpec):
         AggregatorSpec.__init__(self, kind, is_implemented)
         # for now, we keep everything in operand list as it is but substitute streaming input and output
         self.flag_option_list_transformer: TransformerFlagOptionList = \
-            TransformerFlagOptionList.return_transformer_same_as_seq_if_none_else_itself(flag_option_list_transformer)
+            return_transformer_flagoption_list_same_as_seq_if_none_else_itself(flag_option_list_transformer)
 
     # note that this changes the parameter original_cmd_invocation
     def get_aggregator(self,
@@ -218,7 +208,7 @@ class AggregatorSpecFuncTransformer(AggregatorSpec):
         aggregator_cmd_inv.operand_list = inputs_from # TODO: fix typing
         for input_id in inputs_from:
             assert not input_id in aggregator_cmd_inv.access_map
-            aggregator_cmd_inv.access_map[input_id] = AccessKind.make_stream_input()
+            aggregator_cmd_inv.access_map[input_id] = make_stream_input()
         aggregator_cmd_inv.replace_var(aggregator_cmd_inv.implicit_use_of_streaming_output, output_to)
         return Aggregator.make_aggregator_from_cmd_inv_with_io(aggregator_cmd_inv, self.kind)
 

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import Optional, List, Union
 
 from datatypes_new.BasicDatatypesWithIO import OptionWithIO, FileNameOrStdDescriptorWithIOInfo
@@ -26,7 +25,7 @@ class Aggregator(CommandInvocationWithIOVars):
         self.kind = kind
         CommandInvocationWithIOVars.__init__(self, cmd_name, flag_option_list, operand_list, implicit_use_of_streaming_input, implicit_use_of_streaming_output, access_map)
 
-    def __eq__(self, other: Aggregator) -> bool:
+    def __eq__(self, other) -> bool:
         return standard_eq(self, other)
 
     def __repr__(self) -> str:

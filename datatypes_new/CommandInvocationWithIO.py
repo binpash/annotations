@@ -1,11 +1,7 @@
-from __future__ import annotations
 from typing import List, Union, Optional, Tuple
 
 from datatypes_new.BasicDatatypes import Flag, ArgStringType, FileName, StdDescriptor, FileNameOrStdDescriptor
-from datatypes_new.BasicDatatypesWithIO import OptionWithIO, FileNameOrStdDescriptorWithIOInfo, FileNameWithIOInfo, StdDescriptorWithIOInfo, \
-        add_access_to_stream_input, add_access_to_stream_output
-from datatypes_new.AccessKind import AccessKind, AccessKindEnum
-from annotation_generation_new.datatypes.Inputs import Inputs, InputsEnum
+from datatypes_new.BasicDatatypesWithIO import OptionWithIO, FileNameOrStdDescriptorWithIOInfo, FileNameWithIOInfo, StdDescriptorWithIOInfo
 from util_standard import standard_repr, standard_eq
 
 class CommandInvocationWithIO:
@@ -28,7 +24,7 @@ class CommandInvocationWithIO:
     def __repr__(self):
         return standard_repr(self)
 
-    def __eq__(self, other: CommandInvocationWithIO):
+    def __eq__(self, other):
         return standard_eq(self, other)
 
 

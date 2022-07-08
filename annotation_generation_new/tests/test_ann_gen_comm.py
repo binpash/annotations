@@ -1,6 +1,6 @@
 from util_flag_option import make_arg_simple
 from datatypes_new.BasicDatatypes import Operand
-from datatypes_new.BasicDatatypesWithIO import StdDescriptorWithIOInfo
+from datatypes_new.BasicDatatypesWithIO import make_stdout_with_access_output
 from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
 from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
 from annotation_generation_new.datatypes.InputOutputInfo import InputOutputInfo
@@ -25,7 +25,7 @@ def test_comm_1() -> None:
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 2
     assert len(cmd_inv_with_io.get_operands_with_stream_output()) == 0
     assert cmd_inv_with_io.implicit_use_of_streaming_input is None
-    assert cmd_inv_with_io.implicit_use_of_streaming_output == StdDescriptorWithIOInfo.make_stdout_with_access_output()
+    assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
