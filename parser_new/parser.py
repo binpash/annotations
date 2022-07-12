@@ -114,7 +114,7 @@ def get_dict_option_to_primary_repr(json_data):
 #     return dict_option_to_class_for_arg
 
 def are_all_individually_flags(potential_flag_or_option, set_of_all_flags):
-    if potential_flag_or_option[0] != '-':
+    if potential_flag_or_option[0] != '-' or potential_flag_or_option == '-':
         return False
     return all(f'-{split_el}' in set_of_all_flags for split_el in list(potential_flag_or_option[1:]))
 #

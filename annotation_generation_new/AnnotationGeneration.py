@@ -21,6 +21,9 @@ from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorCut
 from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorUniq import InputOutputInfoGeneratorUniq
 from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorComm import InputOutputInfoGeneratorComm
 from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorSort import InputOutputInfoGeneratorSort
+from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorSed import InputOutputInfoGeneratorSed
+from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorCol import InputOutputInfoGeneratorCol
+from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorXargs import InputOutputInfoGeneratorXargs
 
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorGrep import ParallelizabilityInfoGeneratorGrep
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorMv import   ParallelizabilityInfoGeneratorMv
@@ -32,6 +35,9 @@ from annotation_generation_new.annotation_generators.ParallelizabilityInfoGenera
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorUniq import ParallelizabilityInfoGeneratorUniq
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorComm import ParallelizabilityInfoGeneratorComm
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorSort import ParallelizabilityInfoGeneratorSort
+from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorSed import ParallelizabilityInfoGeneratorSed
+from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorCol import ParallelizabilityInfoGeneratorCol
+from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorXArgs import ParallelizabilityInfoGeneratorXargs
 
 # Dictionary that contains the MetaGenerator for each command
 dict_cmd_name_inputoutput_info_generator_module = {
@@ -44,7 +50,10 @@ dict_cmd_name_inputoutput_info_generator_module = {
     "cut":  InputOutputInfoGeneratorCut,
     "uniq": InputOutputInfoGeneratorUniq,
     "comm": InputOutputInfoGeneratorComm,
-    "sort": InputOutputInfoGeneratorSort
+    "sort": InputOutputInfoGeneratorSort,
+    "sed": InputOutputInfoGeneratorSed,
+    "col": InputOutputInfoGeneratorCol,
+    "xargs": InputOutputInfoGeneratorXargs
 }
 dict_cmd_name_parallelizability_info_generator_module = {
     "grep": ParallelizabilityInfoGeneratorGrep,
@@ -56,7 +65,10 @@ dict_cmd_name_parallelizability_info_generator_module = {
     "cut":  ParallelizabilityInfoGeneratorCut,
     "uniq": ParallelizabilityInfoGeneratorUniq,
     "comm": ParallelizabilityInfoGeneratorComm,
-    "sort": ParallelizabilityInfoGeneratorSort
+    "sort": ParallelizabilityInfoGeneratorSort,
+    "sed": ParallelizabilityInfoGeneratorSed,
+    "col": ParallelizabilityInfoGeneratorCol,
+    "xargs": ParallelizabilityInfoGeneratorXargs
 }
 
 # "mv": "Mv",

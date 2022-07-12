@@ -68,3 +68,16 @@ class ParallelizabilityInfoGeneratorInterface(Generator_Interface, ABC):
 
     def set_commutative(self) -> None:
         self.parallelizability_info.set_commutative()
+
+
+    # for original PaSh interface
+
+    def set_parallelizability_info_for_pure(self):
+        pass
+
+    def set_parallelizability_info_for_stateless(self):
+        self.append_to_parallelizer_list_cc_seq_conc()
+        self.append_to_parallelizer_list_rr_seq_conc()
+
+
+
