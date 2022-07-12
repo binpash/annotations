@@ -1,18 +1,6 @@
 {
     "flag": [
         [
-            "-b"
-        ],
-        [
-            "-c"
-        ],
-        [
-            "-d"
-        ],
-        [
-            "-f"
-        ],
-        [
             "-n"
         ],
         [
@@ -38,18 +26,22 @@
     ],
     "option": [
         [
+            "-b",
             "--bytes",
             "LIST"
         ],
         [
+            "-c",
             "--characters",
             "LIST"
         ],
         [
+            "-d",
             "--delimiter",
             "DELIM"
         ],
         [
+            "-f",
             "--fields",
             "LIST"
         ],

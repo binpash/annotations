@@ -99,6 +99,11 @@ class InputOutputInfo:
     def set_first_operand_as_positional_config_arg_type_filename_or_std_descriptor(self) -> None:
         self.operand_list_typer[0] = (WhichClassForArg.FILESTD, make_config_input())
 
+    def set_all_operands_as_arg_string(self) -> None:
+        # TODO: this is used for operands of XARGS,
+        # not correct but sound approximation for cases where input is provided by xargs via stdin
+        self.operand_list_typer = [(WhichClassForArg.ARGSTRING, None)] * len(self.operand_list_typer)
+
     # methods to apply the InputOutputInfo to a command invocation
 
     def apply_input_output_info_to_command_invocation(self, cmd_inv: CommandInvocationInitial) \

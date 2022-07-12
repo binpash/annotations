@@ -136,3 +136,6 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
 
     def set_first_operand_as_positional_config_arg_type_filename_or_std_descriptor(self):
         self.input_output_info.set_first_operand_as_positional_config_arg_type_filename_or_std_descriptor()
+
+    def set_all_operands_as_arg_string(self):
+        self.input_output_info.set_all_operands_as_arg_string()

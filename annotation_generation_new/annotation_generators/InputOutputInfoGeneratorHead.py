@@ -18,4 +18,5 @@ class InputOutputInfoGeneratorHead(InputOutputInfoGeneratorInterface):
         self.if_no_operands_given_stdin_implicitly_used()
 
     def apply_operands_transformer(self) -> None:
+        self.if_no_operands_given_stdin_implicitly_used()
         self.all_operands_are_streaming_inputs()

@@ -4,43 +4,6 @@
             "--null"
         ],
         [
-            "-a",
-            "--arg-file"
-        ],
-        [
-            "--delimiter",
-            "-d"
-        ],
-        [
-            "-E"
-        ],
-        [
-            "-eeof-str",
-            "--eof"
-        ],
-        [
-            "-I"
-        ],
-        [
-            "-ireplace-str",
-            "--replace"
-        ],
-        [
-            "-L"
-        ],
-        [
-            "-lmax-lines",
-            "--max-lines"
-        ],
-        [
-            "-n",
-            "--max-args"
-        ],
-        [
-            "-P",
-            "--max-procs"
-        ],
-        [
             "-o",
             "--open-tty"
         ],
@@ -77,5 +40,44 @@
             "--version"
         ]
     ],
-    "option": []
+    "option": [
+        [
+            "-a",
+            "--arg-file",
+            ["FILE", "OTHER_INPUT"]
+        ],
+        [
+            "--delimiter",
+            "-d",
+            "DELIM"
+        ],
+        [
+            "-E",
+            "-e",
+            "--eof",
+            "EOF_STR"
+        ],
+        [
+            "-I",
+            "-i",
+            "--replace",
+            "REPLACE-STR"
+        ],
+        [
+            "-L",
+            "-l",
+            "--max-lines",
+            "max-lines"
+        ],
+        [
+            "-n",
+            "--max-args",
+            "max-args"
+        ],
+        [
+            "-P",
+            "--max-procs",
+            "max-procs"
+        ]
+    ]
 }
