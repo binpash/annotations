@@ -1,0 +1,15 @@
+{
+    "flag": [
+        [
+            "-f"
+        ],
+        [
+            "-n"
+        ],
+        [
+            "-p"
+        ]
+    ],
+    "option": [],
+    "comment": "ignores [name[=value] ...]"
+}
