@@ -1,6 +1,6 @@
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGenerator_Interface import ParallelizabilityInfoGeneratorInterface
 from annotation_generation_new.datatypes.parallelizability.Parallelizer import \
-    AdditionalInfoSplitterToMapper, make_parallelizer_round_robin
+    AdditionalInfoSplitterToMapper, make_parallelizer_round_robin, make_parallelizer_consec_chunks
 from annotation_generation_new.datatypes.parallelizability.MapperSpec import make_mapper_spec_custom
 from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import \
     make_aggregator_spec_custom_2_ary_from_string_representation
@@ -57,7 +57,14 @@ class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface
                 else:   # none of the above affecting flags
                     pass    #just keep mapper and aggregator None and thus add RR_SEQ_CONC
             # we exploit that mapper_spec becomes seq and aggregator_spec becomes conc if given None
-            parallelizer_rr = make_parallelizer_round_robin(mapper_spec=mapper_spec,
-                                                                         aggregator_spec=aggregator_spec,
-                                                                         info_splitter_mapper=add_info_from_splitter)
-            self.append_to_parallelizer_list(parallelizer_rr)
+            # check can be removed once all are implemented! (exploits short-circuiting)
+            if (mapper_spec is None or mapper_spec.is_implemented) and \
+                    (aggregator_spec is None or aggregator_spec.is_implemented):
+                parallelizer_rr = make_parallelizer_round_robin(mapper_spec=mapper_spec,
+                                                                 aggregator_spec=aggregator_spec,
+                                                                 info_splitter_mapper=add_info_from_splitter)
+                self.append_to_parallelizer_list(parallelizer_rr)
+                parallelizer_cc = make_parallelizer_consec_chunks(mapper_spec=mapper_spec,
+                                                                  aggregator_spec=aggregator_spec,
+                                                                  info_splitter_mapper=add_info_from_splitter)
+                self.append_to_parallelizer_list(parallelizer_cc)

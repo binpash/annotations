@@ -113,6 +113,10 @@ class Operand(BaseClassForBasicDatatypes):
         name_as_string = str(self.name)
         return name_as_string.find(r"\n") > 0
 
+    def contains_null_char(self):
+        name_as_string = str(self.name)
+        return name_as_string.find(r"\0") > 0
+
     def to_arg_string_type(self):
         return ArgStringType(self.name)
 
