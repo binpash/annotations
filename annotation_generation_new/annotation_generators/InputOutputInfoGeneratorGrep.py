@@ -30,10 +30,16 @@ class InputOutputInfoGeneratorGrep(InputOutputInfoGeneratorInterface):
 
     def apply_operands_transformer(self) -> None:
         if self.does_flag_option_list_contain_at_least_one_of(["-e", "-f"]):
-            self.all_operands_are_streaming_inputs() # this is true also if empty
+            if self.get_operand_list_length() == 0:
+                self.set_implicit_use_of_stdin()
+            else:
+                self.all_operands_are_streaming_inputs() # this is true also if empty
         else:
             self.set_first_operand_as_positional_config_arg_type_string()
-            self.all_but_first_operand_is_streaming_input()
+            if self.get_operand_list_length() == 1:
+                self.set_implicit_use_of_stdin()
+            else:
+                self.all_but_first_operand_is_streaming_input()
         # TODO: make correct CA for input list
         # deciding on whether there is an input to check, add to input_list
         # if self.get_length_ioinfo_positional_input_list() == 0:

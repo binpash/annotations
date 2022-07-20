@@ -62,9 +62,17 @@ class InputOutputInfo:
     def all_operands_are_streaming_inputs(self) -> None:
         pass # since this is the default in the constructor
 
+    def all_operands_are_streaming_outputs(self) -> None:
+        number_of_operands = len(self.operand_list_typer)
+        self.operand_list_typer = [(WhichClassForArg.FILESTD, make_stream_output())] * number_of_operands
+
     def all_operands_are_other_inputs(self) -> None:
         number_of_operands = len(self.operand_list_typer)
         self.operand_list_typer = [(WhichClassForArg.FILESTD, make_other_input())] * number_of_operands
+
+    def all_operands_are_other_outputs(self) -> None:
+        number_of_operands = len(self.operand_list_typer)
+        self.operand_list_typer = [(WhichClassForArg.FILESTD, make_other_output())] * number_of_operands
 
     def all_but_last_operand_is_streaming_input(self) -> None:
         pass # since this is the default in the constructor, and we assume the last is assigned somewhere else
@@ -76,6 +84,11 @@ class InputOutputInfo:
 
     def all_but_first_operand_is_streaming_input(self) -> None:
         pass # since this is the default in the constructor and we assume the last is assigned somewhere else
+
+    def all_but_first_operand_is_streaming_output(self) -> None:
+        original_first_entry = self.operand_list_typer[0]
+        self.all_operands_are_streaming_outputs()
+        self.operand_list_typer[0] = original_first_entry
 
     def all_but_first_operand_is_other_input(self) -> None:
         original_first_entry = self.operand_list_typer[0]
@@ -98,6 +111,11 @@ class InputOutputInfo:
 
     def set_first_operand_as_positional_config_arg_type_filename_or_std_descriptor(self) -> None:
         self.operand_list_typer[0] = (WhichClassForArg.FILESTD, make_config_input())
+
+    def set_all_operands_as_arg_string(self) -> None:
+        # TODO: this is used for operands of XARGS,
+        # not correct but sound approximation for cases where input is provided by xargs via stdin
+        self.operand_list_typer = [(WhichClassForArg.ARGSTRING, None)] * len(self.operand_list_typer)
 
     # methods to apply the InputOutputInfo to a command invocation
 
@@ -158,3 +176,11 @@ class InputOutputInfo:
             return OptionWithIO(flagoption.get_name(), option_arg_new)
         else:
             raise Exception("neither flag nor option")
+
+    def has_other_outputs(self):
+        for _, pot_accesskind in self.flagoption_list_typer + self.operand_list_typer:
+            if pot_accesskind is not None:
+                # is not None -> of type AccessKind
+                if pot_accesskind.is_other_output():
+                    return True
+        return False

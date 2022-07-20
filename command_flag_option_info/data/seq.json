@@ -1,0 +1,26 @@
+{
+    "flag": [
+        [
+            "-w",
+            "--equal-width"
+        ],
+        [
+            "--help"
+        ],
+        [
+            "--version"
+        ]
+    ],
+    "option": [
+        [
+            "-f",
+            "--format",
+            "FORMAT"
+        ],
+        [
+            "-s",
+            "--separator",
+            "STRING"
+        ]
+    ]
+}

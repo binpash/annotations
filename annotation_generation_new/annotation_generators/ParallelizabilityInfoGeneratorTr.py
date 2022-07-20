@@ -40,9 +40,10 @@ class ParallelizabilityInfoGeneratorTr(ParallelizabilityInfoGeneratorInterface):
         last_operand: Operand = self.cmd_inv.operand_list[-1]
         # is contained if (a) no -c and in set, or (b) -c and not in set
         last_operand_contains_newline: bool = last_operand.contains_new_line()
+        last_operand_contains_null_char: bool = last_operand.contains_null_char()
         if len(self.cmd_inv.operand_list) == 1 and self.does_flag_option_list_contain_at_least_one_of(["-c"]):
-            return not last_operand_contains_newline
+            return not (last_operand_contains_newline or last_operand_contains_null_char)
         else:  # '-c' (if existent) does not refer to the given set
-            return last_operand_contains_newline
+            return (last_operand_contains_newline or last_operand_contains_null_char)
 
 

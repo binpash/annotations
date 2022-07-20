@@ -1,0 +1,49 @@
+{
+    "flag": [
+        [
+            "-f",
+            "--force"
+        ],
+        [
+            "-i"
+        ],
+        [
+            "-I"
+        ],
+        [
+            "--one-file-system"
+        ],
+        [
+            "--no-preserve-root"
+        ],
+        [
+            "-r",
+            "-R",
+            "--recursive"
+        ],
+        [
+            "-d",
+            "--dir"
+        ],
+        [
+            "-v",
+            "--verbose"
+        ],
+        [
+            "--help"
+        ],
+        [
+            "--version"
+        ]
+    ],
+    "option": [
+        [
+            "--interactive",
+            "WHEN"
+        ],
+        [
+            "--preserve-root",
+            "all"
+        ]
+    ]
+}
