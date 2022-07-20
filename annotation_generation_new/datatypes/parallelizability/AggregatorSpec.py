@@ -3,13 +3,14 @@ from typing import Optional, List, Literal
 
 from abc import ABC, abstractmethod
 
+from parser_new.parser import parse
 from util_standard import standard_repr, standard_eq
 
 from datatypes_new.CommandInvocationWithIOVars import CommandInvocationWithIOVars
 from datatypes_new.BasicDatatypes import FileNameOrStdDescriptor
-from datatypes_new.AccessKind import AccessKind, make_stream_input
+from datatypes_new.AccessKind import AccessKind, make_stream_input, make_stream_output
 from annotation_generation_new.datatypes.parallelizability.TransformerFlagOptionList import TransformerFlagOptionList, \
-    return_transformer_flagoption_list_same_as_seq_if_none_else_itself
+    return_transformer_flagoption_list_same_as_seq_if_none_else_itself, TransformerFlagOptionListCustom
 # from annotation_generation_new.datatypes.parallelizability.TransformerPosConfigList import TransformerPosConfigList
 from annotation_generation_new.datatypes.parallelizability.AggregatorKind import AggregatorKindEnum
 from annotation_generation_new.datatypes.parallelizability.Aggregator import Aggregator
@@ -228,18 +229,24 @@ class AggregatorSpecFuncStringRepresentation(AggregatorSpec):
                        inputs_from: List[FileNameOrStdDescriptor],
                        output_to: FileNameOrStdDescriptor
                        ) -> Optional[Aggregator]:
-        # TODO: compute CommandInvocationWithIO from string representation
-        # TODO: in the CA, swap the inputs and outputs
         if not self.is_implemented:
             return None
+        agg_cmd_inv = parse(self.cmd_inv_as_str)
+        # Assumption: inputs are given as operands and output is stdout
+        # Assumption: no inputs or outputs given (also as config) since we do not do access map things etc...
+        access_map = {input_id: make_stream_input() for input_id in inputs_from}
+        access_map[output_to] = make_stream_output()
+        agg_cmd_inv_with_io_vars = Aggregator(kind=self.kind,
+                                              access_map=access_map,
+                                              cmd_name = agg_cmd_inv.cmd_name,
+                                              flag_option_list=agg_cmd_inv.flag_option_list,
+                                              operand_list=inputs_from,
+                                              implicit_use_of_streaming_input=None,
+                                              implicit_use_of_streaming_output=output_to)
         if self.kind == AggregatorKindEnum.ADJ_LINES_FUNC:
             assert(len(inputs_from) == 1)
-            # TODO
-            return None
+            # TODO: isn't it 2 here?
+            raise Exception("case not yet implemented")
         elif self.kind == AggregatorKindEnum.CUSTOM_2_ARY:
             assert(len(inputs_from) == 2)
-            # TODO
-            return None
-        elif self.kind == AggregatorKindEnum.CUSTOM_N_ARY:
-            # TODO
-            return None
+        return agg_cmd_inv_with_io_vars

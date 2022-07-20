@@ -94,6 +94,15 @@ class CommandInvocationWithIOVars:
         self.map_var(function_to_apply)
         return outputs
 
+    def has_other_outputs(self):
+        outputs = []
+        def function_to_apply(el):
+            if self.access_map[el].is_other_output():
+                outputs.append(el)
+            return el
+        self.map_var(function_to_apply)
+        return len(outputs) > 0
+
     def replace_var_consistently(self, from_var, to_var):
         assert(from_var in self.access_map) # if this is not true, something went wrong before
         self.access_map[to_var] = self.access_map.pop(from_var)

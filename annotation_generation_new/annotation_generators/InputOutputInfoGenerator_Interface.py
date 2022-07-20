@@ -107,8 +107,14 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
     def all_operands_are_streaming_inputs(self) -> None:
         self.input_output_info.all_operands_are_streaming_inputs()
 
+    def all_operands_are_streaming_outputs(self) -> None:
+        self.input_output_info.all_operands_are_streaming_outputs()
+
     def all_operands_are_other_inputs(self) -> None:
         self.input_output_info.all_operands_are_other_inputs()
+
+    def all_operands_are_other_outputs(self) -> None:
+        self.input_output_info.all_operands_are_other_outputs()
 
     def all_but_last_operand_is_streaming_input(self):
         self.input_output_info.all_but_last_operand_is_streaming_input()
@@ -118,6 +124,9 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
 
     def all_but_first_operand_is_streaming_input(self):
         self.input_output_info.all_but_first_operand_is_streaming_input()
+
+    def all_but_first_operand_is_streaming_output(self):
+        self.input_output_info.all_but_first_operand_is_streaming_output()
 
     def all_but_first_operand_is_other_input(self):
         self.input_output_info.all_but_first_operand_is_other_input()

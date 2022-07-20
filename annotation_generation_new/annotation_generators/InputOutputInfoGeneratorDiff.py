@@ -1,8 +1,8 @@
 from annotation_generation_new.annotation_generators.InputOutputInfoGenerator_Interface import InputOutputInfoGeneratorInterface
 
 
-class InputOutputInfoGeneratorExport(InputOutputInfoGeneratorInterface):
+class InputOutputInfoGeneratorDiff(InputOutputInfoGeneratorInterface):
 
     def generate_info(self) -> None:
-        # TODO: currently not captured that it changed environment as it does?
-        pass
+        # all operands streaming inputs
+        self.set_implicit_use_of_stdout()

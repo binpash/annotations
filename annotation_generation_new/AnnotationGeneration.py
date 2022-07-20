@@ -24,10 +24,18 @@ from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorSor
 from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorSed import InputOutputInfoGeneratorSed
 from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorCol import InputOutputInfoGeneratorCol
 from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorXargs import InputOutputInfoGeneratorXargs
-from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorExport import InputOutputInfoGeneratorExport
 from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorSeq import InputOutputInfoGeneratorSeq
 from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorTestOne import InputOutputInfoGeneratorTestOne
 from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorTestTwo import InputOutputInfoGeneratorTestTwo
+from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorAltBigramsAux import InputOutputInfoGeneratorAltBigramsAux
+from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorAltBigramAuxReduce import InputOutputInfoGeneratorAltBigramAuxReduce
+from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorMkfifo import InputOutputInfoGeneratorMkfifo
+from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorDiff import InputOutputInfoGeneratorDiff
+from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorRm import InputOutputInfoGeneratorRm
+from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorTee import InputOutputInfoGeneratorTee
+from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorCustomSort import InputOutputInfoGeneratorCustomSort
+from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorCustomTr import InputOutputInfoGeneratorCustomTr
+from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorSetDiff import InputOutputInfoGeneratorSetDiff
 
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorGrep import ParallelizabilityInfoGeneratorGrep
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorMv import   ParallelizabilityInfoGeneratorMv
@@ -46,6 +54,15 @@ from annotation_generation_new.annotation_generators.ParallelizabilityInfoGenera
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorSeq import ParallelizabilityInfoGeneratorSeq
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorTestOne import ParallelizabilityInfoGeneratorTestOne
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorTestTwo import ParallelizabilityInfoGeneratorTestTwo
+from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorAltBigramsAux import ParallelizabilityInfoGeneratorAltBigramsAux
+from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorAltBigramAuxReduce import ParallelizabilityInfoGeneratorAltBigramAuxReduce
+from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorMkfifo import ParallelizabilityInfoGeneratorMkfifo
+from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorDiff import ParallelizabilityInfoGeneratorDiff
+from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorRm import ParallelizabilityInfoGeneratorRm
+from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorTee import ParallelizabilityInfoGeneratorTee
+from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorCustomSort import ParallelizabilityInfoGeneratorCustomSort
+from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorCustomTr import ParallelizabilityInfoGeneratorCustomTr
+from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorSetDiff import ParallelizabilityInfoGeneratorSetDiff
 
 # Dictionary that contains the MetaGenerator for each command
 dict_cmd_name_inputoutput_info_generator_module = {
@@ -62,10 +79,18 @@ dict_cmd_name_inputoutput_info_generator_module = {
     "sed": InputOutputInfoGeneratorSed,
     "col": InputOutputInfoGeneratorCol,
     "xargs": InputOutputInfoGeneratorXargs,
-    "export": InputOutputInfoGeneratorExport,
     "seq": InputOutputInfoGeneratorSeq,
     "test_one": InputOutputInfoGeneratorTestOne,
-    "test_two": InputOutputInfoGeneratorTestTwo
+    "test_two": InputOutputInfoGeneratorTestTwo,
+    "alt_bigrams_aux": InputOutputInfoGeneratorAltBigramsAux,
+    "alt_bigram_aux_reduce": InputOutputInfoGeneratorAltBigramAuxReduce,
+    "mkfifo": InputOutputInfoGeneratorMkfifo,
+    "diff": InputOutputInfoGeneratorDiff,
+    "rm": InputOutputInfoGeneratorRm,
+    "tee": InputOutputInfoGeneratorTee,
+    "custom_sort": InputOutputInfoGeneratorCustomSort,
+    "custom_tr": InputOutputInfoGeneratorCustomTr,
+    "set_diff": InputOutputInfoGeneratorSetDiff
 }
 dict_cmd_name_parallelizability_info_generator_module = {
     "grep": ParallelizabilityInfoGeneratorGrep,
@@ -84,7 +109,16 @@ dict_cmd_name_parallelizability_info_generator_module = {
     "export": ParallelizabilityInfoGeneratorExport,
     "seq": ParallelizabilityInfoGeneratorSeq,
     "test_one": ParallelizabilityInfoGeneratorTestOne,
-    "test_two": ParallelizabilityInfoGeneratorTestTwo
+    "test_two": ParallelizabilityInfoGeneratorTestTwo,
+    "alt_bigrams_aux": ParallelizabilityInfoGeneratorAltBigramsAux,
+    "alt_bigram_aux_reduce": ParallelizabilityInfoGeneratorAltBigramAuxReduce,
+    "mkfifo": ParallelizabilityInfoGeneratorMkfifo,
+    "diff": ParallelizabilityInfoGeneratorDiff,
+    "rm": ParallelizabilityInfoGeneratorRm,
+    "tee": ParallelizabilityInfoGeneratorTee,
+    "custom_sort": ParallelizabilityInfoGeneratorCustomSort,
+    "custom_tr": ParallelizabilityInfoGeneratorCustomTr,
+    "set_diff": ParallelizabilityInfoGeneratorSetDiff
 }
 
 # "mv": "Mv",
@@ -103,8 +137,11 @@ dict_cmd_name_parallelizability_info_generator_module = {
 # cannot be merged due to types
 def get_input_output_info_from_cmd_invocation(cmd_invocation : CommandInvocationInitial) -> InputOutputInfo:
     # Get the Generator
-    info_generator_class_for_cmd = dict_cmd_name_inputoutput_info_generator_module[cmd_invocation.cmd_name]
+    info_generator_class_for_cmd = dict_cmd_name_inputoutput_info_generator_module.get(cmd_invocation.cmd_name)
+    if info_generator_class_for_cmd is None:
+        return None
     # Initialize the info generator object
+    # TODO: be more rigorous and allow empty parallelization annotation: return ParallelizabilityInfo with [] as default
     info_generator_object = info_generator_class_for_cmd(cmd_invocation)
     # Generate info
     info_generator_object.generate_info()

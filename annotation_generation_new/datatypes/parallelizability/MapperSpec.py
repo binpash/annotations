@@ -2,12 +2,13 @@ from typing import Optional
 
 from enum import Enum
 
+from parser_new.parser import parse
 from util_standard import standard_repr, standard_eq
 
 from datatypes_new.CommandInvocationWithIOVars import CommandInvocationWithIOVars
 from datatypes_new.BasicDatatypes import FileNameOrStdDescriptor
 from annotation_generation_new.datatypes.parallelizability.TransformerFlagOptionList import TransformerFlagOptionList, \
-    return_transformer_flagoption_list_same_as_seq_if_none_else_itself
+    return_transformer_flagoption_list_same_as_seq_if_none_else_itself, TransformerFlagOptionListCustom
 # from annotation_generation_new.datatypes.parallelizability.TransformerPosConfigList import TransformerPosConfigList
 from annotation_generation_new.datatypes.parallelizability.Mapper import Mapper
 from util_new import return_default_if_none_else_itself
@@ -99,3 +100,12 @@ def make_mapper_spec_custom(spec_mapper_cmd_name: str,
                       flag_option_list_transformer= actual_flag_option_list_transformer,
                       # pos_config_list_transformer= actual_pos_config_list_transformer,
                       is_implemented= is_implemented)
+
+def make_mapper_spec_custom_from_string_representation(
+        cmd_inv_as_str: str,
+        is_implemented: bool = False) -> MapperSpec:
+    cmd_inv = parse(cmd_inv_as_str)
+    FlagOptionListTransformer = TransformerFlagOptionListCustom(cmd_inv.flag_option_list)
+    return make_mapper_spec_custom(spec_mapper_cmd_name=cmd_inv.cmd_name,
+                            flag_option_list_transformer=FlagOptionListTransformer,
+                            is_implemented=is_implemented)
