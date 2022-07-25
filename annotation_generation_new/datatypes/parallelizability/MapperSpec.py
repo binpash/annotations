@@ -1,7 +1,8 @@
-from typing import Optional
+from typing import Optional, List
 
 from enum import Enum
 
+from datatypes_new.AccessKind import make_stream_input, make_stream_output
 from parser_new.parser import parse
 from util_standard import standard_repr, standard_eq
 
@@ -37,7 +38,6 @@ class MapperSpec:
         if kind == MapperSpecKindEnum.SAME_AS_SEQ:
             assert spec_mapper_cmd_name is None
             assert flag_option_list_transformer is None
-            # assert pos_config_list_transformer is None
         elif kind == MapperSpecKindEnum.CUSTOM:
             # no assertions since None translate to "see above"
             pass
@@ -56,8 +56,9 @@ class MapperSpec:
     def get_mapper(self,
                    original_cmd_invocation: CommandInvocationWithIOVars,
                    input_from: FileNameOrStdDescriptor,
-                   output_to: FileNameOrStdDescriptor
-                   ) -> Optional[Mapper]:
+                   output_to: FileNameOrStdDescriptor,
+                   aux_output_tos: List[FileNameOrStdDescriptor]
+            ) -> Optional[Mapper]:
         if not self.is_implemented:
             # this is a handle to specify future mappers without the need to implement them
             return None
@@ -75,7 +76,19 @@ class MapperSpec:
                             access_map = original_cmd_invocation.access_map)
         else:
             raise Exception("MapperSpec with unknown kind!")
-        mapper.substitute_inputs_and_outputs_in_cmd_invocation([input_from], [output_to])
+        if len(aux_output_tos) == 0: # we previously checked that they are as many as specified in the parallelizer
+            mapper.substitute_inputs_and_outputs_in_cmd_invocation([input_from], [output_to])
+        else:
+            # ASSUMPTION: operands given in that order: input, output, aux_output_1, aux_output_2, ...
+            for operand in mapper.operand_list:
+                mapper.access_map.pop(operand)
+            mapper.operand_list = [input_from, output_to] + [aux_output_to for aux_output_to in aux_output_tos]
+            mapper.access_map[input_from] = make_stream_input()
+            mapper.access_map[output_to] = make_stream_output()
+            for aux_output_to in aux_output_tos:
+                mapper.access_map[aux_output_to] = make_stream_output()
+            mapper.implicit_use_of_streaming_output = None
+            mapper.implicit_use_of_streaming_input = None
         return mapper
 
 ## factory methods
