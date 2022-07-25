@@ -7,7 +7,7 @@ from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
 from datatypes_new.BasicDatatypes import Operand, ArgStringType, FileNameOrStdDescriptor, FileName, StdDescriptor, \
     Flag, Option, FlagOption, WhichClassForArg, get_stdout_fd, get_stdin_fd
 from datatypes_new.BasicDatatypesWithIO import FileNameOrStdDescriptorWithIOInfo, \
-    StdDescriptorWithIOInfo, OptionWithIO, get_from_original_stddescriptor_with_ioinfo, \
+    OptionWithIO, get_from_original_stddescriptor_with_ioinfo, \
     get_from_original_filename_with_ioinfo
 from util_new import compute_actual_el_for_input, compute_actual_el_for_output
 
