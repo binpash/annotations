@@ -81,6 +81,17 @@ class AggregatorSpec(ABC):
                        ) -> Optional[Aggregator]:
         pass
 
+    @abstractmethod
+    def get_actual_2_ary_aggregator_with_aux(self,
+                                             fst_normal_input: FileNameOrStdDescriptor,
+                                             fst_aux_inputs_from: List[FileNameOrStdDescriptor],
+                                             snd_normal_input: FileNameOrStdDescriptor,
+                                             snd_aux_inputs_from: List[FileNameOrStdDescriptor],
+                                             output_to: FileNameOrStdDescriptor,
+                                             aux_outputs_to: List[FileNameOrStdDescriptor]
+                                             ):
+        pass
+
     def get_kind(self):
         return self.kind
 
@@ -175,6 +186,16 @@ class AggregatorSpecNonFunc(AggregatorSpec):
             # TODO
             return None
 
+    def get_actual_2_ary_aggregator_with_aux(self,
+                                             fst_normal_input: FileNameOrStdDescriptor,
+                                             fst_aux_inputs_from: List[FileNameOrStdDescriptor],
+                                             snd_normal_input: FileNameOrStdDescriptor,
+                                             snd_aux_inputs_from: List[FileNameOrStdDescriptor],
+                                             output_to: FileNameOrStdDescriptor,
+                                             aux_outputs_to: List[FileNameOrStdDescriptor]
+                                             ):
+        raise Exception("Auxiliary information from mapper to aggregator only supported for aggregators given as string")
+
 
 class AggregatorSpecFuncTransformer(AggregatorSpec):
 
@@ -213,6 +234,16 @@ class AggregatorSpecFuncTransformer(AggregatorSpec):
         aggregator_cmd_inv.replace_var(aggregator_cmd_inv.implicit_use_of_streaming_output, output_to)
         return Aggregator.make_aggregator_from_cmd_inv_with_io(aggregator_cmd_inv, self.kind)
 
+    def get_actual_2_ary_aggregator_with_aux(self,
+                                             fst_normal_input: FileNameOrStdDescriptor,
+                                             fst_aux_inputs_from: List[FileNameOrStdDescriptor],
+                                             snd_normal_input: FileNameOrStdDescriptor,
+                                             snd_aux_inputs_from: List[FileNameOrStdDescriptor],
+                                             output_to: FileNameOrStdDescriptor,
+                                             aux_outputs_to: List[FileNameOrStdDescriptor]
+                                             ):
+        raise Exception("Auxiliary information from mapper to aggregator only supported for aggregators given as string")
+
 
 class AggregatorSpecFuncStringRepresentation(AggregatorSpec):
 
@@ -249,4 +280,33 @@ class AggregatorSpecFuncStringRepresentation(AggregatorSpec):
             raise Exception("case not yet implemented")
         elif self.kind == AggregatorKindEnum.CUSTOM_2_ARY:
             assert(len(inputs_from) == 2)
+        return agg_cmd_inv_with_io_vars
+
+    def get_actual_2_ary_aggregator_with_aux(self,
+                                             fst_normal_input: FileNameOrStdDescriptor,
+                                             fst_aux_inputs_from: List[FileNameOrStdDescriptor],
+                                             snd_normal_input: FileNameOrStdDescriptor,
+                                             snd_aux_inputs_from: List[FileNameOrStdDescriptor],
+                                             output_to: FileNameOrStdDescriptor,
+                                             aux_outputs_to: List[FileNameOrStdDescriptor]
+                                             ):
+        assert(len(fst_aux_inputs_from) == len(snd_aux_inputs_from))
+        assert(len(fst_aux_inputs_from) == len(aux_outputs_to))
+        agg_cmd_inv = parse(self.cmd_inv_as_str)
+        all_inputs = [fst_normal_input] + fst_aux_inputs_from + [snd_normal_input] + snd_aux_inputs_from
+        all_outputs = [output_to] + aux_outputs_to
+        access_map = dict()
+        for input_id in all_inputs:
+            access_map[input_id] = make_stream_input()
+        for output_id in all_outputs:
+            access_map[output_id] = make_stream_output()
+        new_operand_list = [fst_normal_input] + fst_aux_inputs_from + [snd_normal_input] + snd_aux_inputs_from + \
+                           [output_to] + aux_outputs_to
+        agg_cmd_inv_with_io_vars = Aggregator(kind=self.kind,
+                                              access_map=access_map,
+                                              cmd_name = agg_cmd_inv.cmd_name,
+                                              flag_option_list=agg_cmd_inv.flag_option_list,
+                                              operand_list=new_operand_list,
+                                              implicit_use_of_streaming_input=None,
+                                              implicit_use_of_streaming_output=None)
         return agg_cmd_inv_with_io_vars

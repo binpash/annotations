@@ -36,6 +36,9 @@ from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorTee
 from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorCustomSort import InputOutputInfoGeneratorCustomSort
 from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorCustomTr import InputOutputInfoGeneratorCustomTr
 from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorSetDiff import InputOutputInfoGeneratorSetDiff
+from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorBigramsAux import InputOutputInfoGeneratorBigramsAux
+from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorBigramAuxMap import InputOutputInfoGeneratorBigramAuxMap
+from annotation_generation_new.annotation_generators.InputOutputInfoGeneratorBigramAuxReduce import InputOutputInfoGeneratorBigramAuxReduce
 
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorGrep import ParallelizabilityInfoGeneratorGrep
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorMv import   ParallelizabilityInfoGeneratorMv
@@ -63,6 +66,9 @@ from annotation_generation_new.annotation_generators.ParallelizabilityInfoGenera
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorCustomSort import ParallelizabilityInfoGeneratorCustomSort
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorCustomTr import ParallelizabilityInfoGeneratorCustomTr
 from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorSetDiff import ParallelizabilityInfoGeneratorSetDiff
+from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorBigramsAux import ParallelizabilityInfoGeneratorBigramsAux
+from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorBigramAuxMap import ParallelizabilityInfoGeneratorBigramAuxMap
+from annotation_generation_new.annotation_generators.ParallelizabilityInfoGeneratorBigramAuxReduce import ParallelizabilityInfoGeneratorBigramAuxReduce
 
 # Dictionary that contains the MetaGenerator for each command
 dict_cmd_name_inputoutput_info_generator_module = {
@@ -90,7 +96,10 @@ dict_cmd_name_inputoutput_info_generator_module = {
     "tee": InputOutputInfoGeneratorTee,
     "custom_sort": InputOutputInfoGeneratorCustomSort,
     "custom_tr": InputOutputInfoGeneratorCustomTr,
-    "set_diff": InputOutputInfoGeneratorSetDiff
+    "set_diff": InputOutputInfoGeneratorSetDiff,
+    "bigrams_aux": InputOutputInfoGeneratorBigramsAux,
+    "bigram_aux_map": InputOutputInfoGeneratorBigramAuxMap,
+    "bigram_aux_reduce": InputOutputInfoGeneratorBigramAuxReduce
 }
 dict_cmd_name_parallelizability_info_generator_module = {
     "grep": ParallelizabilityInfoGeneratorGrep,
@@ -118,7 +127,10 @@ dict_cmd_name_parallelizability_info_generator_module = {
     "tee": ParallelizabilityInfoGeneratorTee,
     "custom_sort": ParallelizabilityInfoGeneratorCustomSort,
     "custom_tr": ParallelizabilityInfoGeneratorCustomTr,
-    "set_diff": ParallelizabilityInfoGeneratorSetDiff
+    "set_diff": ParallelizabilityInfoGeneratorSetDiff,
+    "bigrams_aux": ParallelizabilityInfoGeneratorBigramsAux,
+    "bigram_aux_map": ParallelizabilityInfoGeneratorBigramAuxMap,
+    "bigram_aux_reduce": ParallelizabilityInfoGeneratorBigramAuxReduce
 }
 
 # "mv": "Mv",
