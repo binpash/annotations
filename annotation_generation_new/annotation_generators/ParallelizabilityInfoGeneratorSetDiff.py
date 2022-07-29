@@ -4,5 +4,5 @@ class ParallelizabilityInfoGeneratorSetDiff(ParallelizabilityInfoGeneratorInterf
 
     def generate_info(self) -> None:
         self.append_to_parallelizer_list_cc_seq_conc()
-        # issues with RR (also in future due to tee I think)
+        # issues with RR (also in branch future - due to tee I think)
         # self.set_parallelizability_info_for_stateless()

@@ -11,12 +11,6 @@ class InputOutputInfoGeneratorComm(InputOutputInfoGeneratorInterface):
     # none
 
     def generate_info(self) -> None:
-        self.apply_standard_filedescriptor_transformer()
-        self.apply_operands_transformer()
-
-    def apply_standard_filedescriptor_transformer(self) -> None:
         self.set_implicit_use_of_stdout()
-
-    def apply_operands_transformer(self) -> None:
         assert(self.get_operand_list_length() == 2)  # needs two files to compare;
         self.all_operands_are_streaming_inputs()

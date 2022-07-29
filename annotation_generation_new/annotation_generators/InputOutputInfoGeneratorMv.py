@@ -26,14 +26,9 @@ class InputOutputInfoGeneratorMv(InputOutputInfoGeneratorInterface):
     # -t -> O target directory
     # -u -> O update only if source file is newer than destination file
 
-    # 2 Versions possible for output files, going for A:
-    # A) over-approximating:
+    # over-approximating for output files
     #   - put (whole) output directory (file) in output_list
     #   - do only check -t then
-    # B) more precise:
-    #   - we know state of file system, so we can determine which files will
-    #     be written in the destination directory, i.e., moved and backed up,
-    #     depending on all the different options but recomputing quite some program logic then
 
     def generate_info(self) -> None:
         self.apply_standard_filedescriptor_transformer()
@@ -57,8 +52,3 @@ class InputOutputInfoGeneratorMv(InputOutputInfoGeneratorInterface):
         else:
             # multiple -t options not allowed (checked using cmd)
             raise Exception("multiple -t options defined for mv")
-
-    # option args shall be handled in parser_new
-    # def apply_indiv_arg_transformer_for_input_output_lists(self, arg: FlagOption) -> None:
-    #     if arg.get_name() == "-t":
-    #         self.meta.prepend_el_to_output_list(arg.option_arg)

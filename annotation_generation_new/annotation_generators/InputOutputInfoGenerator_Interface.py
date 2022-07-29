@@ -18,6 +18,11 @@ from parser_new.util_parser import get_json_data
 
 class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
 
+    # here, we only need to specify information about operands and implicitly used resources
+    # information about option arguments are provided by parsing infrastructure
+    # ASSUMPTION: No implicit information should be exploited since internal implementation may change
+
+
     def __init__(self, cmd_invocation: CommandInvocationInitial) -> None:
         super().__init__(cmd_invocation=cmd_invocation)
         flagoption_list_typer: List[Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
@@ -90,8 +95,6 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
     def set_implicit_use_of_stdout(self, value: bool = True) -> None:
         self.input_output_info.set_implicit_use_of_stdout(value)
 
-    ## LIBRARY functions
-
     def if_no_operands_given_stdin_implicitly_used(self) -> None:
         if len(self.cmd_inv.operand_list) == 0:
             self.set_implicit_use_of_stdin(True)
@@ -137,14 +140,15 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
     def only_last_operand_is_other_output(self):
         self.input_output_info.only_last_operand_is_other_output()
 
-    def set_all_operands_as_positional_config_arg_type_string(self):
-        self.input_output_info.set_all_operands_as_positional_config_arg_type_string()
+    def set_all_operands_as_config_arg_type_string(self):
+        self.input_output_info.set_all_operands_as_config_arg_type_string()
 
-    def set_first_operand_as_positional_config_arg_type_string(self):
-        self.input_output_info.set_first_operand_as_positional_config_arg_type_string()
+    def set_first_operand_as_config_arg_type_string(self):
+        self.input_output_info.set_first_operand_as_config_arg_type_string()
 
-    def set_first_operand_as_positional_config_arg_type_filename_or_std_descriptor(self):
-        self.input_output_info.set_first_operand_as_positional_config_arg_type_filename_or_std_descriptor()
+    def set_first_operand_as_config_arg_type_filename_or_std_descriptor(self):
+        self.input_output_info.set_first_operand_as_config_arg_type_filename_or_std_descriptor()
 
+    # only used for xargs
     def set_all_operands_as_arg_string(self):
         self.input_output_info.set_all_operands_as_arg_string()

@@ -3,7 +3,7 @@ from annotation_generation_new.annotation_generators.ParallelizabilityInfoGenera
 class ParallelizabilityInfoGeneratorXargs(ParallelizabilityInfoGeneratorInterface):
 
     def generate_info(self) -> None:
-        # in original, there is a CA but same info
+        # in original, there is a case distinction but same info
         self.set_parallelizability_info_for_stateless()
 
 

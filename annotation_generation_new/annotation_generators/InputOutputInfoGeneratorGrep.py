@@ -35,7 +35,7 @@ class InputOutputInfoGeneratorGrep(InputOutputInfoGeneratorInterface):
             else:
                 self.all_operands_are_streaming_inputs() # this is true also if empty
         else:
-            self.set_first_operand_as_positional_config_arg_type_string()
+            self.set_first_operand_as_config_arg_type_string()
             if self.get_operand_list_length() == 1:
                 self.set_implicit_use_of_stdin()
             else:

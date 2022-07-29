@@ -17,7 +17,7 @@ class ParallelizabilityInfoGeneratorTr(ParallelizabilityInfoGeneratorInterface):
     # tr only takes input from stdin so IF-splitter do not make a lot of sense since RR is superior anyway
 
     def generate_info(self) -> None:
-        # TODO: assert somewhere that only one set is given with -d -> should go in minimizer
+        # assumption that only one set is given with -d
         # tr does only take input from stdin, so we can always apply RR parallelizer (but Mp and Ag may change slightly)
         # check for deletion of newlines
         does_delete_newlines: bool = self.does_flag_option_list_contain_at_least_one_of(["-d"]) and \

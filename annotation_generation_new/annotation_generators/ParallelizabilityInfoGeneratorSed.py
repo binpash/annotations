@@ -12,10 +12,8 @@ class ParallelizabilityInfoGeneratorSed(ParallelizabilityInfoGeneratorInterface)
         first_operand = self.cmd_inv.operand_list[0]
         first_operand_arg = first_operand.get_name()
         first_operand_name = str(first_operand_arg)
-        if (not (first_operand_name.startswith("-")
-                 or first_operand_name.startswith("s"))
-                and ("d" in first_operand_name
-                     or "q" in first_operand_name)):
+        if (not (first_operand_name.startswith("-") or first_operand_name.startswith("s"))
+            and ("d" in first_operand_name or "q" in first_operand_name)):
             self.set_parallelizability_info_for_pure()
         else:
             self.set_parallelizability_info_for_stateless()
