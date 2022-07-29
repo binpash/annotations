@@ -8,14 +8,10 @@ from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import
 class ParallelizabilityInfoGeneratorSed(ParallelizabilityInfoGeneratorInterface):
 
     def generate_info(self) -> None:
-        # TODO: logic copied from PaSh, not in the style we'd like to write annotations
-        first_operand = self.cmd_inv.operand_list[0]
-        first_operand_arg = first_operand.get_name()
-        first_operand_name = str(first_operand_arg)
-        if (not (first_operand_name.startswith("-") or first_operand_name.startswith("s"))
-            and ("d" in first_operand_name or "q" in first_operand_name)):
-            pass # no parallelization
-        else:
+        # TODO: Logic copied from PaSh, but does this not depend how the script is given?
+        if  self.does_first_operand_start_with("-") \
+            or self.does_first_operand_start_with("s") \
+            or not (self.does_first_operand_contain("d") or self.does_first_operand_contain("q")):
             self.append_to_parallelizer_list_cc_seq_conc()
             self.append_to_parallelizer_list_rr_seq_conc()
 

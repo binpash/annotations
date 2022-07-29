@@ -27,3 +27,18 @@ class Generator_Interface(ABC):
 
     def get_operand_list_length(self):
         return len(self.cmd_inv.operand_list)
+
+    def get_first_operand_name_as_string(self):
+        # assumes that it is of type config
+        first_operand = self.cmd_inv.operand_list[0]
+        first_operand_arg = first_operand.get_name()
+        first_operand_name = str(first_operand_arg)
+        return first_operand_name
+
+    def does_first_operand_start_with(self, arg):
+        first_operand_name = self.get_first_operand_name_as_string()
+        return first_operand_name.startswith(arg)
+
+    def does_first_operand_contain(self, arg):
+        first_operand_name = self.get_first_operand_name_as_string()
+        return (arg in first_operand_name)
