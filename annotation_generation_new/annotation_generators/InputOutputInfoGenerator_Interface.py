@@ -99,12 +99,8 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
         if len(self.cmd_inv.operand_list) == 0:
             self.set_implicit_use_of_stdin(True)
 
-    def if_version_or_help_stdout_implicitly_used(self) -> None:
-        if self.is_version_or_help_in_flag_option_list():
-            self.set_implicit_use_of_stdout()
 
     # forwarded to InputOutputInfo
-
     # Assumption: streaming inputs are always filenames or stdin
     # Assumption: (streaming) outputs are always filenames or stdout
     def all_operands_are_streaming_inputs(self) -> None:

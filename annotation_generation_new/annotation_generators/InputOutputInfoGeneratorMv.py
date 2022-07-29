@@ -31,21 +31,11 @@ class InputOutputInfoGeneratorMv(InputOutputInfoGeneratorInterface):
     #   - do only check -t then
 
     def generate_info(self) -> None:
-        self.apply_standard_filedescriptor_transformer()
-        self.apply_operands_transformer()
-
-    def apply_standard_filedescriptor_transformer(self) -> None:
-        self.if_version_or_help_stdout_implicitly_used()
-        # # no way to suppress error messages hence added
-        # self.meta.append_stderr_to_output_list()
-
-    def apply_operands_transformer(self) -> None:
         # -T shall treat destination as file, not directory, not considered currently
         # -t gives destination directory as an argument to option and determines how operands are interpreted
         list_options_t : List[FlagOption] = self.get_flag_option_list_filtered_with(["-t"])
         if len(list_options_t) == 0:
             self.all_but_last_operand_is_other_input()
-            # TODO: is there "other" output?
             self.only_last_operand_is_other_output()
         elif len(list_options_t) == 1:
             self.all_operands_are_other_inputs()

@@ -11,9 +11,8 @@ class InputOutputInfoGeneratorUniq(InputOutputInfoGeneratorInterface):
 
     def generate_info(self) -> None:
         # tested this with the command, man-page a bit inconclusive with optional OUTPUT
-        if self.is_version_or_help_in_flag_option_list():
-            self.set_implicit_use_of_stdout()
-        elif self.get_operand_list_length() == 0:
+        # assumption that version/help not provided
+        if self.get_operand_list_length() == 0:
             self.set_implicit_use_of_stdin()
             self.set_implicit_use_of_stdout()
         elif self.get_operand_list_length() == 1:
