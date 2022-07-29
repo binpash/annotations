@@ -14,7 +14,8 @@ class ParallelizabilityInfoGeneratorSed(ParallelizabilityInfoGeneratorInterface)
         first_operand_name = str(first_operand_arg)
         if (not (first_operand_name.startswith("-") or first_operand_name.startswith("s"))
             and ("d" in first_operand_name or "q" in first_operand_name)):
-            self.set_parallelizability_info_for_pure()
+            pass # no parallelization
         else:
-            self.set_parallelizability_info_for_stateless()
+            self.append_to_parallelizer_list_cc_seq_conc()
+            self.append_to_parallelizer_list_rr_seq_conc()
 
