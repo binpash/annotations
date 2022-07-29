@@ -30,7 +30,5 @@ class ParallelizabilityInfoGeneratorCustomSort(ParallelizabilityInfoGeneratorInt
                                                                                flag_option_list_transformer=chain_transformer_flag_option_list,
                                                                                is_implemented=True)
             # Build parallelizers and append
-            parallelizer_if_seq_cus = make_parallelizer_indiv_files(aggregator_spec=aggregator_spec)
             parallelizer_cc_seq_cus = make_parallelizer_consec_chunks(aggregator_spec=aggregator_spec)
-            self.append_to_parallelizer_list(parallelizer_if_seq_cus)
             self.append_to_parallelizer_list(parallelizer_cc_seq_cus)

@@ -63,5 +63,10 @@ class ParallelizabilityInfoGeneratorInterface(Generator_Interface, ABC):
         parallelizer_rr_seq_adjs = make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
         self.append_to_parallelizer_list(parallelizer_rr_seq_adjs)
 
+    def append_to_parallelizer_list_cc_seq_adjs(self) -> None:
+        aggregator_spec = make_aggregator_spec_adj_lines_seq()
+        parallelizer_cc_seq_adjs = make_parallelizer_consec_chunks(aggregator_spec=aggregator_spec)
+        self.append_to_parallelizer_list(parallelizer_cc_seq_adjs)
+
     def set_commutative(self) -> None:
         self.parallelizability_info.set_commutative()
