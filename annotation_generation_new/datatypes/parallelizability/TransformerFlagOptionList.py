@@ -78,25 +78,25 @@ class TransformerFlagOptionListAdd(TransformerFlagOptionList):
 
 class TransformerFlagOptionListRemove(TransformerFlagOptionList):
 
-    def __init__(self, list_to_remove: List[Union[Flag, OptionWithIO]]) -> None:
+    def __init__(self, list_to_remove: List[str]) -> None:
         self.list_to_remove = list_to_remove
 
     def get_flag_option_list_after_transformer_application(self,
                                                            original_flag_option_list: List[Union[Flag, OptionWithIO]]) \
             -> List[Union[Flag, OptionWithIO]]:
         return [flagoption for flagoption in original_flag_option_list
-                if flagoption not in self.list_to_remove]
+                if flagoption.get_name() not in self.list_to_remove]
 
 class TransformerFlagOptionListFilter(TransformerFlagOptionList):
 
-    def __init__(self, list_filter: List[Union[Flag, OptionWithIO]]) -> None:
+    def __init__(self, list_filter: List[str]) -> None:
         self.list_filter = list_filter
 
     def get_flag_option_list_after_transformer_application(self,
                                                            original_flag_option_list: List[Union[Flag, OptionWithIO]]) \
             -> List[Union[Flag, OptionWithIO]]:
         return [flagoption for flagoption in original_flag_option_list
-                if flagoption in self.list_filter]
+                if flagoption.get_name() in self.list_filter]
 
 class TransformerFlagOptionListEmpty(TransformerFlagOptionList):
 
