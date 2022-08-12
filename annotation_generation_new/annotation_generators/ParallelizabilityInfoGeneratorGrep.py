@@ -24,8 +24,8 @@ class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface
 
     def generate_info(self) -> None:
         if not self.does_flag_option_list_contain_at_least_one_of(["-q"]):
-            # for indiv files
-            self.append_to_parallelizer_list_if_seq_conc()
+            # # for indiv files
+            # self.append_to_parallelizer_list_if_seq_conc()
             # rest for round-robin
             mapper_spec = None
             aggregator_spec = None

@@ -9,7 +9,7 @@ class ParallelizabilityInfo:
 
     def __init__(self,
                  parallelizer_list: Optional[List[Parallelizer]] = None,    # None translates to empty list
-                 # TODO: change these flags to dict using CommandProperties
+                 # TODO: remove RR_comp_with_cat
                  round_robin_compatible_with_cat: bool  = False,
                  is_commutative: bool = False
                  ) -> None:
