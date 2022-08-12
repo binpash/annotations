@@ -102,18 +102,18 @@ class InputOutputInfo:
     def only_last_operand_is_other_output(self) -> None:
         self.operand_list_typer[-1] = (WhichClassForArg.FILESTD, make_other_output())
 
-    def set_all_operands_as_positional_config_arg_type_string(self) -> None:
+    def set_all_operands_as_config_arg_type_string(self) -> None:
         number_of_operands = len(self.operand_list_typer)
         self.operand_list_typer = [(WhichClassForArg.ARGSTRING, None)] * number_of_operands
 
-    def set_first_operand_as_positional_config_arg_type_string(self) -> None:
+    def set_first_operand_as_config_arg_type_string(self) -> None:
         self.operand_list_typer[0] = (WhichClassForArg.ARGSTRING, None)
 
-    def set_first_operand_as_positional_config_arg_type_filename_or_std_descriptor(self) -> None:
+    def set_first_operand_as_config_arg_type_filename_or_std_descriptor(self) -> None:
         self.operand_list_typer[0] = (WhichClassForArg.FILESTD, make_config_input())
 
+    # TODO: this is only used for operands of XARGS but should be refactored once a solution for xargs is found
     def set_all_operands_as_arg_string(self) -> None:
-        # TODO: this is used for operands of XARGS,
         # not correct but sound approximation for cases where input is provided by xargs via stdin
         self.operand_list_typer = [(WhichClassForArg.ARGSTRING, None)] * len(self.operand_list_typer)
 

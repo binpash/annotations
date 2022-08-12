@@ -13,9 +13,6 @@ from annotation_generation_new.datatypes.ParallelizabilityInfo import Paralleliz
 
 class ParallelizabilityInfoGeneratorInterface(Generator_Interface, ABC):
 
-    # This is the select_subcommand from the original proposal,
-    #   instead of returning functions, it initializes the object
-    #   and then we can call its methods.
     def __init__(self, cmd_invocation: CommandInvocationInitial) -> None:
         self.cmd_inv = cmd_invocation
         self.parallelizability_info: ParallelizabilityInfo = ParallelizabilityInfo()
@@ -66,18 +63,10 @@ class ParallelizabilityInfoGeneratorInterface(Generator_Interface, ABC):
         parallelizer_rr_seq_adjs = make_parallelizer_round_robin(aggregator_spec=aggregator_spec)
         self.append_to_parallelizer_list(parallelizer_rr_seq_adjs)
 
+    def append_to_parallelizer_list_cc_seq_adjs(self) -> None:
+        aggregator_spec = make_aggregator_spec_adj_lines_seq()
+        parallelizer_cc_seq_adjs = make_parallelizer_consec_chunks(aggregator_spec=aggregator_spec)
+        self.append_to_parallelizer_list(parallelizer_cc_seq_adjs)
+
     def set_commutative(self) -> None:
         self.parallelizability_info.set_commutative()
-
-
-    # for original PaSh interface
-
-    def set_parallelizability_info_for_pure(self):
-        pass
-
-    def set_parallelizability_info_for_stateless(self):
-        self.append_to_parallelizer_list_cc_seq_conc()
-        self.append_to_parallelizer_list_rr_seq_conc()
-
-
-

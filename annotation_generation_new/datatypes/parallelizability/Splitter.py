@@ -28,6 +28,7 @@ class Splitter:
     def is_splitter_consec_chunks(self) -> bool:
         return self.kind == SplitterKindEnum.CONSEC_CHUNKS
 
+# currently not used
 def make_splitter_indiv_files() -> Splitter:
     return Splitter(SplitterKindEnum.INDIV_FILES)
 

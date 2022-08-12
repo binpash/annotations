@@ -17,25 +17,17 @@ class InputOutputInfoGeneratorGrep(InputOutputInfoGeneratorInterface):
     # for now, we ignore -D/-d with actions
 
     def generate_info(self) -> None:
-        self.apply_standard_filedescriptor_transformer()
-        self.apply_operands_transformer()
-        # self.set_multiple_inputs_possible()
-
-    def apply_standard_filedescriptor_transformer(self) -> None:
-        # though, --help and --version overrules this (and no actual result returned)
-        output_suppressed = self.does_flag_option_list_contain_at_least_one_of(["-q"])
-        version_or_help_write_to_stdout = self.is_version_or_help_in_flag_option_list()
-        if not output_suppressed or version_or_help_write_to_stdout:
+        # --help and --version overrules -q (and no actual result returned) but we assume no help/version
+        if not self.does_flag_option_list_contain_at_least_one_of(["-q"]):
             self.set_implicit_use_of_stdout()
-
-    def apply_operands_transformer(self) -> None:
+        # case analysis how script is provided
         if self.does_flag_option_list_contain_at_least_one_of(["-e", "-f"]):
             if self.get_operand_list_length() == 0:
                 self.set_implicit_use_of_stdin()
             else:
                 self.all_operands_are_streaming_inputs() # this is true also if empty
         else:
-            self.set_first_operand_as_positional_config_arg_type_string()
+            self.set_first_operand_as_config_arg_type_string()
             if self.get_operand_list_length() == 1:
                 self.set_implicit_use_of_stdin()
             else:

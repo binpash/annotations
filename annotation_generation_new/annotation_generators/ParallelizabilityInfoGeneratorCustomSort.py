@@ -17,20 +17,12 @@ class ParallelizabilityInfoGeneratorCustomSort(ParallelizabilityInfoGeneratorInt
             pass    # no parallelization
         else:
             # Build aggregator spec: keep certain flags with filtering and add -m
-            # TODO: find a better way to represent flag options lists to filter, maybe FlagOptionNameType
-            flag_option_list_to_keep = [Flag("-b"), Flag("-d"), Flag("-f"), Flag("-g"), Flag("-i"), Flag("-M"), \
-                                        Flag("-h"), Flag("-n"), Flag("-r"), Option("--sort", ""), Flag("-V"), Flag("-k"), Flag("-t")]
-            transformer_flag_option_list_filter: TransformerFlagOptionListFilter = \
-                TransformerFlagOptionListFilter(flag_option_list_to_keep)
-            transformer_flag_option_list_add: TransformerFlagOptionListAdd = TransformerFlagOptionListAdd([Flag("-m")])
-            chain_transformer_flag_option_list: ChainTransformerFlagOptionList = \
-                ChainTransformerFlagOptionList([transformer_flag_option_list_filter, transformer_flag_option_list_add])
+            transformer_filter = TransformerFlagOptionListFilter(["-b", "-d", "-f", "-g", "-i", "-M", "-h", "-n", "-r", "--sort", "-V", "-k", "-t"])
+            transformer_add = TransformerFlagOptionListAdd([Flag("-m")])
+            chained_transformers = ChainTransformerFlagOptionList([transformer_filter, transformer_add])
             # TODO: change this to n instead of 2 but we keep this for testing aggregator trees for now
             aggregator_spec = make_aggregator_spec_custom_2_ary_from_cmd_inv_with_transformers(
-                                                                               flag_option_list_transformer=chain_transformer_flag_option_list,
-                                                                               is_implemented=True)
+                                   flag_option_list_transformer=chained_transformers, is_implemented=True)
             # Build parallelizers and append
-            parallelizer_if_seq_cus = make_parallelizer_indiv_files(aggregator_spec=aggregator_spec)
             parallelizer_cc_seq_cus = make_parallelizer_consec_chunks(aggregator_spec=aggregator_spec)
-            self.append_to_parallelizer_list(parallelizer_if_seq_cus)
             self.append_to_parallelizer_list(parallelizer_cc_seq_cus)

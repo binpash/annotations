@@ -24,8 +24,8 @@ class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface
 
     def generate_info(self) -> None:
         if not self.does_flag_option_list_contain_at_least_one_of(["-q"]):
-            # for indiv files
-            self.append_to_parallelizer_list_if_seq_conc()
+            # # for indiv files
+            # self.append_to_parallelizer_list_if_seq_conc()
             # rest for round-robin
             mapper_spec = None
             aggregator_spec = None
@@ -38,7 +38,6 @@ class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface
                     # for "-L": if there was no match in one part, the filename will propagate; it not, not
                     aggregator_spec = make_aggregator_spec_custom_2_ary_from_string_representation(cmd_inv_as_str='PLACEHOLDER:merge_keeping_longer_output',
                                                                                        is_implemented=False)
-                    # TODO
                 elif self.does_flag_option_list_contain_at_least_one_of(["-c"]):
                     aggregator_spec = make_aggregator_spec_custom_2_ary_from_string_representation(cmd_inv_as_str='PLACEHOLDER:sum_indiv_results_up',
                                                                                        is_implemented=False)
@@ -58,6 +57,7 @@ class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface
                     pass    #just keep mapper and aggregator None and thus add RR_SEQ_CONC
             # we exploit that mapper_spec becomes seq and aggregator_spec becomes conc if given None
             # check can be removed once all are implemented! (exploits short-circuiting)
+            # TODO: we should be able to remove the `is_implemented`-check as it is checked later
             if (mapper_spec is None or mapper_spec.is_implemented) and \
                     (aggregator_spec is None or aggregator_spec.is_implemented):
                 parallelizer_rr = make_parallelizer_round_robin(mapper_spec=mapper_spec,
