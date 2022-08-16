@@ -10,7 +10,7 @@ from annotation_generation_new.datatypes.InputOutputInfo import InputOutputInfo
 from annotation_generation_new.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
 from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer
 from annotation_generation_new.datatypes.parallelizability.Splitter import Splitter, make_splitter_indiv_files, \
-    make_splitter_round_robin
+    make_splitter_round_robin, make_splitter_consec_chunks
 from annotation_generation_new.datatypes.parallelizability.MapperSpec import make_mapper_spec_seq
 from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import \
     make_aggregator_spec_custom_2_ary_from_cmd_inv_with_transformers
@@ -42,18 +42,14 @@ def test_sort_1() -> None:
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 2
+    assert len(para_info.parallelizer_list) == 1
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
-    parallelizer2: Parallelizer = para_info.parallelizer_list[1]
     # only check splitter and actual mappers and aggregators
-    assert parallelizer1.get_splitter() == make_splitter_indiv_files()
-    assert parallelizer2.get_splitter() == make_splitter_round_robin()
+    assert parallelizer1.get_splitter() == make_splitter_consec_chunks()
     # check that results of getting mapper and aggregator are fine
     goal_mapper_spec = make_mapper_spec_seq()
     # TODO: change to actual check whether it does what is is supposed to do
-    flag_option_list_to_keep = [Flag("-b"), Flag("-d"), Flag("-f"), Flag("-g"), Flag("-i"), Flag("-M"), \
-                                Flag("-h"), Flag("-n"), Flag("-r"), Option("--sort", ""), Flag("-V"), Flag("-k"),
-                                Flag("-t")]
+    flag_option_list_to_keep = ["-b", "-d", "-f", "-g", "-i", "-M", "-h", "-n", "-r", "--sort", "-V", "-k", "-t"]
     transformer_flag_option_list_filter: TransformerFlagOptionListFilter = \
         TransformerFlagOptionListFilter(flag_option_list_to_keep)
     transformer_flag_option_list_add: TransformerFlagOptionListAdd = TransformerFlagOptionListAdd([Flag("-m")])
@@ -63,8 +59,6 @@ def test_sort_1() -> None:
         flag_option_list_transformer=chain_transformer_flag_option_list, is_implemented=True)
     assert parallelizer1.get_mapper_spec() == goal_mapper_spec
     assert parallelizer1.get_aggregator_spec() == goal_aggregator_spec
-    assert parallelizer2.get_mapper_spec() == goal_mapper_spec
-    assert parallelizer2.get_aggregator_spec() == goal_aggregator_spec
 
 
 def test_sort_2() -> None:
@@ -84,12 +78,10 @@ def test_sort_2() -> None:
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 2
+    assert len(para_info.parallelizer_list) == 1
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
-    parallelizer2: Parallelizer = para_info.parallelizer_list[1]
     # only check splitter and actual mappers and aggregators
-    assert parallelizer1.get_splitter() == make_splitter_indiv_files()
-    assert parallelizer2.get_splitter() == make_splitter_round_robin()
+    assert parallelizer1.get_splitter() == make_splitter_consec_chunks()
     # check that results of getting mapper and aggregator are fine
     # TODO: change to actual check whether it does what is is supposed to do: with flag option list
 

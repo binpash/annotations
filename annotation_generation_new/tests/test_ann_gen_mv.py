@@ -40,7 +40,7 @@ def test_mv_1() -> None:
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 0
+    assert para_info is None
 
 
 def test_mv_2() -> None:
@@ -64,7 +64,7 @@ def test_mv_2() -> None:
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 0
+    assert para_info is None
 
 
 def test_mv_3() -> None:

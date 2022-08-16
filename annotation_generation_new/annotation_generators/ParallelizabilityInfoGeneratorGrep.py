@@ -41,6 +41,7 @@ class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface
                 elif self.does_flag_option_list_contain_at_least_one_of(["-c"]):
                     aggregator_spec = make_aggregator_spec_custom_2_ary_from_string_representation(cmd_inv_as_str='PLACEHOLDER:sum_indiv_results_up',
                                                                                        is_implemented=False)
+                    # cat input1 input2 | paste -s -d + - | bc
                 elif self.does_flag_option_list_contain_at_least_one_of(["-n"]) and self.does_flag_option_list_contain_at_least_one_of(["-b"]):
                     mapper_spec = make_mapper_spec_custom('PLACEHOLDER:grep_add_line_number_and_byte_offset',
                                                                      is_implemented=False)
@@ -60,11 +61,11 @@ class ParallelizabilityInfoGeneratorGrep(ParallelizabilityInfoGeneratorInterface
             # TODO: we should be able to remove the `is_implemented`-check as it is checked later
             if (mapper_spec is None or mapper_spec.is_implemented) and \
                     (aggregator_spec is None or aggregator_spec.is_implemented):
-                parallelizer_rr = make_parallelizer_round_robin(mapper_spec=mapper_spec,
-                                                                 aggregator_spec=aggregator_spec,
-                                                                 info_splitter_mapper=add_info_from_splitter)
-                self.append_to_parallelizer_list(parallelizer_rr)
                 parallelizer_cc = make_parallelizer_consec_chunks(mapper_spec=mapper_spec,
                                                                   aggregator_spec=aggregator_spec,
                                                                   info_splitter_mapper=add_info_from_splitter)
                 self.append_to_parallelizer_list(parallelizer_cc)
+                parallelizer_rr = make_parallelizer_round_robin(mapper_spec=mapper_spec,
+                                                                 aggregator_spec=aggregator_spec,
+                                                                 info_splitter_mapper=add_info_from_splitter)
+                self.append_to_parallelizer_list(parallelizer_rr)

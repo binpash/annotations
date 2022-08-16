@@ -11,7 +11,7 @@ from annotation_generation_new.datatypes.InputOutputInfo import InputOutputInfo
 from annotation_generation_new.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
 from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer
 from annotation_generation_new.datatypes.parallelizability.Splitter import make_splitter_round_robin, \
-    make_splitter_indiv_files
+    make_splitter_indiv_files, make_splitter_consec_chunks
 from annotation_generation_new.datatypes.parallelizability.MapperSpec import make_mapper_spec_seq
 from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import AggregatorSpec, \
     make_aggregator_spec_concatenate
@@ -47,7 +47,7 @@ def test_cut_1() -> None:
     # check that specs for mapper and aggregator are fine
     goal_mapper_spec = make_mapper_spec_seq()
     goal_aggregator_spec: AggregatorSpec = make_aggregator_spec_concatenate()
-    assert parallelizer1.get_splitter() == make_splitter_indiv_files()
+    assert parallelizer1.get_splitter() == make_splitter_consec_chunks()
     assert parallelizer1.get_mapper_spec() == goal_mapper_spec
     assert parallelizer1.get_aggregator_spec() == goal_aggregator_spec
     assert parallelizer2.get_splitter() == make_splitter_round_robin()
@@ -78,7 +78,7 @@ def test_cut_2() -> None:
     # check that specs for mapper and aggregator are fine
     goal_mapper_spec = make_mapper_spec_seq()
     goal_aggregator_spec: AggregatorSpec = make_aggregator_spec_concatenate()
-    assert parallelizer1.get_splitter() == make_splitter_indiv_files()
+    assert parallelizer1.get_splitter() == make_splitter_consec_chunks()
     assert parallelizer1.get_mapper_spec() == goal_mapper_spec
     assert parallelizer1.get_aggregator_spec() == goal_aggregator_spec
     assert parallelizer2.get_splitter() == make_splitter_round_robin()

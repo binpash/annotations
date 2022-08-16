@@ -10,7 +10,8 @@ from annotation_generation_new.datatypes.InputOutputInfo import InputOutputInfo
 from annotation_generation_new.datatypes.ParallelizabilityInfo import ParallelizabilityInfo
 
 from annotation_generation_new.datatypes.parallelizability.Parallelizer import Parallelizer
-from annotation_generation_new.datatypes.parallelizability.Splitter import make_splitter_round_robin
+from annotation_generation_new.datatypes.parallelizability.Splitter import \
+    make_splitter_consec_chunks, make_splitter_round_robin
 from annotation_generation_new.datatypes.parallelizability.MapperSpec import make_mapper_spec_seq
 from annotation_generation_new.datatypes.parallelizability.AggregatorSpec import \
     make_aggregator_spec_adj_lines_seq, make_aggregator_spec_adj_lines_func_from_string_representation
@@ -59,12 +60,17 @@ def test_uniq_2() -> None:
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 1
+    print(para_info.parallelizer_list)
+    assert len(para_info.parallelizer_list) == 2
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
+    parallelizer2: Parallelizer = para_info.parallelizer_list[1]
     # check that specs for mapper and aggregator are fine
-    assert parallelizer1.get_splitter() == make_splitter_round_robin()
+    assert parallelizer1.get_splitter() == make_splitter_consec_chunks()
     assert parallelizer1.get_mapper_spec() == make_mapper_spec_seq()
     assert parallelizer1.get_aggregator_spec() == make_aggregator_spec_adj_lines_func_from_string_representation('PLACEHOLDER:uniq_merge_count_uniq', is_implemented=False)
+    assert parallelizer2.get_splitter() == make_splitter_round_robin()
+    assert parallelizer2.get_mapper_spec() == make_mapper_spec_seq()
+    assert parallelizer2.get_aggregator_spec() == make_aggregator_spec_adj_lines_func_from_string_representation('PLACEHOLDER:uniq_merge_count_uniq', is_implemented=False)
 
 
 def test_uniq_3() -> None:
@@ -85,9 +91,13 @@ def test_uniq_3() -> None:
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 1
+    assert len(para_info.parallelizer_list) == 2
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
+    parallelizer2: Parallelizer = para_info.parallelizer_list[1]
     # check that specs for mapper and aggregator are fine
-    assert parallelizer1.get_splitter() == make_splitter_round_robin()
+    assert parallelizer1.get_splitter() == make_splitter_consec_chunks()
     assert parallelizer1.get_mapper_spec() == make_mapper_spec_seq()
     assert parallelizer1.get_aggregator_spec() == make_aggregator_spec_adj_lines_seq()
+    assert parallelizer2.get_splitter() == make_splitter_round_robin()
+    assert parallelizer2.get_mapper_spec() == make_mapper_spec_seq()
+    assert parallelizer2.get_aggregator_spec() == make_aggregator_spec_adj_lines_seq()

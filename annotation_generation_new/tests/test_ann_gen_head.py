@@ -38,12 +38,7 @@ def test_head_1() -> None:
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 1
-    parallelizer1: Parallelizer = para_info.parallelizer_list[0]
-    # check that specs for mapper and aggregator are fine
-    assert parallelizer1.get_splitter() == make_splitter_indiv_files()
-    assert parallelizer1.get_mapper_spec() == make_mapper_spec_seq()
-    assert parallelizer1.get_aggregator_spec() == make_aggregator_spec_concatenate()
+    assert para_info is None
 
 
 def test_head_2() -> None:
@@ -66,9 +61,4 @@ def test_head_2() -> None:
 
     # Parallelizability Info
     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 1
-    parallelizer1: Parallelizer = para_info.parallelizer_list[0]
-    # check that specs for mapper and aggregator are fine
-    assert parallelizer1.get_splitter() == make_splitter_indiv_files()
-    assert parallelizer1.get_mapper_spec() == make_mapper_spec_seq()
-    assert parallelizer1.get_aggregator_spec() == make_aggregator_spec_concatenate()
+    assert para_info is None
