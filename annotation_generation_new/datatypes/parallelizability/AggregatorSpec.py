@@ -8,10 +8,9 @@ from util_standard import standard_repr, standard_eq
 
 from datatypes_new.CommandInvocationWithIOVars import CommandInvocationWithIOVars
 from datatypes_new.BasicDatatypes import FileNameOrStdDescriptor
-from datatypes_new.AccessKind import AccessKind, make_stream_input, make_stream_output
+from datatypes_new.AccessKind import make_stream_input, make_stream_output
 from annotation_generation_new.datatypes.parallelizability.TransformerFlagOptionList import TransformerFlagOptionList, \
-    return_transformer_flagoption_list_same_as_seq_if_none_else_itself, TransformerFlagOptionListCustom
-# from annotation_generation_new.datatypes.parallelizability.TransformerPosConfigList import TransformerPosConfigList
+    return_transformer_flagoption_list_same_as_seq_if_none_else_itself
 from annotation_generation_new.datatypes.parallelizability.AggregatorKind import AggregatorKindEnum
 from annotation_generation_new.datatypes.parallelizability.Aggregator import Aggregator
 from util_new import return_default_if_none_else_itself
@@ -19,10 +18,10 @@ from util_new import return_default_if_none_else_itself
 # What spec needs to contain for which one:
 
 # CONCATENATE:      only kind
-# ADJ_LINES_MERGE:  only kind
-# ADJ_LINES_SEQ:    only kind, return can be computed from parameters
+# ADJ_LINES_MERGE:  only kind (1 imput)
+# ADJ_LINES_SEQ:    only kind, return can be computed from parameters (1 input)
 
-# ADJ_LINES_FUNC:   function for adjacent lines (2 inputs)
+# ADJ_LINES_FUNC:   function for adjacent lines (1 input)
 # CUSTOM_2_ARY:     function for two blocks     (2 inputs)
 # could be given as transformation of original command or parsed from string representation
 
@@ -99,10 +98,10 @@ def make_aggregator_spec_concatenate() -> AggregatorSpec:
     return AggregatorSpecNonFunc(AggregatorKindEnum.CONCATENATE, is_implemented=True)
 
 def make_aggregator_spec_adj_lines_merge() -> AggregatorSpec:
-    return AggregatorSpecNonFunc(AggregatorKindEnum.ADJ_LINES_MERGE, is_implemented=False)
+    return AggregatorSpecNonFunc(AggregatorKindEnum.ADJ_LINES_MERGE, is_implemented=True)
 
 def make_aggregator_spec_adj_lines_seq() -> AggregatorSpec:
-    return AggregatorSpecNonFunc(AggregatorKindEnum.ADJ_LINES_SEQ, is_implemented=False)
+    return AggregatorSpecNonFunc(AggregatorKindEnum.ADJ_LINES_SEQ, is_implemented=True)
 
 def make_aggregator_spec_adj_lines_func_from_cmd_inv_with_transformers(
         flag_option_list_transformer: Optional[TransformerFlagOptionList] = None,
@@ -172,19 +171,15 @@ class AggregatorSpecNonFunc(AggregatorSpec):
         if not self.is_implemented:
             return None
         if self.kind == AggregatorKindEnum.CONCATENATE:
-            cmd_inv_cat = CommandInvocationWithIOVars.make_cat_command_invocation_with_io_vars(inputs_from, output_to)
-            return Aggregator.make_aggregator_from_cmd_inv_with_io(cmd_inv_cat, self.kind)
+            cmd_inv = CommandInvocationWithIOVars.make_cat_command_invocation_with_io_vars(inputs_from, output_to)
         elif self.kind == AggregatorKindEnum.ADJ_LINES_MERGE:
-            assert(len(inputs_from) == 1)
-            assert(False)
-            # TODO
-            # tr -d '\n' | sed '$a\' seems to do the job -> @KK: Can we join this in one command so no sequence of commands?
-            return None
+            cmd_inv = CommandInvocationWithIOVars.make_adj_line_merge_command_invocation_with_io_vars(inputs_from, output_to)
         elif self.kind == AggregatorKindEnum.ADJ_LINES_SEQ:
-            assert(len(inputs_from) == 1)
-            assert(False)
-            # TODO
-            return None
+            cmd_inv = deepcopy(original_cmd_invocation)
+            cmd_inv.substitute_inputs_and_outputs_in_cmd_invocation(inputs_from, [output_to])
+        else:
+            raise Exception("Given Aggregator Kind not implemented: " + str(self.kind))
+        return Aggregator.make_aggregator_from_cmd_inv_with_io(cmd_inv, self.kind)
 
     def get_actual_2_ary_aggregator_with_aux(self,
                                              fst_normal_input: FileNameOrStdDescriptor,

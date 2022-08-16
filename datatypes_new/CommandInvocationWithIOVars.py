@@ -171,6 +171,21 @@ class CommandInvocationWithIOVars:
             access_map=access_map)
         return cmd_inv_with_io_vars
 
+    @staticmethod
+    def make_adj_line_merge_command_invocation_with_io_vars(input_ids, output_id):
+        assert (len(input_ids) == 1)  # ASSUMPTION: PaSh provides the adjacent lines as two lines to the cmd invocation
+        access_map = {input_id: make_stream_input() for input_id in input_ids}
+        access_map[output_id] = make_stream_output()
+        operand_list = [ArgStringType(r"''"), input_ids[0]]
+        cmd_inv_with_io_vars = CommandInvocationWithIOVars(
+            cmd_name="paste",
+            flag_option_list=[Flag("-s"), Flag("-d")],
+            operand_list=operand_list,
+            implicit_use_of_streaming_input=None,
+            implicit_use_of_streaming_output=output_id,
+            access_map=access_map)
+        return cmd_inv_with_io_vars
+
     def remove_streaming_inputs(self):
         # TODO: check whether this removes options with streaming input
         def function_to_apply(el):
