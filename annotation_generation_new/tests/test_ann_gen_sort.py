@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from util_flag_option import make_arg_simple
 from datatypes_new.BasicDatatypes import Flag, Option, FlagOption, Operand, FileName, ArgStringType
@@ -32,7 +32,8 @@ def test_sort_1() -> None:
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
-    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    io_info: Optional[InputOutputInfo] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = io_info.apply_input_output_info_to_command_invocation(cmd_inv)
     assert len(cmd_inv_with_io.get_operands_with_config_input()) == 0
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 2
@@ -41,8 +42,8 @@ def test_sort_1() -> None:
     assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 
     # Parallelizability Info
-    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 1
+    para_info: Optional[ParallelizabilityInfo] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert para_info is not None and len(para_info.parallelizer_list) == 1
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
     # only check splitter and actual mappers and aggregators
     assert parallelizer1.get_splitter() == make_splitter_consec_chunks()
@@ -68,7 +69,8 @@ def test_sort_2() -> None:
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
-    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    io_info: Optional[InputOutputInfo] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = io_info.apply_input_output_info_to_command_invocation(cmd_inv)
     assert len(cmd_inv_with_io.get_operands_with_config_input()) == 0
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 0
@@ -77,8 +79,8 @@ def test_sort_2() -> None:
     assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 
     # Parallelizability Info
-    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 1
+    para_info: Optional[ParallelizabilityInfo] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert para_info is not None and len(para_info.parallelizer_list) == 1
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
     # only check splitter and actual mappers and aggregators
     assert parallelizer1.get_splitter() == make_splitter_consec_chunks()
@@ -92,7 +94,8 @@ def test_sort_3() -> None:
     cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
 
     # IO Info
-    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    io_info: Optional[InputOutputInfo] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = io_info.apply_input_output_info_to_command_invocation(cmd_inv)
     assert len(cmd_inv_with_io.get_operands_with_config_input()) == 0
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 0
@@ -101,8 +104,8 @@ def test_sort_3() -> None:
     assert cmd_inv_with_io.implicit_use_of_streaming_output is None
 
     # Parallelizability Info
-    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 0 # because of stable sort
+    para_info: Optional[ParallelizabilityInfo] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert para_info is not None and len(para_info.parallelizer_list) == 0 # because of stable sort
 
 def test_sort_5() -> None:
     args: List[FlagOption] = [make_arg_simple(["-m"])]
@@ -110,7 +113,8 @@ def test_sort_5() -> None:
     cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
 
     # IO Info
-    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    io_info: Optional[InputOutputInfo] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = io_info.apply_input_output_info_to_command_invocation(cmd_inv)
     assert len(cmd_inv_with_io.get_operands_with_config_input()) == 0
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 0
@@ -119,8 +123,8 @@ def test_sort_5() -> None:
     assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 
     # Parallelizability Info
-    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 0 # because of stable sort
+    para_info: Optional[ParallelizabilityInfo] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert para_info is not None and len(para_info.parallelizer_list) == 0 # because of stable sort
 
 
 def test_sort_6() -> None:
@@ -129,7 +133,8 @@ def test_sort_6() -> None:
     cmd_inv: CommandInvocationInitial = CommandInvocationInitial(cmd_name, flag_option_list=args, operand_list=operands)
 
     # IO Info
-    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    io_info: Optional[InputOutputInfo] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = io_info.apply_input_output_info_to_command_invocation(cmd_inv)
     assert len(cmd_inv_with_io.get_operands_with_config_input()) == 0
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 0
@@ -138,5 +143,5 @@ def test_sort_6() -> None:
     assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 
     # Parallelizability Info
-    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 0 # because of files0-from
+    para_info: Optional[ParallelizabilityInfo] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert para_info is not None and len(para_info.parallelizer_list) == 0 # because of files0-from

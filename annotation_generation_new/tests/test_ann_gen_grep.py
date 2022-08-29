@@ -1,5 +1,5 @@
 from util_flag_option import make_arg_simple
-from typing import List
+from typing import List, Optional
 from datatypes_new.BasicDatatypes import FlagOption, ArgStringType, Operand, FileName
 from datatypes_new.BasicDatatypesWithIO import make_stdout_with_access_output
 from datatypes_new.CommandInvocationInitial import CommandInvocationInitial
@@ -29,7 +29,8 @@ def test_grep_1() -> None:
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
-    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    io_info: Optional[InputOutputInfo] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = io_info.apply_input_output_info_to_command_invocation(cmd_inv)
     assert len(cmd_inv_with_io.get_operands_with_config_input()) == 0
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 2
@@ -38,8 +39,8 @@ def test_grep_1() -> None:
     assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 
     # Parallelizability Info
-    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 0
+    para_info: Optional[ParallelizabilityInfo] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert para_info is not None and len(para_info.parallelizer_list) == 0
     # currently not implemented and thus not added to parallelizer_list
     # parallelizer1: Parallelizer = para_info.parallelizer_list[0]
     # parallelizer2: Parallelizer = para_info.parallelizer_list[1]
@@ -66,7 +67,8 @@ def test_grep_2() -> None:
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
-    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    io_info: Optional[InputOutputInfo] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = io_info.apply_input_output_info_to_command_invocation(cmd_inv)
     assert len(cmd_inv_with_io.get_operands_with_config_input()) == 0
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 2
@@ -75,8 +77,8 @@ def test_grep_2() -> None:
     assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 
     # Parallelizability Info
-    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 0
+    para_info: Optional[ParallelizabilityInfo] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert para_info is not None and len(para_info.parallelizer_list) == 0
     # currently not implemented and thus not added to parallelizer_list
     # parallelizer1: Parallelizer = para_info.parallelizer_list[0]
     # parallelizer2: Parallelizer = para_info.parallelizer_list[1]
@@ -103,7 +105,8 @@ def test_grep_3() -> None:
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
-    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    io_info: Optional[InputOutputInfo] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = io_info.apply_input_output_info_to_command_invocation(cmd_inv)
     assert len(cmd_inv_with_io.get_operands_with_config_input()) == 0
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 2
@@ -112,8 +115,8 @@ def test_grep_3() -> None:
     assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 
     # Parallelizability Info
-    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 2
+    para_info: Optional[ParallelizabilityInfo] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert para_info is not None and len(para_info.parallelizer_list) == 2
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
     parallelizer2: Parallelizer = para_info.parallelizer_list[1]
     # check that specs for mapper and aggregator are fine
@@ -138,7 +141,8 @@ def test_grep_4() -> None:
     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
-    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    io_info: Optional[InputOutputInfo] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = io_info.apply_input_output_info_to_command_invocation(cmd_inv)
     assert len(cmd_inv_with_io.get_operands_with_config_input()) == 0
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 3
@@ -147,8 +151,8 @@ def test_grep_4() -> None:
     assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 
     # Parallelizability Info
-    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 0
+    para_info: Optional[ParallelizabilityInfo] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert para_info is not None and len(para_info.parallelizer_list) == 0
     # currently not implemented and thus not added to parallelizer_list
     # parallelizer1: Parallelizer = para_info.parallelizer_list[0]
     # parallelizer2: Parallelizer = para_info.parallelizer_list[1]
@@ -173,7 +177,8 @@ def test_grep_5() -> None:
     # cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 
     # IO Info
-    io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    io_info: Optional[InputOutputInfo] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = io_info.apply_input_output_info_to_command_invocation(cmd_inv)
     assert len(cmd_inv_with_io.get_operands_with_config_input()) == 1
     assert len(cmd_inv_with_io.get_operands_with_stream_input()) == 2
@@ -182,8 +187,8 @@ def test_grep_5() -> None:
     assert cmd_inv_with_io.implicit_use_of_streaming_output is None
 
     # Parallelizability Info
-    para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
-    assert len(para_info.parallelizer_list) == 0
+    para_info: Optional[ParallelizabilityInfo] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    assert para_info is not None and len(para_info.parallelizer_list) == 0
 
 # test case removed for now (has to do with the case analysis on what to do when no file is given)
 # def test_grep_6() -> None:
