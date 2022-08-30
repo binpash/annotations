@@ -1,4 +1,5 @@
 import argparse
+from typing import Optional
 
 # create parser
 from annotation_generation_new.AnnotationGeneration import get_input_output_info_from_cmd_invocation, \
@@ -33,10 +34,9 @@ if where_to_save is not None:
     shall_we_write_to_file = True
     try:
         text_file = open(script_prefix + where_to_save)
+        text_file.close()
     except IOError:
         shall_we_write_to_file = False
-    finally:
-        text_file.close()
     if not shall_we_write_to_file:
         print("There exists a file on the provided path so the result will be output (only). ")
 
@@ -49,16 +49,16 @@ command_invocation: CommandInvocationInitial = parse(cmd_invocation)
 result += str(command_invocation) + "\n"
 
 result += ">>> INPUT-OUTPUT INFORMATION (applied to command invocation if possible): \n"
-io_info: InputOutputInfo = get_input_output_info_from_cmd_invocation(command_invocation)
+io_info: Optional[InputOutputInfo] = get_input_output_info_from_cmd_invocation(command_invocation)
 if io_info is None:
     result += f"Information not provided so considered side-effectful."
-if io_info.has_other_outputs():
+elif io_info.has_other_outputs():
     result += f"Provided command has outputs other than streaming."
 else:
     command_invocation_with_io = io_info.apply_input_output_info_to_command_invocation(command_invocation)
     result += str(command_invocation_with_io)
 result += "\n"
-para_info: ParallelizabilityInfo = get_parallelizability_info_from_cmd_invocation(command_invocation)
+para_info: Optional[ParallelizabilityInfo] = get_parallelizability_info_from_cmd_invocation(command_invocation)
 if para_info is None:
     para_info = ParallelizabilityInfo() # defaults to no parallelizer's and all properties False
 result += ">>> PARALLELIZABILITY INFORMATION: \n"

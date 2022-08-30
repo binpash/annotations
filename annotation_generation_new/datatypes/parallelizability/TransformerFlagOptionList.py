@@ -1,9 +1,9 @@
 from typing import Optional, List, Union
 from datatypes_new.BasicDatatypes import Flag
-from datatypes_new.BasicDatatypesWithIO import OptionWithIO
 
 from abc import ABC, abstractmethod
 
+from datatypes_new.BasicDatatypesWithIOVar import OptionWithIOVar
 from util_standard import standard_repr, standard_eq
 from util_new import foldl
 
@@ -28,8 +28,8 @@ class TransformerFlagOptionList(ABC):
 
     @abstractmethod
     def get_flag_option_list_after_transformer_application(self,
-                                                           original_flag_option_list: List[Union[Flag, OptionWithIO]]) \
-            -> List[Union[Flag, OptionWithIO]]:
+                                                           original_flag_option_list: List[Union[Flag, OptionWithIOVar]]) \
+            -> List[Union[Flag, OptionWithIOVar]]:
         pass
 
 def return_transformer_flagoption_list_empty_if_none_else_itself(arg: Optional[TransformerFlagOptionList]) \
@@ -47,8 +47,8 @@ def return_transformer_flagoption_list_same_as_seq_if_none_else_itself(arg: Opti
         return arg
 
 def apply_individual_transformer_flagoption_list(transformer: TransformerFlagOptionList,
-                                                 current_list: List[Union[Flag, OptionWithIO]]
-                                                 ) -> List[Union[Flag, OptionWithIO]]:
+                                                 current_list: List[Union[Flag, OptionWithIOVar]]
+                                                 ) -> List[Union[Flag, OptionWithIOVar]]:
     return transformer.get_flag_option_list_after_transformer_application(current_list)
 
 # TODO: retrieve access info for option arguments from man-page-file
@@ -59,18 +59,18 @@ class TransformerFlagOptionListSeq(TransformerFlagOptionList):
         pass
 
     def get_flag_option_list_after_transformer_application(self,
-                                                           original_flag_option_list: List[Union[Flag, OptionWithIO]]) \
-            -> List[Union[Flag, OptionWithIO]]:
+                                                           original_flag_option_list: List[Union[Flag, OptionWithIOVar]]) \
+            -> List[Union[Flag, OptionWithIOVar]]:
         return original_flag_option_list
 
 class TransformerFlagOptionListAdd(TransformerFlagOptionList):
 
-    def __init__(self, list_to_add: List[Union[Flag, OptionWithIO]]) -> None:
-        self.list_to_add: List[Union[Flag, OptionWithIO]] = list_to_add
+    def __init__(self, list_to_add: List[Union[Flag, OptionWithIOVar]]) -> None:
+        self.list_to_add: List[Union[Flag, OptionWithIOVar]] = list_to_add
 
     def get_flag_option_list_after_transformer_application(self,
-                                                           original_flag_option_list: List[Union[Flag, OptionWithIO]]) \
-            -> List[Union[Flag, OptionWithIO]]:
+                                                           original_flag_option_list: List[Union[Flag, OptionWithIOVar]]) \
+            -> List[Union[Flag, OptionWithIOVar]]:
         list_of_flagoptions_without_the_ones_in_original_one = [flagoption
                                                                 for flagoption in self.list_to_add
                                                                 if flagoption not in original_flag_option_list]
@@ -82,8 +82,8 @@ class TransformerFlagOptionListRemove(TransformerFlagOptionList):
         self.list_to_remove = list_to_remove
 
     def get_flag_option_list_after_transformer_application(self,
-                                                           original_flag_option_list: List[Union[Flag, OptionWithIO]]) \
-            -> List[Union[Flag, OptionWithIO]]:
+                                                           original_flag_option_list: List[Union[Flag, OptionWithIOVar]]) \
+            -> List[Union[Flag, OptionWithIOVar]]:
         return [flagoption for flagoption in original_flag_option_list
                 if flagoption.get_name() not in self.list_to_remove]
 
@@ -93,8 +93,8 @@ class TransformerFlagOptionListFilter(TransformerFlagOptionList):
         self.list_filter = list_filter
 
     def get_flag_option_list_after_transformer_application(self,
-                                                           original_flag_option_list: List[Union[Flag, OptionWithIO]]) \
-            -> List[Union[Flag, OptionWithIO]]:
+                                                           original_flag_option_list: List[Union[Flag, OptionWithIOVar]]) \
+            -> List[Union[Flag, OptionWithIOVar]]:
         return [flagoption for flagoption in original_flag_option_list
                 if flagoption.get_name() in self.list_filter]
 
@@ -104,18 +104,18 @@ class TransformerFlagOptionListEmpty(TransformerFlagOptionList):
         pass
 
     def get_flag_option_list_after_transformer_application(self,
-                                                           original_flag_option_list: List[Union[Flag, OptionWithIO]]) \
-            -> List[Union[Flag, OptionWithIO]]:
+                                                           original_flag_option_list: List[Union[Flag, OptionWithIOVar]]) \
+            -> List[Union[Flag, OptionWithIOVar]]:
         return []
 
 class TransformerFlagOptionListCustom(TransformerFlagOptionList):
 
-    def __init__(self, list_custom: List[Union[Flag, OptionWithIO]]) -> None:
+    def __init__(self, list_custom: List[Union[Flag, OptionWithIOVar]]) -> None:
         self.list_custom = list_custom
 
     def get_flag_option_list_after_transformer_application(self,
-                                                           original_flag_option_list: List[Union[Flag, OptionWithIO]]) \
-            -> List[Union[Flag, OptionWithIO]]:
+                                                           original_flag_option_list: List[Union[Flag, OptionWithIOVar]]) \
+            -> List[Union[Flag, OptionWithIOVar]]:
         return self.list_custom
 
 ## factory methods to hide details for API
@@ -146,7 +146,7 @@ class ChainTransformerFlagOptionList(TransformerFlagOptionList):
         self.list_transformers = list_transformers
 
     def get_flag_option_list_after_transformer_application(self,
-                                                           original_flag_option_list: List[Union[Flag, OptionWithIO]]
-                                                           ) -> List[Union[Flag, OptionWithIO]]:
+                                                           original_flag_option_list: List[Union[Flag, OptionWithIOVar]]
+                                                           ) -> List[Union[Flag, OptionWithIOVar]]:
         return foldl(apply_individual_transformer_flagoption_list, original_flag_option_list, self.list_transformers)
 

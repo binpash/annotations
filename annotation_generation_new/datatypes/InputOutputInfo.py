@@ -1,3 +1,5 @@
+import itertools
+
 from util_standard import standard_repr
 from typing import List, Tuple, Union, Optional, Literal
 from datatypes_new.AccessKind import AccessKind, make_stream_input, make_other_input, make_stream_output, \
@@ -178,7 +180,8 @@ class InputOutputInfo:
             raise Exception("neither flag nor option")
 
     def has_other_outputs(self):
-        for _, pot_accesskind in self.flagoption_list_typer + self.operand_list_typer:
+        typer_lists = list(itertools.chain(self.flagoption_list_typer, self.operand_list_typer))
+        for _, pot_accesskind in typer_lists:
             if pot_accesskind is not None:
                 # is not None -> of type AccessKind
                 if pot_accesskind.is_other_output():

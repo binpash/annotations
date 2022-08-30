@@ -68,7 +68,7 @@ def get_input_output_info_from_cmd_invocation(cmd_invocation : CommandInvocation
     # Get the Generator, info_generator_class_for_cmd_repr, info_generator_class_for_cmd_repr
     info_generator_class_for_cmd_repr = DICT_CMD_NAME_TO_REPRESENTATION_IN_MODULE_NAMES.get(cmd_invocation.cmd_name)
     try:
-        info_generator_class_for_cmd = str_to_class(INPUTOUTPUT_INFO_FILENAME_MODULE_PREFIX + info_generator_class_for_cmd_repr)
+        info_generator_class_for_cmd = str_to_class(str(INPUTOUTPUT_INFO_FILENAME_MODULE_PREFIX) + str(info_generator_class_for_cmd_repr))
         # Initialize the info generator object
         info_generator_object = info_generator_class_for_cmd(cmd_invocation)
         # Generate info
@@ -79,7 +79,7 @@ def get_input_output_info_from_cmd_invocation(cmd_invocation : CommandInvocation
 
 def get_parallelizability_info_from_cmd_invocation(cmd_invocation : CommandInvocationInitial) -> Optional[ParallelizabilityInfo]:
     # Get the Generator
-    info_generator_class_for_cmd_repr = PARALLELIZABILITY_INFO_FILENAME_MODULE_PREFIX + DICT_CMD_NAME_TO_REPRESENTATION_IN_MODULE_NAMES.get(cmd_invocation.cmd_name)
+    info_generator_class_for_cmd_repr = str(PARALLELIZABILITY_INFO_FILENAME_MODULE_PREFIX) + str(DICT_CMD_NAME_TO_REPRESENTATION_IN_MODULE_NAMES.get(cmd_invocation.cmd_name))
     try:
         info_generator_class_for_cmd = str_to_class(info_generator_class_for_cmd_repr)
         # Initialize the info generator object

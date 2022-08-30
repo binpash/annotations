@@ -1,11 +1,12 @@
 from copy import deepcopy
-from typing import Optional, List
+from typing import Optional, List, Union
 
 from datatypes_new.CommandInvocationWithIOVars import CommandInvocationWithIOVars
 from util_standard import standard_eq
 from util_new import return_default_if_none_else_itself
 
-from datatypes_new.BasicDatatypes import FileNameOrStdDescriptor
+from datatypes_new.BasicDatatypesWithIOVar import IOVar
+from datatypes_new.BasicDatatypes import FileNameOrStdDescriptor, ArgStringType
 from annotation_generation_new.datatypes.parallelizability.Splitter import Splitter, make_splitter_consec_chunks, \
     make_splitter_indiv_files, make_splitter_round_robin, make_splitter_round_robin_with_unwrap
 from annotation_generation_new.datatypes.parallelizability.MapperSpec import MapperSpec, \
@@ -65,9 +66,9 @@ class Parallelizer:
 
     def get_actual_mapper(self,
                           cmd_invocation: CommandInvocationWithIOVars,
-                          input_from: FileNameOrStdDescriptor,
-                          output_to: FileNameOrStdDescriptor,
-                          aux_output_tos: List[FileNameOrStdDescriptor]) \
+                          input_from: IOVar,
+                          output_to: IOVar,
+                          aux_output_tos: List[IOVar]) \
             -> Optional[Mapper]:
         assert(len(aux_output_tos) == self.info_mapper_aggregator)
         return self.core_mapper_spec.get_mapper(cmd_invocation, input_from, output_to, aux_output_tos)
@@ -77,8 +78,9 @@ class Parallelizer:
 
     def get_actual_aggregator(self,
                               cmd_invocation: CommandInvocationWithIOVars,
-                              inputs_from: List[FileNameOrStdDescriptor],
-                              output_to: FileNameOrStdDescriptor
+                              inputs_from: List[Union[IOVar, ArgStringType]],
+                              # ArgStringType needed for typing, only IOVar provided
+                              output_to: IOVar
                             ) -> Optional[Aggregator]:
         return self.core_aggregator_spec.get_aggregator(cmd_invocation, inputs_from, output_to)
 

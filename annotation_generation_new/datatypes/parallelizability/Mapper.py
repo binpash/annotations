@@ -1,5 +1,6 @@
 from typing import Optional, List, Union
 
+from datatypes_new.BasicDatatypesWithIOVar import OptionWithIOVar, IOVar
 from util_standard import standard_repr, standard_eq
 
 from datatypes_new.BasicDatatypes import Flag, ArgStringType
@@ -12,10 +13,10 @@ class Mapper(CommandInvocationWithIOVars):
 
     def __init__(self,
                  cmd_name: str,
-                 flag_option_list : List[Union[Flag, OptionWithIO]],
-                 operand_list : List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]],
-                 implicit_use_of_streaming_input: Optional[FileNameOrStdDescriptorWithIOInfo],
-                 implicit_use_of_streaming_output: Optional[FileNameOrStdDescriptorWithIOInfo],
+                 flag_option_list : List[Union[Flag, OptionWithIOVar]],
+                 operand_list : List[Union[ArgStringType, IOVar]],
+                 implicit_use_of_streaming_input: Optional[IOVar],
+                 implicit_use_of_streaming_output: Optional[IOVar],
                  access_map
                  ) -> None:
         CommandInvocationWithIOVars.__init__(self,

@@ -1,6 +1,7 @@
 from typing import Optional, List, Union
 
 from datatypes_new.BasicDatatypesWithIO import OptionWithIO, FileNameOrStdDescriptorWithIOInfo
+from datatypes_new.BasicDatatypesWithIOVar import IOVar, OptionWithIOVar
 from datatypes_new.CommandInvocationWithIOVars import CommandInvocationWithIOVars
 from util_standard import standard_repr, standard_eq
 from util_new import return_empty_flag_option_list_if_none_else_itself, return_empty_pos_config_list_if_none_else_itself
@@ -16,10 +17,10 @@ class Aggregator(CommandInvocationWithIOVars):
                  # depending on kind, the aggregator function will be applied to different inputs, e.g. lines
                  kind: AggregatorKindEnum,
                  cmd_name: str,
-                 flag_option_list: List[Union[Flag, OptionWithIO]],
-                 operand_list: List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]],
-                 implicit_use_of_streaming_input: Optional[FileNameOrStdDescriptorWithIOInfo],
-                 implicit_use_of_streaming_output: Optional[FileNameOrStdDescriptorWithIOInfo],
+                 flag_option_list: List[Union[Flag, OptionWithIOVar]],
+                 operand_list: List[Union[ArgStringType, IOVar]],
+                 implicit_use_of_streaming_input: Optional[IOVar],
+                 implicit_use_of_streaming_output: Optional[IOVar],
                  access_map
                  ) -> None:
         self.kind = kind

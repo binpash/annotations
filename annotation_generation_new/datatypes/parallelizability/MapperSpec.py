@@ -1,13 +1,14 @@
-from typing import Optional, List
+from typing import Optional, List, Union
 
 from enum import Enum
 
 from datatypes_new.AccessKind import make_stream_input, make_stream_output
+from datatypes_new.BasicDatatypesWithIOVar import IOVar, OptionWithIOVar
 from parser_new.parser import parse
 from util_standard import standard_repr, standard_eq
 
 from datatypes_new.CommandInvocationWithIOVars import CommandInvocationWithIOVars
-from datatypes_new.BasicDatatypes import FileNameOrStdDescriptor
+from datatypes_new.BasicDatatypes import FileNameOrStdDescriptor, Flag
 from annotation_generation_new.datatypes.parallelizability.TransformerFlagOptionList import TransformerFlagOptionList, \
     return_transformer_flagoption_list_same_as_seq_if_none_else_itself, TransformerFlagOptionListCustom
 # from annotation_generation_new.datatypes.parallelizability.TransformerPosConfigList import TransformerPosConfigList
@@ -55,9 +56,9 @@ class MapperSpec:
     # return value None if it is not yet implemented
     def get_mapper(self,
                    original_cmd_invocation: CommandInvocationWithIOVars,
-                   input_from: FileNameOrStdDescriptor,
-                   output_to: FileNameOrStdDescriptor,
-                   aux_output_tos: List[FileNameOrStdDescriptor]
+                   input_from: IOVar,
+                   output_to: IOVar,
+                   aux_output_tos: List[IOVar]
             ) -> Optional[Mapper]:
         if not self.is_implemented:
             # this is a handle to specify future mappers without the need to implement them
@@ -81,8 +82,13 @@ class MapperSpec:
         else:
             # ASSUMPTION: operands given in that order: input, output, aux_output_1, aux_output_2, ...
             for operand in mapper.operand_list:
+                assert(isinstance(operand, IOVar))
                 mapper.access_map.pop(operand)
-            mapper.operand_list = [input_from, output_to] + [aux_output_to for aux_output_to in aux_output_tos]
+            # trick for typing...
+            new_operand_list = []
+            for x in [input_from, output_to] + [aux_output_to for aux_output_to in aux_output_tos]:
+                new_operand_list.append(x)
+            mapper.operand_list = new_operand_list
             mapper.access_map[input_from] = make_stream_input()
             mapper.access_map[output_to] = make_stream_output()
             for aux_output_to in aux_output_tos:
@@ -118,7 +124,14 @@ def make_mapper_spec_custom_from_string_representation(
         cmd_inv_as_str: str,
         is_implemented: bool = False) -> MapperSpec:
     cmd_inv = parse(cmd_inv_as_str)
-    FlagOptionListTransformer = TransformerFlagOptionListCustom(cmd_inv.flag_option_list)
+    # currently, we assume no file names in option arguments
+    # this is why we do not convert them properly but need to do this trick for typing
+    # later, if option arguments contain file names, they need to get IOVar from PaSh
+    new_flagoption_list: List[Union[Flag, OptionWithIOVar]] = []
+    for x in cmd_inv.flag_option_list:
+        assert isinstance(x, Flag)
+        new_flagoption_list.append(x)
+    FlagOptionListTransformer = TransformerFlagOptionListCustom(new_flagoption_list)
     return make_mapper_spec_custom(spec_mapper_cmd_name=cmd_inv.cmd_name,
                             flag_option_list_transformer=FlagOptionListTransformer,
                             is_implemented=is_implemented)

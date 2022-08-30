@@ -1,13 +1,14 @@
 from copy import deepcopy
-from typing import Optional, List, Literal
+from typing import Optional, List, Literal, Union
 
 from abc import ABC, abstractmethod
 
+from datatypes_new.BasicDatatypesWithIOVar import IOVar, OptionWithIOVar
 from parser_new.parser import parse
 from util_standard import standard_repr, standard_eq
 
 from datatypes_new.CommandInvocationWithIOVars import CommandInvocationWithIOVars
-from datatypes_new.BasicDatatypes import FileNameOrStdDescriptor
+from datatypes_new.BasicDatatypes import FileNameOrStdDescriptor, ArgStringType, Flag
 from datatypes_new.AccessKind import AccessKind, make_stream_input, make_stream_output
 from annotation_generation_new.datatypes.parallelizability.TransformerFlagOptionList import TransformerFlagOptionList, \
     return_transformer_flagoption_list_same_as_seq_if_none_else_itself, TransformerFlagOptionListCustom
@@ -76,8 +77,9 @@ class AggregatorSpec(ABC):
     @abstractmethod
     def get_aggregator(self,
                        original_cmd_invocation: CommandInvocationWithIOVars,
-                       inputs_from: List[FileNameOrStdDescriptor],
-                       output_to: FileNameOrStdDescriptor
+                       inputs_from: List[Union[IOVar, ArgStringType]],
+                       # ArgStringType needed for typing, only IOVar provided
+                       output_to: IOVar
                        ) -> Optional[Aggregator]:
         pass
 
@@ -166,8 +168,9 @@ class AggregatorSpecNonFunc(AggregatorSpec):
 
     def get_aggregator(self,
                        original_cmd_invocation: CommandInvocationWithIOVars,
-                       inputs_from: List[FileNameOrStdDescriptor],
-                       output_to: FileNameOrStdDescriptor
+                       inputs_from: List[Union[IOVar, ArgStringType]],
+                       # ArgStringType needed for typing, only IOVar provided
+                       output_to: IOVar
                        ) -> Optional[Aggregator]:
         if not self.is_implemented:
             return None
@@ -209,11 +212,11 @@ class AggregatorSpecFuncTransformer(AggregatorSpec):
         self.flag_option_list_transformer: TransformerFlagOptionList = \
             return_transformer_flagoption_list_same_as_seq_if_none_else_itself(flag_option_list_transformer)
 
-    # note that this changes the parameter original_cmd_invocation
     def get_aggregator(self,
                        original_cmd_invocation: CommandInvocationWithIOVars,
-                       inputs_from: List[FileNameOrStdDescriptor],
-                       output_to: FileNameOrStdDescriptor
+                       inputs_from: List[Union[IOVar, ArgStringType]],
+                       # ArgStringType needed for typing, only IOVar provided
+                       output_to: IOVar
                        ) -> Optional[Aggregator]:
         if not self.is_implemented:
             return None
@@ -227,9 +230,9 @@ class AggregatorSpecFuncTransformer(AggregatorSpec):
         # access map modifications
         # Hard-coded how to provide input and get output -> TODO: move to spec
         aggregator_cmd_inv.remove_streaming_inputs()
-        aggregator_cmd_inv.operand_list = inputs_from # TODO: fix typing
+        aggregator_cmd_inv.operand_list = inputs_from
         for input_id in inputs_from:
-            assert not input_id in aggregator_cmd_inv.access_map
+            assert not input_id in aggregator_cmd_inv.access_map and isinstance(input_id, IOVar)
             aggregator_cmd_inv.access_map[input_id] = make_stream_input()
         aggregator_cmd_inv.replace_var(aggregator_cmd_inv.implicit_use_of_streaming_output, output_to)
         return Aggregator.make_aggregator_from_cmd_inv_with_io(aggregator_cmd_inv, self.kind)
@@ -257,12 +260,20 @@ class AggregatorSpecFuncStringRepresentation(AggregatorSpec):
 
     def get_aggregator(self,
                        original_cmd_invocation: CommandInvocationWithIOVars,
-                       inputs_from: List[FileNameOrStdDescriptor],
-                       output_to: FileNameOrStdDescriptor
+                       inputs_from: List[Union[IOVar, ArgStringType]],
+                       # ArgStringType needed for typing, only IOVar provided
+                       output_to: IOVar
                        ) -> Optional[Aggregator]:
         if not self.is_implemented:
             return None
         agg_cmd_inv = parse(self.cmd_inv_as_str)
+        # currently, we assume no file names in option arguments
+        # this is why we do not convert them properly but need to do this trick for typing
+        # later, if option arguments contain file names, they need to get IOVar from PaSh
+        new_flagoption_list : List[Union[Flag, OptionWithIOVar]] = []
+        for x in agg_cmd_inv.flag_option_list:
+            assert isinstance(x, Flag)
+            new_flagoption_list.append(x)
         # Assumption: inputs are given as operands and output is stdout
         # Assumption: no inputs or outputs given (also as config) since we do not do access map things etc...
         access_map = {input_id: make_stream_input() for input_id in inputs_from}
@@ -270,7 +281,7 @@ class AggregatorSpecFuncStringRepresentation(AggregatorSpec):
         agg_cmd_inv_with_io_vars = Aggregator(kind=self.kind,
                                               access_map=access_map,
                                               cmd_name = agg_cmd_inv.cmd_name,
-                                              flag_option_list=agg_cmd_inv.flag_option_list,
+                                              flag_option_list=new_flagoption_list,
                                               operand_list=inputs_from,
                                               implicit_use_of_streaming_input=None,
                                               implicit_use_of_streaming_output=output_to)
@@ -283,16 +294,23 @@ class AggregatorSpecFuncStringRepresentation(AggregatorSpec):
         return agg_cmd_inv_with_io_vars
 
     def get_actual_2_ary_aggregator_with_aux(self,
-                                             fst_normal_input: FileNameOrStdDescriptor,
-                                             fst_aux_inputs_from: List[FileNameOrStdDescriptor],
-                                             snd_normal_input: FileNameOrStdDescriptor,
-                                             snd_aux_inputs_from: List[FileNameOrStdDescriptor],
-                                             output_to: FileNameOrStdDescriptor,
-                                             aux_outputs_to: List[FileNameOrStdDescriptor]
+                                             fst_normal_input: IOVar,
+                                             fst_aux_inputs_from: List[IOVar],
+                                             snd_normal_input: IOVar,
+                                             snd_aux_inputs_from: List[IOVar],
+                                             output_to: IOVar,
+                                             aux_outputs_to: List[IOVar]
                                              ):
         assert(len(fst_aux_inputs_from) == len(snd_aux_inputs_from))
         assert(len(fst_aux_inputs_from) == len(aux_outputs_to))
         agg_cmd_inv = parse(self.cmd_inv_as_str)
+        # currently, we assume no file names in option arguments
+        # this is why we do not convert them properly but need to do this trick for typing
+        # later, if option arguments contain file names, they need to get IOVar from PaSh
+        new_flagoption_list : List[Union[Flag, OptionWithIOVar]] = []
+        for x in agg_cmd_inv.flag_option_list:
+            assert isinstance(x, Flag)
+            new_flagoption_list.append(x)
         all_inputs = [fst_normal_input] + fst_aux_inputs_from + [snd_normal_input] + snd_aux_inputs_from
         all_outputs = [output_to] + aux_outputs_to
         access_map = dict()
@@ -300,12 +318,14 @@ class AggregatorSpecFuncStringRepresentation(AggregatorSpec):
             access_map[input_id] = make_stream_input()
         for output_id in all_outputs:
             access_map[output_id] = make_stream_output()
-        new_operand_list = [fst_normal_input] + fst_aux_inputs_from + [snd_normal_input] + snd_aux_inputs_from + \
-                           [output_to] + aux_outputs_to
+        new_operand_list : List[Union[ArgStringType, IOVar]] = []
+        # trick for typing...
+        for x in [fst_normal_input] + fst_aux_inputs_from + [snd_normal_input] + snd_aux_inputs_from + [output_to] + aux_outputs_to:
+            new_operand_list.append(x)
         agg_cmd_inv_with_io_vars = Aggregator(kind=self.kind,
                                               access_map=access_map,
                                               cmd_name = agg_cmd_inv.cmd_name,
-                                              flag_option_list=agg_cmd_inv.flag_option_list,
+                                              flag_option_list=new_flagoption_list,
                                               operand_list=new_operand_list,
                                               implicit_use_of_streaming_input=None,
                                               implicit_use_of_streaming_output=None)

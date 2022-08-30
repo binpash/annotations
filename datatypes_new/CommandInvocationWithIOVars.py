@@ -2,10 +2,11 @@ from copy import deepcopy
 from typing import List, Union, Optional
 
 from datatypes_new.BasicDatatypes import Flag, ArgStringType, FileNameOrStdDescriptor
-from datatypes_new.BasicDatatypesWithIO import OptionWithIO, FileNameOrStdDescriptorWithIOInfo, FileNameWithIOInfo, StdDescriptorWithIOInfo
-from datatypes_new.AccessKind import make_stream_input, make_stream_output
+from datatypes_new.BasicDatatypesWithIO import OptionWithIO, FileNameOrStdDescriptorWithIOInfo, FileNameWithIOInfo, \
+    StdDescriptorWithIOInfo
+from datatypes_new.AccessKind import make_stream_input, make_stream_output, AccessKind
 from annotation_generation_new.datatypes.Inputs import Inputs, InputsEnum
-from datatypes_new.CommandInvocationWithIO import CommandInvocationWithIO
+from datatypes_new.BasicDatatypesWithIOVar import OptionWithIOVar, IOVar
 from util_standard import standard_repr, standard_eq
 
 
@@ -14,21 +15,19 @@ class CommandInvocationWithIOVars:
     # TODO: get_access() will not work here anymore, use access_map
 
     def __init__(self,
-                 # types to be updated
                  cmd_name: str,
-                 flag_option_list: List[Union[Flag, OptionWithIO]],
-                 operand_list: List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]],
-                 implicit_use_of_streaming_input: Optional[FileNameOrStdDescriptorWithIOInfo],
-                 implicit_use_of_streaming_output: Optional[FileNameOrStdDescriptorWithIOInfo],
-                 access_map
+                 flag_option_list: List[Union[Flag, OptionWithIOVar]],
+                 operand_list: List[Union[ArgStringType, IOVar]],
+                 implicit_use_of_streaming_input: Optional[IOVar],
+                 implicit_use_of_streaming_output: Optional[IOVar],
+                 access_map: dict[IOVar, AccessKind]
                  ) -> None:
         self.cmd_name: str = cmd_name
-        self.flag_option_list: List[Union[Flag, OptionWithIO]] = deepcopy(flag_option_list)
-        self.operand_list: List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]] = deepcopy(operand_list)
-        self.implicit_use_of_streaming_input: Optional[FileNameOrStdDescriptorWithIOInfo] = deepcopy(implicit_use_of_streaming_input)
-        self.implicit_use_of_streaming_output: Optional[FileNameOrStdDescriptorWithIOInfo] = deepcopy(implicit_use_of_streaming_output)
+        self.flag_option_list: List[Union[Flag, OptionWithIOVar]] = deepcopy(flag_option_list)
+        self.operand_list: List[Union[ArgStringType, IOVar]] = deepcopy(operand_list)
+        self.implicit_use_of_streaming_input: Optional[IOVar] = deepcopy(implicit_use_of_streaming_input)
+        self.implicit_use_of_streaming_output: Optional[IOVar] = deepcopy(implicit_use_of_streaming_output)
         self.access_map = deepcopy(access_map)
-        # map from variables to filenames
 
     def __repr__(self):
         return standard_repr(self)
@@ -39,19 +38,20 @@ class CommandInvocationWithIOVars:
     def is_aggregator_concatenate(self): # needed since isinstance(_, Aggregator) does not work
         return False
 
-    @staticmethod
-    def get_from_without_vars(cmd_inv_with_io: CommandInvocationWithIO, access_map):
-        return CommandInvocationWithIOVars(cmd_name=cmd_inv_with_io.cmd_name,
-                                    flag_option_list=cmd_inv_with_io.flag_option_list,
-                                    operand_list=cmd_inv_with_io.operand_list,
-                                    implicit_use_of_streaming_input=cmd_inv_with_io.implicit_use_of_streaming_input,
-                                    implicit_use_of_streaming_output=cmd_inv_with_io.implicit_use_of_streaming_output,
-                                    access_map=access_map)
+    # problematic regarding typing so removed
+    # @staticmethod
+    # def get_from_without_vars(cmd_inv_with_io: CommandInvocationWithIO, access_map):
+    #     return CommandInvocationWithIOVars(cmd_name=cmd_inv_with_io.cmd_name,
+    #                                 flag_option_list=cmd_inv_with_io.flag_option_list,
+    #                                 operand_list=cmd_inv_with_io.operand_list,
+    #                                 implicit_use_of_streaming_input=cmd_inv_with_io.implicit_use_of_streaming_input,
+    #                                 implicit_use_of_streaming_output=cmd_inv_with_io.implicit_use_of_streaming_output,
+    #                                 access_map=access_map)
 
 
     def substitute_inputs_and_outputs_in_cmd_invocation(self,
-                                                        inputs_from: List[FileNameOrStdDescriptor],
-                                                        outputs_to: List[FileNameOrStdDescriptor]) -> None:
+                                                        inputs_from: List[IOVar],
+                                                        outputs_to: List[IOVar]) -> None:
         self.substitute_inputs_in_cmd_invocation(inputs_from)
         self.substitute_outputs_in_cmd_invocation(outputs_to)
 
