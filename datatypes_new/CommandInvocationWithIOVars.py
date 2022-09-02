@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import List, Union, Optional
+from typing import List, Union, Optional, Dict
 
 from datatypes_new.BasicDatatypes import Flag, ArgStringType, FileNameOrStdDescriptor
 from datatypes_new.BasicDatatypesWithIO import OptionWithIO, FileNameOrStdDescriptorWithIOInfo, FileNameWithIOInfo, \
@@ -20,7 +20,7 @@ class CommandInvocationWithIOVars:
                  operand_list: List[Union[ArgStringType, IOVar]],
                  implicit_use_of_streaming_input: Optional[IOVar],
                  implicit_use_of_streaming_output: Optional[IOVar],
-                 access_map: dict[IOVar, AccessKind]
+                 access_map: Dict[IOVar, AccessKind]
                  ) -> None:
         self.cmd_name: str = cmd_name
         self.flag_option_list: List[Union[Flag, OptionWithIOVar]] = deepcopy(flag_option_list)

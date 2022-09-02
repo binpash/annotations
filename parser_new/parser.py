@@ -1,4 +1,4 @@
-from typing import Set, Literal, List
+from typing import Set, Literal, List, Dict
 
 import shlex
 from datatypes_new.BasicDatatypes import FlagOption, Flag, Option, Operand, FileName, ArgStringType
@@ -16,10 +16,10 @@ def parse(command) -> CommandInvocationInitial:
     # TODO: if there is an element "\n", we lose the quotation marks currently
 
     set_of_all_flags: Set[str] = get_set_of_all_flags(json_data)
-    dict_flag_to_primary_repr: dict[str, str] = get_dict_flag_to_primary_repr(json_data)
+    dict_flag_to_primary_repr: Dict[str, str] = get_dict_flag_to_primary_repr(json_data)
     set_of_all_options: Set[str] = get_set_of_all_options(json_data)
-    dict_option_to_primary_repr: dict[str, str] = get_dict_option_to_primary_repr(json_data)
-    # dict_option_to_class_for_arg: dict[str, WhichClassForArg] = get_dict_option_to_class_for_arg(json_data)
+    dict_option_to_primary_repr: Dict[str, str] = get_dict_option_to_primary_repr(json_data)
+    # dict_option_to_class_for_arg: Dict[str, WhichClassForArg] = get_dict_option_to_class_for_arg(json_data)
 
     # parse list of command invocation terms
     flag_option_list: List[FlagOption] = []
@@ -86,22 +86,22 @@ def get_set_of_all(flag_or_option_str: Literal["flag", "option"], json_data) -> 
 
 
 def get_dict_flag_to_primary_repr(json_data):
-    dict_flag_to_primary_repr: dict[str, str] = dict()
+    dict_flag_to_primary_repr: Dict[str, str] = dict()
     for list_of_equiv_flag_repr in json_data["flag"]:
         for i in range(1, len(list_of_equiv_flag_repr)):
             dict_flag_to_primary_repr[list_of_equiv_flag_repr[i]] = list_of_equiv_flag_repr[0]
     return dict_flag_to_primary_repr
 
 def get_dict_option_to_primary_repr(json_data):
-    dict_option_to_primary_repr: dict[str, str] = dict()
+    dict_option_to_primary_repr: Dict[str, str] = dict()
     for list_of_equiv_flag_repr in json_data["option"]:
         for i in range(1, len(list_of_equiv_flag_repr) - 1):    # last one contains type
             dict_option_to_primary_repr[list_of_equiv_flag_repr[i]] = list_of_equiv_flag_repr[0]
     return dict_option_to_primary_repr
 
 # moved ot IOInfoGenerator
-# def get_dict_option_to_class_for_arg(json_data) -> dict[str, WhichClassForArg]:
-#     dict_option_to_class_for_arg: dict[str, WhichClassForArg] = dict()
+# def get_dict_option_to_class_for_arg(json_data) -> Dict[str, WhichClassForArg]:
+#     dict_option_to_class_for_arg: Dict[str, WhichClassForArg] = dict()
 #     for option_data in json_data["option"]:
 #         option_name = option_data[0]
 #         option_arg_type = option_data[-1]

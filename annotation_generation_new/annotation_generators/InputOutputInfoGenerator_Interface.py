@@ -1,4 +1,4 @@
-from typing import List, Tuple, Union, Literal
+from typing import List, Tuple, Union, Literal, Dict
 
 from config_new.definitions import INDICATORS_FOR_FILENAMES
 
@@ -48,7 +48,7 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
             List[Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
                        Tuple[Literal[WhichClassForArg.ARGSTRING], None],
                        Tuple[Literal[WhichClassForArg.PLAINSTRING], None]]]:
-        dict_option_to_class_for_arg: dict[str, Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
+        dict_option_to_class_for_arg: Dict[str, Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
                                                       Tuple[Literal[WhichClassForArg.ARGSTRING], None]]] = self.get_dict_option_to_class_for_arg()
         flagoption_list_typer = []
         for flagoption in self.cmd_inv.flag_option_list:
@@ -60,9 +60,9 @@ class InputOutputInfoGeneratorInterface(Generator_Interface, ABC):
                 raise Exception("neither Flag nor Option")
         return flagoption_list_typer
 
-    def get_dict_option_to_class_for_arg(self) -> dict[str, Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
+    def get_dict_option_to_class_for_arg(self) -> Dict[str, Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
                                                                   Tuple[Literal[WhichClassForArg.ARGSTRING], None]]]:
-        dict_option_to_class_for_arg: dict[str, Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
+        dict_option_to_class_for_arg: Dict[str, Union[Tuple[Literal[WhichClassForArg.FILESTD], AccessKind],
                                                       Tuple[Literal[WhichClassForArg.ARGSTRING], None]]] = dict()
         json_data = get_json_data(self.cmd_inv.cmd_name)
         for option_data in json_data["option"]:
