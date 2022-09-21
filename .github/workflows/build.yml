@@ -59,11 +59,18 @@ jobs:
         uses: actions/checkout@v2
  
       # we don't reuse the wheels so that all of the CI runs can happen concurrently
-      - name: Install Python directly
+      - name: Install AnnotationLibrary directly
         run: sudo python3 setup.py install
       
+      - name: Install pytest
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      
       - name: Test Annotation Library
-        run: pytest          
+        run: |
+          pytest          
 
   deploy:
     needs:
