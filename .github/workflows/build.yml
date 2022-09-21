@@ -26,9 +26,6 @@ jobs:
         env:
            CIBW_BUILD: cp38-* cp39-*
 
-            
-pip wheel -w DEST_DIR .
-
       - name: Upload binary wheel
         uses: actions/upload-artifact@v2
         with:
