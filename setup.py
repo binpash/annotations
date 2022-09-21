@@ -17,6 +17,8 @@ setup(name='annotations',
                 'config_new',
                 'datatypes_new',
                 'parser_new'],
+      ## Necessary for the markdown to be properly rendered
+      long_description_content_type="text/markdown",
     ## TODO: Maybe we can use this?
     #   packages=find_packages(),
     #   package_data={'': ['command_flag_option_info/data/*.json']},
