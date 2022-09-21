@@ -11,12 +11,13 @@ jobs:
     strategy:
       fail-fast: false
       # TODO: Don't think we need to build in macos too
-      ## TODO: Don't think we need to build for all python versions
       matrix:
         os:
           # - macos-11
           - ubuntu-latest
-        python-version: ["3.8", "3.9", "3.10"]
+        ## There should be only one python version here
+        python-version: 
+          - "3.8"
 
     runs-on: ${{ matrix.os }}
 
@@ -37,7 +38,6 @@ jobs:
 
       - name: Build project
         run: |
-          # pip wheel -w ./bdist .
           python -m build
 
       # - name: Build wheels
