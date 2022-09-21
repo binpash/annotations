@@ -10,10 +10,12 @@ jobs:
   package-python:
     strategy:
       fail-fast: false
+      # TODO: Don't think we need to build in macos too
       matrix:
         os:
-          - macos-11
+          # - macos-11
           - ubuntu-latest
+        python-version: ["3.8", "3.9", "3.10"]
 
     runs-on: ${{ matrix.os }}
 
@@ -21,20 +23,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v2.8.1
-        env:
-           CIBW_BUILD: cp38-* cp39-*
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Build project
+        run: |
+          # pip wheel -w ./bdist .
+          python -m build
+
+      # - name: Build wheels
+      #   uses: pypa/cibuildwheel@v2.8.1
+      #   env:
+      #      CIBW_BUILD: cp38-* cp39-*
 
       - name: Upload binary wheel
         uses: actions/upload-artifact@v2
         with:
           name: ${{ format('bdist.{0}', matrix.os) }}
-          path: wheelhouse/annotations-*.whl
+          # path: wheelhouse/annotations-*.whl
+          path: dist/annotations-*.whl
 
-      - name: Build source distribution (Linux only)
-        if: contains(matrix.os, 'ubuntu')
-        run: python setup.py sdist
+      # - name: Build source distribution (Linux only)
+      #   if: contains(matrix.os, 'ubuntu')
+      #   run: python setup.py sdist
             
       - name: Upload source distribution (from Linux)
         uses: actions/upload-artifact@v2
