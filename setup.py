@@ -1,6 +1,9 @@
 # from distutils.core import setup, find_packages
 from setuptools import setup, find_packages
 
+from pathlib import Path
+long_description = (Path(__file__).parent / "README.md").read_text()
+
 ##
 ## TODO: Rename the package names (and the name of the whole library)
 ##
@@ -18,6 +21,7 @@ setup(name='annotations',
                 'datatypes_new',
                 'parser_new'],
       ## Necessary for the markdown to be properly rendered
+      long_description=long_description,
       long_description_content_type="text/markdown",
     ## TODO: Maybe we can use this?
     #   packages=find_packages(),
