@@ -48,7 +48,7 @@ jobs:
       - name: Upload binary wheel
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ format('bdist.{0}', python-version) }}
+          name: ${{ format('bdist.{0}', matrix.python-version) }}
           # path: wheelhouse/annotations-*.whl
           path: dist/annotations-*.whl
 
