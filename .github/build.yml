@@ -1,0 +1,112 @@
+name: Main workflow
+
+on:
+  pull_request:
+  push:
+  schedule:
+    - cron: '5 14 * * *'
+
+jobs:
+  package-python:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-11
+          - ubuntu-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.8.1
+            
+      - name: Upload binary wheel
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ format('bdist.{0}', matrix.os) }}
+          path: wheelhouse/annotations-*.whl
+
+      - name: Build source distribution (Linux only)
+        if: contains(matrix.os, 'ubuntu')
+        run: python setup.py sdist
+            
+      - name: Upload source distribution (from Linux)
+        uses: actions/upload-artifact@v2
+        if: contains(matrix.os, 'ubuntu')
+        with:
+          name: sdist
+          path: dist/annotations-*.tar.gz
+      
+  build-and-test:
+    strategy:
+      fail-fast: true
+      matrix:
+        os:
+          - macos-12
+          - macos-11
+          - ubuntu-latest
+        ocaml-compiler:
+          - 4.14.x
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+ 
+      # we don't reuse the wheels so that all of the CI runs can happen concurrently
+      - name: Install Python directly
+        run: sudo python3 setup.py install
+      
+      - name: Test Annotation Library
+        run: pytest          
+
+  deploy:
+    needs:
+      - package-python
+      - build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags')
+      
+    steps:
+      - name: Download distributions
+        uses: actions/download-artifact@v2
+
+      # This echo is very useful jk
+      - name: Rename distributions
+        run: |
+          mkdir dist
+          ls bdist.*/
+          mv bdist.*/libdash-*.whl dist/
+          mv sdist/annotations-*.tar.gz dist/
+          echo Look on my Works, ye Mighty, and despair!
+          ls dist
+  
+      - name: Deploy 'latest' release on GH
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Python source and binary distributions"
+          files: |
+            dist/*
+
+      - name: Deploy test distribution to Test PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          verbose: true
+          repository_url: https://test.pypi.org/legacy/
+          skip_existing: true            
+              
+      - name: Deploy tagged release on PyPI
+        if: startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          verbose: true
