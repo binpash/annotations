@@ -169,6 +169,7 @@ def format_arg_char(arg_char):
         ## TODO: Make this correct
         raise NotImplementedError
 
+
 ## This function gets a key and a value from the ast json format
 def get_kv(dic):
     return (dic[0], dic[1])
