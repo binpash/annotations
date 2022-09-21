@@ -2,6 +2,7 @@ name: Main workflow
 
 env:
   PKG_NAME: pash-annotations
+  PKG_NAME_WHEEL: pash_annotations
 
 on:
   pull_request:
@@ -52,7 +53,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ format('bdist.{0}', matrix.python-version) }}
-          path: ${{ format('dist/{0}-*.whl', env.PKG_NAME) }}
+          path: ${{ format('dist/{0}-*.whl', env.PKG_NAME_WHEEL) }}
 
       # - name: Build source distribution (Linux only)
       #   if: contains(matrix.os, 'ubuntu')
@@ -117,7 +118,7 @@ jobs:
         run: |
           mkdir dist
           ls bdist.*/
-          mv bdist.*/${PKG_NAME}-*.whl dist/
+          mv bdist.*/${PKG_NAME_WHEEL}-*.whl dist/
           mv sdist/${PKG_NAME}-*.tar.gz dist/
           echo Look on my Works, ye Mighty, and despair!
           ls dist
