@@ -1,5 +1,8 @@
 name: Main workflow
 
+env:
+  PKG_NAME: pash-annotations
+
 on:
   pull_request:
   push:
@@ -49,8 +52,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ format('bdist.{0}', matrix.python-version) }}
-          # path: wheelhouse/annotations-*.whl
-          path: dist/annotations-*.whl
+          path: ${{ format('dist/{0}-*.whl', env.PKG_NAME) }}
 
       # - name: Build source distribution (Linux only)
       #   if: contains(matrix.os, 'ubuntu')
@@ -61,7 +63,8 @@ jobs:
         if: contains(matrix.python-version, '3.8')
         with:
           name: sdist
-          path: dist/annotations-*.tar.gz
+          path: ${{ format('dist/{0}-*.tar.gz', env.PKG_NAME) }}
+          # path: dist/annotations-*.tar.gz
       
   build-and-test:
     strategy:
@@ -114,8 +117,8 @@ jobs:
         run: |
           mkdir dist
           ls bdist.*/
-          mv bdist.*/annotations-*.whl dist/
-          mv sdist/annotations-*.tar.gz dist/
+          mv bdist.*/${PKG_NAME}-*.whl dist/
+          mv sdist/${PKG_NAME}-*.tar.gz dist/
           echo Look on my Works, ye Mighty, and despair!
           ls dist
   
