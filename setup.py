@@ -8,7 +8,7 @@ long_description = (Path(__file__).parent / "README.md").read_text()
 ## TODO: Rename the package names (and the name of the whole library)
 ##
 setup(name='pash-annotations',
-      version='0.1.2',
+      version='0.1.3',
       py_modules=['util_flag_option',
                   'util_new',
                   'util_standard'],
