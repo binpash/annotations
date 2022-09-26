@@ -72,8 +72,9 @@ jobs:
       fail-fast: true
       matrix:
         os:
-          - macos-12
-          - macos-11
+          # TODO: Uncomment those
+          # - macos-12
+          # - macos-11
           - ubuntu-latest
         python-version: ["3.8", "3.9", "3.10"]
 
@@ -113,7 +114,6 @@ jobs:
       - name: Download distributions
         uses: actions/download-artifact@v2
 
-      # This echo is very useful jk
       - name: Rename distributions
         run: |
           mkdir dist
@@ -123,6 +123,7 @@ jobs:
           echo Look on my Works, ye Mighty, and despair!
           ls dist
   
+      ## TODO: Fix this!
       # - name: Deploy 'latest' release on GH
       #   uses: marvinpinto/action-automatic-releases@latest
       #   with:
