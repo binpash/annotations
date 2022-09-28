@@ -5,10 +5,12 @@ import pkgutil
 def get_json_data(cmd_name):
     command_json_fn = f'{cmd_name}.json'
     # get man page data for command as dict
-    json_data_bytes = pkgutil.get_data(__name__, 'command_flag_option_info/data/' + command_json_fn)
-    if json_data_bytes is None:
-        json_data_bytes = pkgutil.get_data(__name__, 'command_flag_option_info.data._default_data_for_commands.json')
-        if json_data_bytes is None:
+    try:
+        json_data_bytes = pkgutil.get_data(__name__, 'command_flag_option_info/data/' + command_json_fn)
+    except FileNotFoundError:
+        try:
+            json_data_bytes = pkgutil.get_data(__name__, 'command_flag_option_info.data._default_data_for_commands.json')
+        except FileNotFoundError:
             raise Exception(f'json-File for default values not found.')
     json_data = json.loads(json_data_bytes)
     return json_data
