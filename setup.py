@@ -21,7 +21,7 @@ setup(name='pash-annotations',
                 'pash_annotations.config',
                 'pash_annotations.datatypes',
                 'pash_annotations.parser'],
-package_data={'pash_annotations': ['command_flag_option_info/*.json']},
+package_data={'pash_annotations': ['parser/command_flag_option_info/*.json']},
       ## Necessary for the markdown to be properly rendered
       long_description=long_description,
       long_description_content_type="text/markdown",
