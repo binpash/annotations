@@ -60,6 +60,7 @@ for FILENAME_MODULE_PAIR in inputoutput_info_generator_file_module_names + \
     try:
         exec(import_str)
     except ModuleNotFoundError:
+        print("not imported: " + import_str)
         pass # it's fine if some do not exist, we catch that later
 
 
@@ -74,7 +75,8 @@ def get_input_output_info_from_cmd_invocation(cmd_invocation : CommandInvocation
         # Generate info
         info_generator_object.generate_info()
         return info_generator_object.get_info()
-    except Exception: # module does not exist
+    except Exception as sth: # module does not exist
+        print("Exc: " + str(sth))
         return None
 
 def get_parallelizability_info_from_cmd_invocation(cmd_invocation : CommandInvocationInitial) -> Optional[ParallelizabilityInfo]:
