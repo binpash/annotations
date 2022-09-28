@@ -1,4 +1,4 @@
-from util_standard import standard_repr
+from pash_annotations.util_standard import standard_repr
 from pash_annotations.util import return_default_if_none_else_itself
 from typing import Dict, Any, Optional
 
