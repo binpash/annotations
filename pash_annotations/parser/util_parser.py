@@ -9,7 +9,7 @@ def get_json_data(cmd_name):
         json_data_bytes = pkgutil.get_data(__name__, 'command_flag_option_info/data/' + command_json_fn)
     except FileNotFoundError:
         try:
-            json_data_bytes = pkgutil.get_data(__name__, 'command_flag_option_info.data._default_data_for_commands.json')
+            json_data_bytes = pkgutil.get_data(__name__, 'command_flag_option_info/data/_default_data_for_commands.json')
         except FileNotFoundError:
             raise Exception(f'json-File for default values not found.')
     json_data = json.loads(json_data_bytes)
