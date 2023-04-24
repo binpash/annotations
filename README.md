@@ -12,6 +12,12 @@ For the time being, there are two sets of annotation generators:
 - the input-output information generated
 - the parallelizability information generated
 
+## Adding an annotation
+
+- Add the command in the dictionary in (https://github.com/binpash/annotations/blob/main/pash_annotations/annotation_generation/AnnotationGeneration.py#L13)
+- Add an `InputOutputInfoGeneratorXXX.py` in (https://github.com/binpash/annotations/tree/main/pash_annotations/annotation_generation/annotation_generators)
+- (Optionally) add a `ParallelizabilityInfoGeneratorXXX.py` in (https://github.com/binpash/annotations/tree/main/pash_annotations/annotation_generation/annotation_generators)
+
 ## Parser
 Use command_flag_option_info JSON files to parse xbd-type terminal commands.
 Will split on spaces (`" "`) and equal signs (`"="`).

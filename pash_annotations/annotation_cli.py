@@ -13,7 +13,7 @@ from parser.parser import parse
 parser = argparse.ArgumentParser()
 
 # add arguments to the parser
-parser.add_argument('--command_invocation', metavar='STRING', type=str,
+parser.add_argument('--command_invocation', metavar='STRING', type=str, required=True,
                     help='specifies the command invocation to check (enclosed by \")')
 parser.add_argument('--save_to', metavar='FILE', type=str, default=None,
                     help='store output in file (relative to where the script is called from); '
