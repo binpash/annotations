@@ -35,12 +35,12 @@ jobs:
             export PASH_TOP=$PWD
             export PATH=$PATH:$PASH_TOP
             # Install local version of library
-            python3 -m pip install ../annotations --no-cache-dir --root python_pkgs --ignore-installed
+            sudo python3 -m pip install ../annotations --no-cache-dir --root python_pkgs --ignore-installed
             cd python_pkgs
             pkg_path=$(find . \( -name "site-packages" -or -name "dist-packages" \) -type d)
             for directory in $pkg_path; do
               # using which to avoid the `-i` alias in many distros
-              $(which cp) -r $directory/* .
+              sudo $(which cp) -r $directory/* .
             done
             cd ../
             # run all the tests (INTRO, INTERFACE, COMPILER)
