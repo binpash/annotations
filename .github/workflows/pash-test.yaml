@@ -20,10 +20,13 @@ jobs:
       steps:
         - uses: actions/checkout@v2 
           with:
-            repository: 'binpash/pash'
-            ref: 'future'
+            ref: ${{ github.event.pull_request.head.sha }}
         - name: Running Correctness Tests
           run: |
+            ## Download and install pash
+            cd ../
+            git clone --recurse-submodules https://github.com/binpash/pash.git
+            cd pash
             sudo touch /.githubenv
             # install the system deps and pash the environment
             sudo -E bash scripts/distro-deps.sh -o
@@ -31,6 +34,15 @@ jobs:
             sudo -E bash scripts/setup-pash.sh -o
             export PASH_TOP=$PWD
             export PATH=$PATH:$PASH_TOP
+            # Install local version of library
+            python3 -m pip install ../annotations --no-cache-dir --root python_pkgs --ignore-installed
+            cd python_pkgs
+            pkg_path=$(find . \( -name "site-packages" -or -name "dist-packages" \) -type d)
+            for directory in $pkg_path; do
+              # using which to avoid the `-i` alias in many distros
+              $(which cp) -r $directory/* .
+            done
+            cd ../
             # run all the tests (INTRO, INTERFACE, COMPILER)
             cd scripts && bash run_tests.sh  
             # fetch the execution results of the passed/failed
