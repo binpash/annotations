@@ -1,0 +1,36 @@
+{
+    "flag": [
+        [
+            "-c",
+            "--bytes"
+        ],
+        [
+            "-m",
+            "--chars"
+        ],
+        [
+            "-l",
+            "--lines"
+        ],
+        [
+            "-L",
+            "--max-line-length"
+        ],
+        [
+            "-w",
+            "--words"
+        ],
+        [
+            "--help"
+        ],
+        [
+            "--version"
+        ]
+    ],
+    "option": [
+        [
+            "--files0-from",
+            "GLOB"
+        ]
+    ]
+}

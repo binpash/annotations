@@ -15,6 +15,7 @@ For the time being, there are two sets of annotation generators:
 ## Adding an annotation
 
 - Add the command in the dictionary in (https://github.com/binpash/annotations/blob/main/pash_annotations/annotation_generation/AnnotationGeneration.py#L13)
+- Add a json file with the command flags in (https://github.com/binpash/annotations/tree/main/pash_annotations/parser/command_flag_option_info/data). This could be used to generate a first version of it: (https://github.com/binpash/annotations/blob/main/pash_annotations/parser/command_flag_option_info/manpage-to-json.sh).
 - Add an `InputOutputInfoGeneratorXXX.py` in (https://github.com/binpash/annotations/tree/main/pash_annotations/annotation_generation/annotation_generators)
 - (Optionally) add a `ParallelizabilityInfoGeneratorXXX.py` in (https://github.com/binpash/annotations/tree/main/pash_annotations/annotation_generation/annotation_generators)
 
