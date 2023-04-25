@@ -23,6 +23,7 @@ jobs:
             ref: ${{ github.event.pull_request.head.sha }}
         - name: Running Correctness Tests
           run: |
+            set -x
             ## Download and install pash
             cd ../
             git clone --recurse-submodules https://github.com/binpash/pash.git
