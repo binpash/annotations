@@ -37,6 +37,7 @@ jobs:
             # Install local version of library
             sudo python3 -m pip install ../annotations --no-cache-dir --root python_pkgs --ignore-installed
             cd python_pkgs
+            rm -rf pash_annotations*
             pkg_path=$(find . \( -name "site-packages" -or -name "dist-packages" \) -type d)
             for directory in $pkg_path; do
               # using which to avoid the `-i` alias in many distros
@@ -75,5 +76,5 @@ jobs:
         - name: Exit Code
           run: |
             # check if everything executed without errors
-            cd scripts/workflow && bash exit_code.sh
+            cd ../pash/scripts/workflow && bash exit_code.sh
 
