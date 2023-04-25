@@ -23,6 +23,7 @@ jobs:
             ref: ${{ github.event.pull_request.head.sha }}
         - name: Running Correctness Tests
           run: |
+            set -x
             ## Download and install pash
             cd ../
             git clone --recurse-submodules https://github.com/binpash/pash.git
@@ -34,13 +35,14 @@ jobs:
             sudo -E bash scripts/setup-pash.sh -o
             export PASH_TOP=$PWD
             export PATH=$PATH:$PASH_TOP
-            # Install local version of library
-            sudo python3 -m pip install ../annotations --no-cache-dir --root python_pkgs --ignore-installed
-            cd python_pkgs
+            # Install local version of library and clean the previous one
+            rm -rf python_pkgs/pash_annotations*
+            sudo python3 -m pip install ../annotations --no-cache-dir --no-index --root python_pkgs_new --ignore-installed
+            cd python_pkgs_new
             pkg_path=$(find . \( -name "site-packages" -or -name "dist-packages" \) -type d)
             for directory in $pkg_path; do
               # using which to avoid the `-i` alias in many distros
-              sudo $(which cp) -r $directory/* .
+              sudo $(which cp) -r $directory/* ../python_pkgs
             done
             cd ../
             # run all the tests (INTRO, INTERFACE, COMPILER)
@@ -75,5 +77,5 @@ jobs:
         - name: Exit Code
           run: |
             # check if everything executed without errors
-            cd scripts/workflow && bash exit_code.sh
+            cd ../pash/scripts/workflow && bash exit_code.sh
 
