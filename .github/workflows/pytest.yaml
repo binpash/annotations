@@ -25,8 +25,8 @@ jobs:
           run: |
             ## Install pytest
             pip install pytest
-            pytest > pytest.out
-        #     ## TODO: Parse
+            pytest
+        # TODO: Ideally make a PR comment too but there is no need to for now
         #     # fetch the execution results of the passed/failed
         #     cd workflow && bash parse.sh > results.log 2>&1  
         #     # get the timer

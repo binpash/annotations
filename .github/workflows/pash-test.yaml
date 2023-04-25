@@ -23,8 +23,8 @@ jobs:
             ref: ${{ github.event.pull_request.head.sha }}
         - name: Running Correctness Tests
           run: |
-            set -x
             ## Download and install pash
+            set -x
             cd ../
             git clone --recurse-submodules https://github.com/binpash/pash.git
             cd pash
@@ -36,7 +36,7 @@ jobs:
             export PASH_TOP=$PWD
             export PATH=$PATH:$PASH_TOP
             # Install local version of library and clean the previous one
-            rm -rf python_pkgs/pash_annotations*
+            sudo rm -rf python_pkgs/pash_annotations*
             sudo python3 -m pip install ../annotations --no-cache-dir --no-index --root python_pkgs_new --ignore-installed
             cd python_pkgs_new
             pkg_path=$(find . \( -name "site-packages" -or -name "dist-packages" \) -type d)
