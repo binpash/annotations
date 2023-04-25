@@ -24,7 +24,7 @@ DICT_CMD_NAME_TO_REPRESENTATION_IN_MODULE_NAMES = {
     "custom_tr": "CustomTr",
     "cut": "Cut",
     "diff": "Diff",
-    "grep": "Grep",
+    # "grep": "Grep",
     "head": "Head",
     "mkfifo": "Mkfifo",
     "mv":   "Mv",
