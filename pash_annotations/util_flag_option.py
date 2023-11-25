@@ -1,4 +1,5 @@
-from pash_annotations.datatypes.BasicDatatypes import FlagOption, Option, Flag
+from pash_annotations.datatypes.basic_datatypes import FlagOption, Option, Flag
+
 
 def make_arg_simple(arg: list) -> FlagOption:
     if len(arg) == 1:
