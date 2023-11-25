@@ -2,24 +2,28 @@ from typing import Optional, List, Union
 
 from enum import Enum
 
-from datatypes.command_invocation_with_iovars import CommandInvocationWithIOVars
-from datatypes.basic_datatypes import Flag
-from datatypes.access_kind import make_stream_input, make_stream_output
-from datatypes.basic_datatypes_with_iovar import (
+from pash_annotations.datatypes.command_invocation_with_iovars import (
+    CommandInvocationWithIOVars,
+)
+from pash_annotations.datatypes.basic_datatypes import Flag
+from pash_annotations.datatypes.access_kind import make_stream_input, make_stream_output
+from pash_annotations.datatypes.basic_datatypes_with_iovar import (
     IOVar,
     OptionWithIOVar,
 )
 
-from transformer_flag_option_list import (
+from pash_annotations.annotation_generation.datatypes.parallelizability.transformer_flag_option_list import (
     TransformerFlagOptionList,
     return_transformer_flagoption_list_same_as_seq_if_none_else_itself,
     TransformerFlagOptionListCustom,
 )
-from mapper import Mapper
+from pash_annotations.annotation_generation.datatypes.parallelizability.mapper import (
+    Mapper,
+)
 
-from parser.parser import parse
-from util_standard import standard_repr, standard_eq
-from util import return_default_if_none_else_itself
+from pash_annotations.parser.parser import parse
+from pash_annotations.util_standard import standard_repr, standard_eq
+from pash_annotations.util import return_default_if_none_else_itself
 
 
 class MapperSpecKindEnum(Enum):

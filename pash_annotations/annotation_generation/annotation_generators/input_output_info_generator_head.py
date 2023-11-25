@@ -2,7 +2,6 @@ from input_output_info_generator_interface import InputOutputInfoGeneratorInterf
 
 
 class InputOutputInfoGeneratorHead(InputOutputInfoGeneratorInterface):
-
     # list_of_all_flags = ["-q", "-v", "-z", "--help", "--version"]
     # list_of_all_options = ["-c", "-n"]
 

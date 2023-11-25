@@ -12,5 +12,5 @@ class InputOutputInfoGeneratorComm(InputOutputInfoGeneratorInterface):
 
     def generate_info(self) -> None:
         self.set_implicit_use_of_stdout()
-        assert(self.get_operand_list_length() == 2)  # needs two files to compare;
+        assert self.get_operand_list_length() == 2  # needs two files to compare;
         self.all_operands_are_streaming_inputs()

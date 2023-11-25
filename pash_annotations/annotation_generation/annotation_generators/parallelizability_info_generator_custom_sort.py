@@ -1,4 +1,4 @@
-from parallelizability_info_generator_interface import (
+from pash_annotations.annotation_generation.datatypes.parallelizability_info_generator_interface import (
     ParallelizabilityInfoGeneratorInterface,
 )
 from pash_annotations.annotation_generation.datatypes.parallelizability.aggregator_spec import (
@@ -12,7 +12,7 @@ from pash_annotations.annotation_generation.datatypes.parallelizability.transfor
     TransformerFlagOptionListAdd,
     ChainTransformerFlagOptionList,
 )
-from pash_annotations.datatypes.BasicDatatypes import Flag
+from pash_annotations.datatypes.basic_datatypes import Flag
 
 
 class ParallelizabilityInfoGeneratorCustomSort(ParallelizabilityInfoGeneratorInterface):

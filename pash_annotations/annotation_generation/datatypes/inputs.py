@@ -7,7 +7,6 @@ class InputsEnum(Enum):
 
 
 class Inputs:
-
     def __init__(self, kind: InputsEnum, values):
         self.kind = kind
         self.values = values
@@ -29,4 +28,4 @@ class Inputs:
             streaming_inputs = self.values[1]
             return conf_inputs + streaming_inputs
         else:
-            assert(False)
+            assert False

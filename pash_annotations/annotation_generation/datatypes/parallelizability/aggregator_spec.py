@@ -3,21 +3,31 @@ from typing import Optional, List, Literal, Union
 
 from abc import ABC, abstractmethod
 
-from datatypes.basic_datatypes import FileNameOrStdDescriptor, ArgStringType, Flag
-from datatypes.basic_datatypes_with_iovar import IOVar, OptionWithIOVar
-from datatypes.command_invocation_with_iovars import CommandInvocationWithIOVars
-from datatypes.access_kind import make_stream_input, make_stream_output
+from pash_annotations.datatypes.basic_datatypes import (
+    FileNameOrStdDescriptor,
+    ArgStringType,
+    Flag,
+)
+from pash_annotations.datatypes.basic_datatypes_with_iovar import IOVar, OptionWithIOVar
+from pash_annotations.datatypes.command_invocation_with_iovars import (
+    CommandInvocationWithIOVars,
+)
+from pash_annotations.datatypes.access_kind import make_stream_input, make_stream_output
 
-from util import return_default_if_none_else_itself
-from parser.parser import parse
-from util_standard import standard_repr, standard_eq
+from pash_annotations.util import return_default_if_none_else_itself
+from pash_annotations.parser.parser import parse
+from pash_annotations.util_standard import standard_repr, standard_eq
 
-from transformer_flag_option_list import (
+from pash_annotations.annotation_generation.datatypes.parallelizability.transformer_flag_option_list import (
     TransformerFlagOptionList,
     return_transformer_flagoption_list_same_as_seq_if_none_else_itself,
 )
-from aggregator_kind import AggregatorKindEnum
-from aggregator import Aggregator
+from pash_annotations.annotation_generation.datatypes.parallelizability.aggregator_kind import (
+    AggregatorKindEnum,
+)
+from pash_annotations.annotation_generation.datatypes.parallelizability.aggregator import (
+    Aggregator,
+)
 
 
 # What spec needs to contain for which one:
@@ -244,7 +254,7 @@ class AggregatorSpecNonFunc(AggregatorSpec):
         aux_outputs_to: List[FileNameOrStdDescriptor],
     ):
         raise Exception(
-            "Auxiliary information from mapper to aggregator only supported for aggregators given as string"
+            "Auxiliary information from pash_annotations.annotation_generation.datatypes.parallelizability.mapper to aggregator only supported for aggregators given as string"
         )
 
 
@@ -314,7 +324,7 @@ class AggregatorSpecFuncTransformer(AggregatorSpec):
         aux_outputs_to: List[FileNameOrStdDescriptor],
     ):
         raise Exception(
-            "Auxiliary information from mapper to aggregator only supported for aggregators given as string"
+            "Auxiliary information from pash_annotations.annotation_generation.datatypes.parallelizability.mapper to aggregator only supported for aggregators given as string"
         )
 
 

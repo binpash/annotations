@@ -1,11 +1,11 @@
-from parallelizability_info_generator_interface import (
+from pash_annotations.annotation_generation.datatypes.parallelizability_info_generator_interface import (
     ParallelizabilityInfoGeneratorInterface,
 )
-from annotation_generation.datatypes.parallelizability.parallelizer import (
+from pash_annotations.annotation_generation.datatypes.parallelizability.parallelizer import (
     make_parallelizer_round_robin,
     make_parallelizer_consec_chunks,
 )
-from annotation_generation.datatypes.parallelizability.aggregator_spec import (
+from pash_annotations.annotation_generation.datatypes.parallelizability.aggregator_spec import (
     make_aggregator_spec_adj_lines_func_from_string_representation,
 )
 

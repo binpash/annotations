@@ -3,15 +3,30 @@ from typing import Optional, List, Union
 
 from copy import deepcopy
 
-from datatypes.command_invocation_with_iovars import CommandInvocationWithIOVars
-from datatypes.basic_datatypes_with_iovar import IOVar
-from datatypes.basic_datatypes import FileNameOrStdDescriptor, ArgStringType
+from pash_annotations.datatypes.command_invocation_with_iovars import (
+    CommandInvocationWithIOVars,
+)
+from pash_annotations.datatypes.basic_datatypes_with_iovar import IOVar
+from pash_annotations.datatypes.basic_datatypes import (
+    FileNameOrStdDescriptor,
+    ArgStringType,
+)
 
-from mapper import Mapper
-from aggregator import Aggregator
-from mapper_spec import MapperSpec, return_mapper_spec_seq_if_none_else_itself
-from aggregator_spec import AggregatorSpec, return_aggregator_conc_if_none_else_itself
-from splitter import (
+from pash_annotations.annotation_generation.datatypes.parallelizability.mapper import (
+    Mapper,
+)
+from pash_annotations.annotation_generation.datatypes.parallelizability.aggregator import (
+    Aggregator,
+)
+from pash_annotations.annotation_generation.datatypes.parallelizability.mapper_spec import (
+    MapperSpec,
+    return_mapper_spec_seq_if_none_else_itself,
+)
+from pash_annotations.annotation_generation.datatypes.parallelizability.aggregator_spec import (
+    AggregatorSpec,
+    return_aggregator_conc_if_none_else_itself,
+)
+from pash_annotations.annotation_generation.datatypes.parallelizability.splitter import (
     Splitter,
     make_splitter_consec_chunks,
     make_splitter_indiv_files,
@@ -19,8 +34,8 @@ from splitter import (
     make_splitter_round_robin_with_unwrap,
 )
 
-from util_standard import standard_eq
-from util import return_default_if_none_else_itself
+from pash_annotations.util_standard import standard_eq
+from pash_annotations.util import return_default_if_none_else_itself
 
 
 # this will probably become its own class with more information later

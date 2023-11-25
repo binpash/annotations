@@ -1,4 +1,4 @@
-from parallelizability_info_generator_interface import (
+from pash_annotations.annotation_generation.datatypes.parallelizability_info_generator_interface import (
     ParallelizabilityInfoGeneratorInterface,
 )
 

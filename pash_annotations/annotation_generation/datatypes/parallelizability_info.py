@@ -1,12 +1,12 @@
 from typing import List, Optional, Tuple
 
-from parallelizability.parallelizer import (
+from pash_annotations.annotation_generation.datatypes.parallelizability.parallelizer import (
     Parallelizer,
     make_parallelizer_round_robin_with_unwrap_from_other,
 )
 
-from util_standard import standard_repr
-from util import return_empty_list_if_none_else_itself
+from pash_annotations.util_standard import standard_repr
+from pash_annotations.util import return_empty_list_if_none_else_itself
 
 
 class ParallelizabilityInfo:

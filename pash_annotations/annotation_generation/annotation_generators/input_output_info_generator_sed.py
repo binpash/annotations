@@ -2,7 +2,6 @@ from input_output_info_generator_interface import InputOutputInfoGeneratorInterf
 
 
 class InputOutputInfoGeneratorSed(InputOutputInfoGeneratorInterface):
-
     def generate_info(self) -> None:
         self.set_implicit_use_of_stdin()
         self.set_implicit_use_of_stdout()
@@ -11,4 +10,3 @@ class InputOutputInfoGeneratorSed(InputOutputInfoGeneratorInterface):
             self.all_but_first_operand_is_streaming_input()
         else:
             self.all_operands_are_streaming_inputs()
-

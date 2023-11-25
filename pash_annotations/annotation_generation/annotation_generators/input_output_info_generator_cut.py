@@ -2,7 +2,6 @@ from input_output_info_generator_interface import InputOutputInfoGeneratorInterf
 
 
 class InputOutputInfoGeneratorCut(InputOutputInfoGeneratorInterface):
-
     # list_of_all_flags = ["-n", "--complement", "-s", "-z", "--help", "--version"]
     # list_of_all_options = ["-b", "-c", "-d", "-f", "--output-delimiter", ]
 

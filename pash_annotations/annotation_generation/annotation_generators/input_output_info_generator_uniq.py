@@ -2,7 +2,6 @@ from input_output_info_generator_interface import InputOutputInfoGeneratorInterf
 
 
 class InputOutputInfoGeneratorUniq(InputOutputInfoGeneratorInterface):
-
     # list_of_all_flags = ["-c", "-d", "-D", "-i", "-u", "-z", "--help", "--version"]
     # list_of_all_options = ["--all-repeated", "-f", "--group", "-s", "-w"]
 
@@ -22,4 +21,4 @@ class InputOutputInfoGeneratorUniq(InputOutputInfoGeneratorInterface):
             self.all_but_last_operand_is_streaming_input()
             self.only_last_operand_is_stream_output()
         else:
-            raise Exception('extra operand for uniq, the 3rd one')
+            raise Exception("extra operand for uniq, the 3rd one")

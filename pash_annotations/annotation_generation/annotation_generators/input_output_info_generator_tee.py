@@ -2,7 +2,6 @@ from input_output_info_generator_interface import InputOutputInfoGeneratorInterf
 
 
 class InputOutputInfoGeneratorTee(InputOutputInfoGeneratorInterface):
-
     def generate_info(self) -> None:
         self.set_implicit_use_of_stdin()
         # copies to both operands and stdout

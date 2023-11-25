@@ -2,10 +2,10 @@ from typing import Optional, List, Union
 
 from abc import ABC, abstractmethod
 
-from datatypes.basic_datatypes import Flag
-from datatypes.basic_datatypes_with_iovar import OptionWithIOVar
-from util_standard import standard_repr, standard_eq
-from util import foldl
+from pash_annotations.datatypes.basic_datatypes import Flag
+from pash_annotations.datatypes.basic_datatypes_with_iovar import OptionWithIOVar
+from pash_annotations.util_standard import standard_repr, standard_eq
+from pash_annotations.util import foldl
 
 
 # We offer the following different transformers for flag option lists

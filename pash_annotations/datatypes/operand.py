@@ -1,1 +1,1 @@
-from datatypes.basic_datatypes import ArgStringType
+from pash_annotations.datatypes.basic_datatypes import ArgStringType

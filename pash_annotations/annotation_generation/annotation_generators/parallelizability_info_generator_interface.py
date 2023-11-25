@@ -1,23 +1,25 @@
 from abc import ABC, abstractmethod
 
-from datatypes.command_invocation_initial import CommandInvocationInitial
+from pash_annotations.datatypes.command_invocation_initial import (
+    CommandInvocationInitial,
+)
 
-from annotation_generation.annotation_generators.generator_interface import (
+from pash_annotations.annotation_generation.annotation_generators.generator_interface import (
     Generator_Interface,
 )
 
-from annotation_generation.datatypes.parallelizability.parallelizer import (
+from pash_annotations.annotation_generation.datatypes.parallelizability.parallelizer import (
     Parallelizer,
     make_parallelizer_indiv_files,
     make_parallelizer_consec_chunks,
     make_parallelizer_round_robin,
 )
-from annotation_generation.datatypes.parallelizability.aggregator_spec import (
+from pash_annotations.annotation_generation.datatypes.parallelizability.aggregator_spec import (
     make_aggregator_spec_adj_lines_merge,
     make_aggregator_spec_adj_lines_seq,
     make_aggregator_spec_adj_lines_func_from_string_representation,
 )
-from annotation_generation.datatypes.parallelizability_info import (
+from pash_annotations.annotation_generation.datatypes.parallelizability_info import (
     ParallelizabilityInfo,
 )
 

@@ -16,7 +16,7 @@ from pash_annotations.datatypes.access_kind import (
     make_stream_output,
     AccessKind,
 )
-from pash_annotations.annotation_generation.datatypes.Inputs import Inputs, InputsEnum
+from pash_annotations.annotation_generation.datatypes.inputs import Inputs, InputsEnum
 from pash_annotations.datatypes.basic_datatypes_with_iovar import (
     OptionWithIOVar,
     IOVar,

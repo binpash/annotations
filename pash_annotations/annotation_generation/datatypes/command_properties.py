@@ -1,5 +1,5 @@
-from util_standard import standard_repr
-from util import return_default_if_none_else_itself
+from pash_annotations.util_standard import standard_repr
+from pash_annotations.util import return_default_if_none_else_itself
 from typing import Dict, Any, Optional
 
 
@@ -18,4 +18,3 @@ class CommandProperties:
 
     def get_property_value(self, prop_name: str):
         return self.dict_prop_name_value.get(prop_name, None)
-

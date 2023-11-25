@@ -1,18 +1,18 @@
-from parallelizability_info_generator_interface import (
+from pash_annotations.annotation_generation.datatypes.parallelizability_info_generator_interface import (
     ParallelizabilityInfoGeneratorInterface,
 )
-from annotation_generation.datatypes.parallelizability.aggregator_spec import (
+from pash_annotations.annotation_generation.datatypes.parallelizability.aggregator_spec import (
     make_aggregator_spec_custom_2_ary_from_cmd_inv_with_transformers,
 )
-from annotation_generation.datatypes.parallelizability.parallelizer import (
+from pash_annotations.annotation_generation.datatypes.parallelizability.parallelizer import (
     make_parallelizer_consec_chunks,
 )
-from annotation_generation.datatypes.parallelizability.transformer_flag_option_list import (
+from pash_annotations.annotation_generation.datatypes.parallelizability.transformer_flag_option_list import (
     TransformerFlagOptionListFilter,
     TransformerFlagOptionListAdd,
     ChainTransformerFlagOptionList,
 )
-from datatypes.basic_datatypes import Flag
+from pash_annotations.datatypes.basic_datatypes import Flag
 
 
 class ParallelizabilityInfoGeneratorSort(ParallelizabilityInfoGeneratorInterface):

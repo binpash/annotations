@@ -1,10 +1,14 @@
 from typing import Optional, List, Union
 
-from datatypes.basic_datatypes import Flag, ArgStringType
-from datatypes.basic_datatypes_with_iovar import IOVar, OptionWithIOVar
-from datatypes.command_invocation_with_iovars import CommandInvocationWithIOVars
-from aggregator_kind import AggregatorKindEnum
-from util_standard import standard_repr, standard_eq
+from pash_annotations.datatypes.basic_datatypes import Flag, ArgStringType
+from pash_annotations.datatypes.basic_datatypes_with_iovar import IOVar, OptionWithIOVar
+from pash_annotations.datatypes.command_invocation_with_iovars import (
+    CommandInvocationWithIOVars,
+)
+from pash_annotations.annotation_generation.datatypes.parallelizability.aggregator_kind import (
+    AggregatorKindEnum,
+)
+from pash_annotations.util_standard import standard_repr, standard_eq
 
 
 class Aggregator(CommandInvocationWithIOVars):

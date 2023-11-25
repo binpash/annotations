@@ -1,8 +1,10 @@
 from typing import List
 from abc import ABC, abstractmethod
 
-from datatypes.basic_datatypes import FlagOption
-from datatypes.command_invocation_initial import CommandInvocationInitial
+from pash_annotations.datatypes.basic_datatypes import FlagOption
+from pash_annotations.datatypes.command_invocation_initial import (
+    CommandInvocationInitial,
+)
 
 
 class Generator_Interface(ABC):

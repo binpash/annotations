@@ -7,8 +7,12 @@ from collections import namedtuple
 from pash_annotations.datatypes.command_invocation_initial import (
     CommandInvocationInitial,
 )
-from datatypes.input_output_info import InputOutputInfo
-from datatypes.parallelizability_info import ParallelizabilityInfo
+from pash_annotations.annotation_generation.datatypes.input_output_info import (
+    InputOutputInfo,
+)
+from pash_annotations.annotation_generation.datatypes.parallelizability_info import (
+    ParallelizabilityInfo,
+)
 
 ### directory paths
 ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), "../.."))
