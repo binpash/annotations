@@ -1,24 +1,40 @@
 from typing import List, Union, Optional, Tuple
 
-from pash_annotations.datatypes.BasicDatatypes import Flag, ArgStringType, FileName, StdDescriptor, FileNameOrStdDescriptor
-from pash_annotations.datatypes.BasicDatatypesWithIO import OptionWithIO, FileNameOrStdDescriptorWithIOInfo, FileNameWithIOInfo, StdDescriptorWithIOInfo
+from pash_annotations.datatypes.basic_datatypes import (
+    Flag,
+    ArgStringType,
+)
+from pash_annotations.datatypes.basic_datatypes_with_io import (
+    OptionWithIO,
+    FileNameOrStdDescriptorWithIOInfo,
+    FileNameWithIOInfo,
+    StdDescriptorWithIOInfo,
+)
 from pash_annotations.util_standard import standard_repr, standard_eq
+
 
 class CommandInvocationWithIO:
     # TODO: fully substitute by ...Vars and delete this one
 
-    def __init__(self,
-                 cmd_name: str,
-                 flag_option_list: List[Union[Flag, OptionWithIO]],
-                 operand_list: List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]],
-                 implicit_use_of_streaming_input: Optional[FileNameOrStdDescriptorWithIOInfo],
-                 implicit_use_of_streaming_output: Optional[FileNameOrStdDescriptorWithIOInfo],
-                 ) -> None:
+    def __init__(
+        self,
+        cmd_name: str,
+        flag_option_list: List[Union[Flag, OptionWithIO]],
+        operand_list: List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]],
+        implicit_use_of_streaming_input: Optional[FileNameOrStdDescriptorWithIOInfo],
+        implicit_use_of_streaming_output: Optional[FileNameOrStdDescriptorWithIOInfo],
+    ) -> None:
         self.cmd_name: str = cmd_name
         self.flag_option_list: List[Union[Flag, OptionWithIO]] = flag_option_list
-        self.operand_list: List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]] = operand_list
-        self.implicit_use_of_streaming_input: Optional[FileNameOrStdDescriptorWithIOInfo] = implicit_use_of_streaming_input
-        self.implicit_use_of_streaming_output: Optional[FileNameOrStdDescriptorWithIOInfo] = implicit_use_of_streaming_output
+        self.operand_list: List[
+            Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]
+        ] = operand_list
+        self.implicit_use_of_streaming_input: Optional[
+            FileNameOrStdDescriptorWithIOInfo
+        ] = implicit_use_of_streaming_input
+        self.implicit_use_of_streaming_output: Optional[
+            FileNameOrStdDescriptorWithIOInfo
+        ] = implicit_use_of_streaming_output
         # map from variables to filenames
 
     def __repr__(self):
@@ -26,7 +42,6 @@ class CommandInvocationWithIO:
 
     def __eq__(self, other):
         return standard_eq(self, other)
-
 
     # def substitute_inputs_and_outputs_in_cmd_invocation(self,
     #                                                     inputs_from: List[FileNameOrStdDescriptor],
@@ -171,30 +186,80 @@ class CommandInvocationWithIO:
     #     return outputs
 
     # for test cases:
-    def get_operands_with_config_input(self) -> List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]]:
-        return [x for x in self.operand_list if
-                isinstance(x, ArgStringType) or
-                ((isinstance(x, FileNameWithIOInfo) or isinstance(x, StdDescriptorWithIOInfo))
-                and x.access.is_config_input())]
+    def get_operands_with_config_input(
+        self,
+    ) -> List[Union[ArgStringType, FileNameOrStdDescriptorWithIOInfo]]:
+        return [
+            x
+            for x in self.operand_list
+            if isinstance(x, ArgStringType)
+            or (
+                (
+                    isinstance(x, FileNameWithIOInfo)
+                    or isinstance(x, StdDescriptorWithIOInfo)
+                )
+                and x.access.is_config_input()
+            )
+        ]
 
     def get_operands_with_stream_input(self) -> List[FileNameOrStdDescriptorWithIOInfo]:
-        return [x for x in self.operand_list if (isinstance(x, FileNameWithIOInfo) or isinstance(x, StdDescriptorWithIOInfo))
-                and x.access.is_stream_input()]
+        return [
+            x
+            for x in self.operand_list
+            if (
+                isinstance(x, FileNameWithIOInfo)
+                or isinstance(x, StdDescriptorWithIOInfo)
+            )
+            and x.access.is_stream_input()
+        ]
 
     def get_operands_with_other_input(self) -> List[FileNameOrStdDescriptorWithIOInfo]:
-        return [x for x in self.operand_list if (isinstance(x, FileNameWithIOInfo) or isinstance(x, StdDescriptorWithIOInfo))
-                and x.access.is_other_input()]
+        return [
+            x
+            for x in self.operand_list
+            if (
+                isinstance(x, FileNameWithIOInfo)
+                or isinstance(x, StdDescriptorWithIOInfo)
+            )
+            and x.access.is_other_input()
+        ]
 
-    def get_operands_with_stream_output(self) -> List[FileNameOrStdDescriptorWithIOInfo]:
-        return [x for x in self.operand_list if (isinstance(x, FileNameWithIOInfo) or isinstance(x, StdDescriptorWithIOInfo))
-                and x.access.is_stream_output()]
+    def get_operands_with_stream_output(
+        self,
+    ) -> List[FileNameOrStdDescriptorWithIOInfo]:
+        return [
+            x
+            for x in self.operand_list
+            if (
+                isinstance(x, FileNameWithIOInfo)
+                or isinstance(x, StdDescriptorWithIOInfo)
+            )
+            and x.access.is_stream_output()
+        ]
 
     def get_operands_with_other_output(self) -> List[FileNameOrStdDescriptorWithIOInfo]:
-        return [x for x in self.operand_list if (isinstance(x, FileNameWithIOInfo) or isinstance(x, StdDescriptorWithIOInfo))
-                and x.access.is_other_output()]
+        return [
+            x
+            for x in self.operand_list
+            if (
+                isinstance(x, FileNameWithIOInfo)
+                or isinstance(x, StdDescriptorWithIOInfo)
+            )
+            and x.access.is_other_output()
+        ]
 
     def get_options_with_other_output(self) -> List[OptionWithIO]:
-        only_options: List[OptionWithIO] = [x for x in self.flag_option_list if isinstance(x, OptionWithIO)]
-        return [x for x in only_options if
-                ((isinstance(x.option_arg, FileNameWithIOInfo) or isinstance(x.option_arg, StdDescriptorWithIOInfo)))
-                and x.option_arg.access.is_other_output()]
+        only_options: List[OptionWithIO] = [
+            x for x in self.flag_option_list if isinstance(x, OptionWithIO)
+        ]
+        return [
+            x
+            for x in only_options
+            if (
+                (
+                    isinstance(x.option_arg, FileNameWithIOInfo)
+                    or isinstance(x.option_arg, StdDescriptorWithIOInfo)
+                )
+            )
+            and x.option_arg.access.is_other_output()
+        ]

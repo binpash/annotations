@@ -1,13 +1,13 @@
 from typing import Union
-from pash_annotations.datatypes.BasicDatatypes import ArgStringType
+from pash_annotations.datatypes.basic_datatypes import ArgStringType
 
 IOVar = int
 
-class OptionWithIOVar:
 
+class OptionWithIOVar:
     def __init__(self, name: str, option_arg: Union[IOVar, ArgStringType]) -> None:
-        self.option_name : str = name
-        self.option_arg : Union[IOVar, ArgStringType] = option_arg
+        self.option_name: str = name
+        self.option_arg: Union[IOVar, ArgStringType] = option_arg
 
     def get_name(self) -> str:
         return self.option_name
