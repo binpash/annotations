@@ -1,6 +1,6 @@
 from typing import List, Tuple, Union, Literal, Dict
 
-from config.definitions import INDICATORS_FOR_FILENAMES
+from pash_annotations.config.definitions import INDICATORS_FOR_FILENAMES
 
 from pash_annotations.datatypes.basic_datatypes import Flag, Option, WhichClassForArg
 from pash_annotations.datatypes.access_kind import AccessKind, get_access_from_string

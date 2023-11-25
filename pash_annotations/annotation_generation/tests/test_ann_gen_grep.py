@@ -37,7 +37,7 @@ from pash_annotations.annotation_generation.datatypes.parallelizability.aggregat
     make_aggregator_spec_concatenate,
 )
 
-import pash_annotations.annotation_generation.annotation_generation as AnnotationGeneration
+from pash_annotations.annotation_generation.annotation_generation import AnnotationGenerator
 
 cmd_name = "grep"
 
@@ -58,7 +58,7 @@ def test_grep_1() -> None:
     # IO Info
     io_info: Optional[
         InputOutputInfo
-    ] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_input_output_info_from_cmd_invocation(cmd_inv)
     assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = (
         io_info.apply_input_output_info_to_command_invocation(cmd_inv)
@@ -75,7 +75,7 @@ def test_grep_1() -> None:
     # Parallelizability Info
     para_info: Optional[
         ParallelizabilityInfo
-    ] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_parallelizability_info_from_cmd_invocation(cmd_inv)
     assert para_info is not None and len(para_info.parallelizer_list) == 0
     # currently not implemented and thus not added to parallelizer_list
     # parallelizer1: Parallelizer = para_info.parallelizer_list[0]
@@ -110,7 +110,7 @@ def test_grep_2() -> None:
     # IO Info
     io_info: Optional[
         InputOutputInfo
-    ] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_input_output_info_from_cmd_invocation(cmd_inv)
     assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = (
         io_info.apply_input_output_info_to_command_invocation(cmd_inv)
@@ -127,7 +127,7 @@ def test_grep_2() -> None:
     # Parallelizability Info
     para_info: Optional[
         ParallelizabilityInfo
-    ] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_parallelizability_info_from_cmd_invocation(cmd_inv)
     assert para_info is not None and len(para_info.parallelizer_list) == 0
     # currently not implemented and thus not added to parallelizer_list
     # parallelizer1: Parallelizer = para_info.parallelizer_list[0]
@@ -162,7 +162,7 @@ def test_grep_3() -> None:
     # IO Info
     io_info: Optional[
         InputOutputInfo
-    ] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_input_output_info_from_cmd_invocation(cmd_inv)
     assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = (
         io_info.apply_input_output_info_to_command_invocation(cmd_inv)
@@ -179,7 +179,7 @@ def test_grep_3() -> None:
     # Parallelizability Info
     para_info: Optional[
         ParallelizabilityInfo
-    ] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_parallelizability_info_from_cmd_invocation(cmd_inv)
     assert para_info is not None and len(para_info.parallelizer_list) == 2
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
     parallelizer2: Parallelizer = para_info.parallelizer_list[1]
@@ -211,7 +211,7 @@ def test_grep_4() -> None:
     # IO Info
     io_info: Optional[
         InputOutputInfo
-    ] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_input_output_info_from_cmd_invocation(cmd_inv)
     assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = (
         io_info.apply_input_output_info_to_command_invocation(cmd_inv)
@@ -228,7 +228,7 @@ def test_grep_4() -> None:
     # Parallelizability Info
     para_info: Optional[
         ParallelizabilityInfo
-    ] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_parallelizability_info_from_cmd_invocation(cmd_inv)
     assert para_info is not None and len(para_info.parallelizer_list) == 0
     # currently not implemented and thus not added to parallelizer_list
     # parallelizer1: Parallelizer = para_info.parallelizer_list[0]
@@ -256,7 +256,7 @@ def test_grep_5() -> None:
     # IO Info
     io_info: Optional[
         InputOutputInfo
-    ] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_input_output_info_from_cmd_invocation(cmd_inv)
     assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = (
         io_info.apply_input_output_info_to_command_invocation(cmd_inv)
@@ -270,7 +270,7 @@ def test_grep_5() -> None:
     # Parallelizability Info
     para_info: Optional[
         ParallelizabilityInfo
-    ] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_parallelizability_info_from_cmd_invocation(cmd_inv)
     assert para_info is not None and len(para_info.parallelizer_list) == 0
 
 
@@ -282,7 +282,7 @@ def test_grep_5() -> None:
 #     cmd_inv_pref: CommandInvocationPrefix = CommandInvocationPrefix(cmd_inv.cmd_name, cmd_inv.flag_option_list, [])
 #
 #     # IO Info
-#     io_info: InputOutputInfo = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+#     io_info: InputOutputInfo = AnnotationGenerator().get_input_output_info_from_cmd_invocation(cmd_inv)
 #     cmd_inv_with_io: CommandInvocationWithIO = io_info.apply_input_output_info_to_command_invocation(cmd_inv)
 #     print(cmd_inv_with_io.operand_list)
 #     assert len(cmd_inv_with_io.get_operands_with_config_input()) == 1
@@ -292,7 +292,7 @@ def test_grep_5() -> None:
 #     assert cmd_inv_with_io.implicit_use_of_streaming_output == make_stdout_with_access_output()
 #
 #     # Parallelizability Info
-#     para_info: ParallelizabilityInfo = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+#     para_info: ParallelizabilityInfo = AnnotationGenerator().get_parallelizability_info_from_cmd_invocation(cmd_inv)
 #     assert len(para_info.parallelizer_list) == 2
 #     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
 #     parallelizer2: Parallelizer = para_info.parallelizer_list[1]

@@ -1,6 +1,6 @@
 from typing import List
 from pash_annotations.datatypes.basic_datatypes import FlagOption
-from input_output_info_generator_interface import InputOutputInfoGeneratorInterface
+from pash_annotations.annotation_generation.annotation_generators.input_output_info_generator_interface import InputOutputInfoGeneratorInterface
 
 
 class InputOutputInfoGeneratorMv(InputOutputInfoGeneratorInterface):

@@ -18,7 +18,7 @@ from pash_annotations.annotation_generation.datatypes.parallelizability_info imp
     ParallelizabilityInfo,
 )
 
-import pash_annotations.annotation_generation.annotation_generation as AnnotationGeneration
+from pash_annotations.annotation_generation.annotation_generation import AnnotationGenerator
 
 cmd_name = "tail"
 
@@ -36,7 +36,7 @@ def test_tail_1() -> None:
     # IO Info
     io_info: Optional[
         InputOutputInfo
-    ] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_input_output_info_from_cmd_invocation(cmd_inv)
     assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = (
         io_info.apply_input_output_info_to_command_invocation(cmd_inv)
@@ -54,7 +54,7 @@ def test_tail_1() -> None:
     # Parallelizability Info
     para_info: Optional[
         ParallelizabilityInfo
-    ] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_parallelizability_info_from_cmd_invocation(cmd_inv)
     assert para_info is None
 
 
@@ -71,7 +71,7 @@ def test_tail_2() -> None:
     # IO Info
     io_info: Optional[
         InputOutputInfo
-    ] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_input_output_info_from_cmd_invocation(cmd_inv)
     assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = (
         io_info.apply_input_output_info_to_command_invocation(cmd_inv)
@@ -89,5 +89,5 @@ def test_tail_2() -> None:
     # Parallelizability Info
     para_info: Optional[
         ParallelizabilityInfo
-    ] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_parallelizability_info_from_cmd_invocation(cmd_inv)
     assert para_info is None

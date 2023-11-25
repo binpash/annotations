@@ -34,7 +34,7 @@ from pash_annotations.annotation_generation.datatypes.parallelizability.aggregat
     make_aggregator_spec_concatenate,
 )
 
-import pash_annotations.annotation_generation.annotation_generation as AnnotationGeneration
+from pash_annotations.annotation_generation.annotation_generation import AnnotationGenerator
 
 cmd_name = "cut"
 
@@ -54,7 +54,7 @@ def test_cut_1() -> None:
     # IO Info
     io_info: Optional[
         InputOutputInfo
-    ] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_input_output_info_from_cmd_invocation(cmd_inv)
     assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = (
         io_info.apply_input_output_info_to_command_invocation(cmd_inv)
@@ -71,7 +71,7 @@ def test_cut_1() -> None:
     # Parallelizability Info
     para_info: Optional[
         ParallelizabilityInfo
-    ] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_parallelizability_info_from_cmd_invocation(cmd_inv)
     assert para_info is not None and len(para_info.parallelizer_list) == 2
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
     parallelizer2: Parallelizer = para_info.parallelizer_list[1]
@@ -99,7 +99,7 @@ def test_cut_2() -> None:
     # IO Info
     io_info: Optional[
         InputOutputInfo
-    ] = AnnotationGeneration.get_input_output_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_input_output_info_from_cmd_invocation(cmd_inv)
     assert io_info is not None
     cmd_inv_with_io: CommandInvocationWithIO = (
         io_info.apply_input_output_info_to_command_invocation(cmd_inv)
@@ -119,7 +119,7 @@ def test_cut_2() -> None:
     # Parallelizability Info
     para_info: Optional[
         ParallelizabilityInfo
-    ] = AnnotationGeneration.get_parallelizability_info_from_cmd_invocation(cmd_inv)
+    ] = AnnotationGenerator().get_parallelizability_info_from_cmd_invocation(cmd_inv)
     assert para_info is not None and len(para_info.parallelizer_list) == 2
     parallelizer1: Parallelizer = para_info.parallelizer_list[0]
     parallelizer2: Parallelizer = para_info.parallelizer_list[1]
