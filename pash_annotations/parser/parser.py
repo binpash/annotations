@@ -26,6 +26,8 @@ def parse(command) -> CommandInvocationInitial:
     i = 1
     while i < len(parsed_elements_list):
         potential_flag_or_option = parsed_elements_list[i]
+        if potential_flag_or_option == '': # empty string counts as an operand
+            break
         if potential_flag_or_option in set_of_all_flags:
             flag_name_as_string: str = dict_flag_to_primary_repr.get(potential_flag_or_option, potential_flag_or_option)
             flag: Flag = Flag(flag_name_as_string)
