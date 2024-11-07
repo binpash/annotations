@@ -1,0 +1,46 @@
+{
+  "flag": [
+    [
+      "-b",
+      "--binary"
+    ],
+    [
+      "-c",
+      "--check"
+    ],
+    [
+      "--tag"
+    ],
+    [
+      "-t",
+      "--text"
+    ],
+    [
+      "-z",
+      "--zero"
+    ],
+    [
+      "--ignore-missing"
+    ],
+    [
+      "--quiet"
+    ],
+    [
+      "--status"
+    ],
+    [
+      "--strict"
+    ],
+    [
+      "-w",
+      "--warn"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": []
+}

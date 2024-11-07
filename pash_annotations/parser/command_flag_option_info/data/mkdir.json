@@ -1,0 +1,32 @@
+{
+  "flag": [
+    [
+      "-p",
+      "--parents"
+    ],
+    [
+      "-v",
+      "--verbose"
+    ],
+    [
+      "-Z"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": [
+    [
+      "-m",
+      "--mode",
+      "OPTION"
+    ],
+    [
+      "--context",
+      "OPTION"
+    ]
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "flag": [
+    [
+      "-c",
+      "--crown-margin"
+    ],
+    [
+      "-s",
+      "--split-only"
+    ],
+    [
+      "-t",
+      "--tagged-paragraph"
+    ],
+    [
+      "-u",
+      "--uniform-spacing"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": [
+    [
+      "-p",
+      "--prefix",
+      "OPTION"
+    ],
+    [
+      "-w",
+      "--width",
+      "OPTION"
+    ],
+    [
+      "-g",
+      "--goal",
+      "OPTION"
+    ]
+  ]
+}

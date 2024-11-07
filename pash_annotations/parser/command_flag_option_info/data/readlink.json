@@ -1,0 +1,43 @@
+{
+  "flag": [
+    [
+      "-f",
+      "--canonicalize"
+    ],
+    [
+      "-e",
+      "--canonicalize-existing"
+    ],
+    [
+      "-m",
+      "--canonicalize-missing"
+    ],
+    [
+      "-n",
+      "--no-newline"
+    ],
+    [
+      "-q",
+      "--quiet"
+    ],
+    [
+      "-s",
+      "--silent"
+    ],
+    [
+      "-v",
+      "--verbose"
+    ],
+    [
+      "-z",
+      "--zero"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": []
+}

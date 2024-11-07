@@ -1,0 +1,55 @@
+{
+  "flag": [
+    [
+      "-c",
+      "--changes"
+    ],
+    [
+      "-f",
+      "--silent",
+      "--quiet"
+    ],
+    [
+      "-v",
+      "--verbose"
+    ],
+    [
+      "--dereference"
+    ],
+    [
+      "-h",
+      "--no-dereference"
+    ],
+    [
+      "--no-preserve-root"
+    ],
+    [
+      "--preserve-root"
+    ],
+    [
+      "-R",
+      "--recursive"
+    ],
+    [
+      "-H"
+    ],
+    [
+      "-L"
+    ],
+    [
+      "-P"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": [
+    [
+      "--reference",
+      "OPTION"
+    ]
+  ]
+}

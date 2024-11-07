@@ -1,0 +1,36 @@
+{
+  "flag": [
+    [
+      "-d",
+      "--directory"
+    ],
+    [
+      "-u",
+      "--dry-run"
+    ],
+    [
+      "-q",
+      "--quiet"
+    ],
+    [
+      "-t"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": [
+    [
+      "--suffix",
+      "OPTION"
+    ],
+    [
+      "-p",
+      "--tmpdir",
+      "OPTION"
+    ]
+  ]
+}

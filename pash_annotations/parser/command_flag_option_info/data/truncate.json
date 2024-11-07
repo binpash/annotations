@@ -1,0 +1,30 @@
+{
+  "flag": [
+    [
+      "-c",
+      "--characters"
+    ],
+    [
+      "-o",
+      "--io-blocks"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": [
+    [
+      "-r",
+      "--reference",
+      "OPTION"
+    ],
+    [
+      "-s",
+      "--size",
+      "OPTION"
+    ]
+  ]
+}

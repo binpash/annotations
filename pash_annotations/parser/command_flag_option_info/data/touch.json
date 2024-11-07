@@ -1,0 +1,47 @@
+{
+  "flag": [
+    [
+      "-a"
+    ],
+    [
+      "-c",
+      "--no-create"
+    ],
+    [
+      "-f"
+    ],
+    [
+      "-h",
+      "--no-dereference"
+    ],
+    [
+      "-m"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": [
+    [
+      "-d",
+      "--date",
+      "OPTION"
+    ],
+    [
+      "-r",
+      "--reference",
+      "OPTION"
+    ],
+    [
+      "-t",
+      "OPTION"
+    ],
+    [
+      "--time",
+      "OPTION"
+    ]
+  ]
+}

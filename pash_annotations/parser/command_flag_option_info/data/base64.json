@@ -1,0 +1,25 @@
+{
+  "flag": [
+    [
+      "-d",
+      "--decode"
+    ],
+    [
+      "-i",
+      "--ignore-garbage"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": [
+    [
+      "-w",
+      "--wrap",
+      "OPTION"
+    ]
+  ]
+}

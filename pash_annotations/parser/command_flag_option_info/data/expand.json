@@ -1,0 +1,26 @@
+{
+  "flag": [
+    [
+      "-i",
+      "--initial"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": [
+    [
+      "-t",
+      "--tabs",
+      "OPTION"
+    ],
+    [
+      "-t",
+      "--tabs",
+      "OPTION"
+    ]
+  ]
+}

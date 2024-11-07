@@ -1,0 +1,43 @@
+{
+  "flag": [
+    [
+      "-e",
+      "--echo"
+    ],
+    [
+      "-r",
+      "--repeat"
+    ],
+    [
+      "-z",
+      "--zero-terminated"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": [
+    [
+      "-i",
+      "--input-range",
+      "OPTION"
+    ],
+    [
+      "-n",
+      "--head-count",
+      "OPTION"
+    ],
+    [
+      "-o",
+      "--output",
+      "OPTION"
+    ],
+    [
+      "--random-source",
+      "OPTION"
+    ]
+  ]
+}

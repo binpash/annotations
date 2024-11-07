@@ -1,0 +1,53 @@
+{
+  "flag": [
+    [
+      "--debug"
+    ],
+    [
+      "-R",
+      "--rfc-2822"
+    ],
+    [
+      "-u",
+      "--utc",
+      "--universal"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": [
+    [
+      "-d",
+      "--date",
+      "OPTION"
+    ],
+    [
+      "-f",
+      "--file",
+      "OPTION"
+    ],
+    [
+      "-I",
+      "--iso-8601",
+      "OPTION"
+    ],
+    [
+      "--rfc-3339",
+      "OPTION"
+    ],
+    [
+      "-r",
+      "--reference",
+      "OPTION"
+    ],
+    [
+      "-s",
+      "--set",
+      "OPTION"
+    ]
+  ]
+}

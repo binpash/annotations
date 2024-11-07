@@ -1,0 +1,20 @@
+{
+  "flag": [
+    [
+      "-p"
+    ],
+    [
+      "-P"
+    ],
+    [
+      "--portability"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": []
+}

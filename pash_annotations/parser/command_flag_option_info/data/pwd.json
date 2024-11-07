@@ -1,0 +1,19 @@
+{
+  "flag": [
+    [
+      "-L",
+      "--logical"
+    ],
+    [
+      "-P",
+      "--physical"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": []
+}

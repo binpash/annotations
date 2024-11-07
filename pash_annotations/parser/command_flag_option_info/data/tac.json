@@ -1,0 +1,25 @@
+{
+  "flag": [
+    [
+      "-b",
+      "--before"
+    ],
+    [
+      "-r",
+      "--regex"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": [
+    [
+      "-s",
+      "--separator",
+      "OPTION"
+    ]
+  ]
+}

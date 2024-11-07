@@ -1,0 +1,46 @@
+{
+  "flag": [
+    [
+      "-l",
+      "--list"
+    ],
+    [
+      "-c"
+    ],
+    [
+      "-s",
+      "--silent"
+    ],
+    [
+      "--verbose"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "-?",
+      "--usage"
+    ],
+    [
+      "-V",
+      "--version"
+    ]
+  ],
+  "option": [
+    [
+      "-f",
+      "--from-code",
+      "OPTION"
+    ],
+    [
+      "-t",
+      "--to-code",
+      "OPTION"
+    ],
+    [
+      "-o",
+      "--output",
+      "OPTION"
+    ]
+  ]
+}

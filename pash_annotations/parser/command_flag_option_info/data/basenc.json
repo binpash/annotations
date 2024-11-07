@@ -1,0 +1,49 @@
+{
+  "flag": [
+    [
+      "--base64"
+    ],
+    [
+      "--base64url"
+    ],
+    [
+      "--base32"
+    ],
+    [
+      "--base32hex"
+    ],
+    [
+      "--base16"
+    ],
+    [
+      "--base2msbf"
+    ],
+    [
+      "--base2lsbf"
+    ],
+    [
+      "-d",
+      "--decode"
+    ],
+    [
+      "-i",
+      "--ignore-garbage"
+    ],
+    [
+      "--z85"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": [
+    [
+      "-w",
+      "--wrap",
+      "OPTION"
+    ]
+  ]
+}

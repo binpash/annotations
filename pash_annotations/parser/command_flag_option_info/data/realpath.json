@@ -1,0 +1,49 @@
+{
+  "flag": [
+    [
+      "-e",
+      "--canonicalize-existing"
+    ],
+    [
+      "-m",
+      "--canonicalize-missing"
+    ],
+    [
+      "-L",
+      "--logical"
+    ],
+    [
+      "-P",
+      "--physical"
+    ],
+    [
+      "-q",
+      "--quiet"
+    ],
+    [
+      "-s",
+      "--strip",
+      "--no-symlinks"
+    ],
+    [
+      "-z",
+      "--zero"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": [
+    [
+      "--relative-to",
+      "OPTION"
+    ],
+    [
+      "--relative-base",
+      "OPTION"
+    ]
+  ]
+}

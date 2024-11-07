@@ -1,0 +1,25 @@
+{
+  "flag": [
+    [
+      "-b",
+      "--bytes"
+    ],
+    [
+      "-s",
+      "--spaces"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": [
+    [
+      "-w",
+      "--width",
+      "OPTION"
+    ]
+  ]
+}

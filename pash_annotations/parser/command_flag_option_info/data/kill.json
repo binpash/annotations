@@ -1,0 +1,25 @@
+{
+  "flag": [
+    [
+      "-L",
+      "--table"
+    ]
+  ],
+  "option": [
+    [
+      "-s",
+      "--signal",
+      "OPTION"
+    ],
+    [
+      "-q",
+      "--queue",
+      "OPTION"
+    ],
+    [
+      "-l",
+      "--list",
+      "OPTION"
+    ]
+  ]
+}

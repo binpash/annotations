@@ -1,0 +1,23 @@
+{
+  "flag": [
+    [
+      "-a",
+      "--multiple"
+    ],
+    [
+      "-s",
+      "--suffix"
+    ],
+    [
+      "-z",
+      "--zero"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--version"
+    ]
+  ],
+  "option": []
+}
