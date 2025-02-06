@@ -8,7 +8,7 @@ on:
   pull_request:
   push:
   schedule:
-    - cron: '5 14 * * *'
+    - cron: '5 14 * * *'      
 
 jobs:
   package-python:
@@ -29,33 +29,48 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      
-      - name: Install build
+      - name: Upgrade pip and build
         run: |
-          python -m pip install --upgrade pip
-          pip install build
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          python3 -m pip install --upgrade pip
+          python3 -m pip install --upgrade build
 
-      - name: Build project
-        run: |
-          python -m build
-
+      - name: Build wheel
+        run: python3 -m build
+            
       - name: Upload binary wheel
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ format('bdist.{0}', matrix.python-version) }}
-          path: ${{ format('dist/{0}-*.whl', env.PKG_NAME_WHEEL) }}
+          name: dist
+          path: ./dist/*.whl
+
+
+      # - name: Set up Python ${{ matrix.python-version }}
+      #   uses: actions/setup-python@v4
+      #   with:
+      #     python-version: ${{ matrix.python-version }}
+      
+      # - name: Install build
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install build
+      #     if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      # - name: Build project
+      #   run: |
+      #     python -m build
+
+      # - name: Upload binary wheel
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: ${{ format('bdist.{0}', matrix.python-version) }}
+      #     path: ${{ format('dist/{0}-*.whl', env.PKG_NAME_WHEEL) }}
             
-      - name: Upload source distribution (from Linux)
-        uses: actions/upload-artifact@v4
-        if: contains(matrix.python-version, '3.8')
-        with:
-          name: sdist
-          path: ${{ format('dist/{0}-*.tar.gz', env.PKG_NAME) }}
+      # - name: Upload source distribution (from Linux)
+      #   uses: actions/upload-artifact@v4
+      #   if: contains(matrix.python-version, '3.8')
+      #   with:
+      #     name: sdist
+      #     path: ${{ format('dist/{0}-*.tar.gz', env.PKG_NAME) }}
       
   build-and-test:
     strategy:
@@ -91,6 +106,8 @@ jobs:
         run: |
           pytest          
 
+
+
   deploy:
     needs:
       - package-python
@@ -102,14 +119,14 @@ jobs:
       - name: Download distributions
         uses: actions/download-artifact@v4
 
-      - name: Rename distributions
-        run: |
-          mkdir dist
-          ls bdist.*/
-          mv bdist.*/${PKG_NAME_WHEEL}-*.whl dist/
-          mv sdist/${PKG_NAME}-*.tar.gz dist/
-          echo Look on my Works, ye Mighty, and despair!
-          ls dist
+      # - name: Rename distributions
+      #   run: |
+      #     mkdir dist
+      #     ls bdist.*/
+      #     mv bdist.*/${PKG_NAME_WHEEL}-*.whl dist/
+      #     mv sdist/${PKG_NAME}-*.tar.gz dist/
+      #     echo Look on my Works, ye Mighty, and despair!
+      #     ls dist
   
       ## TODO: Fix this!
       # - name: Deploy 'latest' release on GH
@@ -121,6 +138,21 @@ jobs:
       #     title: "Python source and binary distributions"
       #     files: |
       #       dist/*
+
+      # - name: Deploy test distribution to Test PyPI
+      #   uses: pypa/gh-action-pypi-publish@release/v1
+      #   with:
+      #     password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+      #     verbose: true
+      #     repository_url: https://test.pypi.org/legacy/
+      #     skip_existing: true            
+              
+      # - name: Deploy tagged release on PyPI
+      #   if: startsWith(github.ref, 'refs/tags')
+      #   uses: pypa/gh-action-pypi-publish@release/v1
+      #   with:
+      #     password: ${{ secrets.PYPI_API_TOKEN }}
+      #     verbose: true
 
       - name: Deploy test distribution to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1

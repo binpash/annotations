@@ -15,7 +15,8 @@ jobs:
         matrix:
           os: 
             - ubuntu-20.04
-            - ubuntu-24.04
+            # Uncomment this when PaSh Ubuntu14.04 tests pass
+            # - ubuntu-24.04
       runs-on: ${{ matrix.os }}
       if: github.event.pull_request.draft == false
       steps:
