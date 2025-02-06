@@ -89,8 +89,8 @@ jobs:
         with:
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
           verbose: true
-          repository_url: https://test.pypi.org/legacy/
-          skip_existing: true            
+          repository-url: https://test.pypi.org/legacy/
+          skip-existing: true            
               
       - name: Deploy tagged release on PyPI
         if: startsWith(github.ref, 'refs/tags')
