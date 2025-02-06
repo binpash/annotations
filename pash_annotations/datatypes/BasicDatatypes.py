@@ -163,7 +163,7 @@ def format_arg_char(arg_char):
         if(val in non_escape_chars):
             return '{}'.format(chr(val))
         else:
-            return '\{}'.format(chr(val))
+            return '{}'.format(chr(val))
     else:
         # log("Cannot format arg_char:", arg_char)
         ## TODO: Make this correct
