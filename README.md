@@ -60,3 +60,8 @@ For instance, to import `Parallelizer.py`, we use
 ```
 from annotation_generation.parallelizers.Parallelizer import Parallelizer
 ```
+
+# How to Add a New Command to PaSh's Annotation System
+
+
+Here is a detailed walkthrough on [how to add a new command to PaSh's Annotation System](docs/adding-annotations.md)
