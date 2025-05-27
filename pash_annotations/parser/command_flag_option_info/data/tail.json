@@ -9,10 +9,6 @@
             "--follow"
         ],
         [
-            "-n",
-            "--lines"
-        ],
-        [
             "-q",
             "--quiet",
             "--silent"
@@ -39,6 +35,11 @@
         ]
     ],
     "option": [
+        [
+            "-n",
+            "--lines",
+            "N"
+        ],
         [
             "--max-unchanged-stats",
             "N"
