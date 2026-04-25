@@ -65,3 +65,4 @@ from annotation_generation.parallelizers.Parallelizer import Parallelizer
 
 
 Here is a detailed walkthrough on [how to add a new command to PaSh's Annotation System](docs/adding-annotations.md)
+a
