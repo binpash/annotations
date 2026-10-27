@@ -32,7 +32,7 @@ We also have a regex-based script that can be used to generate initial JSON file
 Since there is no standard for man-pages, the quality of results varies but it usually provides a good skeleton and saves quite some time.
 
 ## Annotation Generation
-Currently, annotation generators for input-output information and parallelizability information has been implemented.
+Only annotation generators for input-output information and parallelizability information have been implemented.
 Each annotation generator implements a specific generator interface (e.g., `InputOutputInfoGenerator_Interface.py`) which specializes a more general generator interface (`Generator_Interface.py`).
 The general generator interface contains functions that help to check conditions on the command invocation while 
 the more specific generator interface provides functionality to change the respective information (object) generated.
